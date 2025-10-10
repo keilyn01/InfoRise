@@ -177,6 +177,9 @@ def firma_usuario(usuario_id):
     except Exception:
         abort(404)
 
+@app.route("/")
+def redireccion_raiz():
+    return redirect(url_for("inicio_principal"))
 
 # Ruta principal
 @app.route("/Inforise")
