@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block titulo %}Reportes{% endblock %}
+
+{% block contenido %}
+<div class="container contenedor-reportes">
+  <h1 class="titulo-pagina mt-5">Reportes</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mt-3">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+ <!-- 🔧 Botones de acción -->
+<div class="acciones-reportes d-flex justify-content-between align-items-end mb-4">
+  <!-- 🗑️ Eliminar + Confirmar (izquierda) -->
+  <div class="d-flex gap-2 align-items-end">
+    <button type="button" class="btn-accion" onclick="activarEliminacion()" id="btn-eliminar">
+      <i class="fa-solid fa-trash"></i>
+      <span>Eliminar</span>
+    </button>
+
+    <button type="button" class="btn-accion btn-confirmar" id="btn-confirmar-eliminacion" onclick="mostrarModalEliminar()">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>Confirmar eliminación</span>
+    </button>
+  </div>
+
+  <!-- 📅 Filtro por fecha + Ordenar (derecha) -->
+  <form method="GET" class="filtro-fechas d-flex align-items-end gap-3">
+    <div>
+      <label for="fecha_inicio">Desde:</label>
+      <input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ request.args.get('fecha_inicio', '') }}">
+    </div>
+    <div>
+      <label for="fecha_fin">Hasta:</label>
+      <input type="date" name="fecha_fin" id="fecha_fin" value="{{ request.args.get('fecha_fin', '') }}">
+    </div>
+    <button type="submit" class="btn-accion">
+  <i class="fa-solid fa-filter"></i>
+  <span>Filtrar</span>
+</button>
+    <a
+      href="?orden={% if request.args.get('orden') == 'asc' %}desc{% else %}asc{% endif %}"
+      class="btn-accion text-decoration-none"
+      title="Ordenar"
+    >
+      <i class="fa-solid {% if request.args.get('orden') == 'asc' %}fa-arrow-up-wide-short{% else %}fa-arrow-down-wide-short{% endif %}"></i>
+      <span>Ordenar</span>
+    </a>
+  </form>
+</div>
+     
+
+  <!-- ✅ Modal de confirmación de eliminación -->
+  <div id="modal-eliminar" class="modal-nombrar" style="display: none;">
+    <form method="POST" action="{{ url_for('eliminar_reportes') }}" id="form-eliminar-modal">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>¿Confirmas eliminar los reportes seleccionados?</label>
+      <div class="botones-modal mt-3">
+        <button type="submit" class="btn btn-sm btn-danger">
+          <i class="fa-solid fa-circle-check"></i> Sí, eliminar
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="cerrarModalEliminar()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- 🧾 Encabezado tipo Word -->
+  <div class="encabezado-reportes fila-reporte">
+    <span class="nombre-reporte">Nombre</span>
+    <span class="fecha-reporte">Fecha</span>
+    <span class="editar-reporte">Editar</span>
+    <span class="descargar-reporte">Descargar</span>
+  </div>
+
+  <!-- 📄 Lista de reportes -->
+  {% for reporte in reportes %}
+  <div class="fila-reporte fila-reporte-link" onclick="window.location.href='/Inforise/reporte/{{ reporte[0] }}'">
+    {% if not reporte_enviado.get(reporte[0]) %}
+      <input type="checkbox" name="reportes" value="{{ reporte[0] }}" class="checkbox-eliminar" style="display: none;" onclick="event.stopPropagation();">
+    {% endif %}
+    <div class="nombre-reporte d-flex align-items-center gap-2" data-id="{{ reporte[0] }}">
+  <i class="fa-solid fa-file-lines text-success"></i>
+  <span class="nombre-click" data-id="{{ reporte[0] }}" style="text-decoration: none; color: inherit;">
+     {{ reporte[7] or 'Reporte sin nombre' }}
+  </span>
+  {% if not reporte_enviado.get(reporte[0]) %}
+  <form method="POST" action="{{ url_for('enviar_reporte', id_reporte=reporte[0]) }}" onsubmit="event.stopPropagation();" class="ms-2">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn btn-sm btn-enviar" title="Enviar">
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
+  </form>
+  {% else %}
+  <span class="badge bg-success ms-2">Enviado</span>
+  {% endif %}
+
+  {% if reporte_revisado.get(reporte[0]) %}
+  <span class="badge bg-primary ms-2">Revisado</span>
+  {% endif %}
+</div>
+    <div class="fecha-reporte">{{ reporte[2] }}</div>
+    <div>
+      <a href="/Inforise/editar/{{ reporte[0] }}" class="btn btn-sm btn-editar" title="Editar" onclick="event.stopPropagation();">
+        <i class="fa-solid fa-pen"></i>
+      </a>
+    </div>
+    <div>
+      <a href="{{ url_for('generar_pdf', id_reporte=reporte[0]) }}" class="btn btn-sm btn-descargar" title="Descargar" onclick="event.stopPropagation();">
+        <i class="fa-solid fa-download"></i>
+      </a>
+    </div>
+  </div>
+  <div id="modal-nombrar" class="modal-nombrar" style="display: none;">
+  <form method="POST" id="form-nombrar">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="nombre">Nuevo nombre del reporte:</label>
+    <input type="text" name="nombre" id="nombre" class="form-control mb-3" required>
+    <div class="botones-modal">
+      <button type="submit" class="btn btn-sm btn-success">Guardar</button>
+      <button type="button" class="btn btn-sm btn-success btn-cancelar" onclick="cerrarModalNombrar()">Cancelar</button>
+    </div>
+  </form>
+</div>
+{% endfor %}
+<!-- ✅ Scripts -->
+<script>
+document.querySelectorAll('.nombre-click').forEach(span => {
+  // Abrir modal al hacer clic derecho (escritorio)
+  span.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    abrirModalNombrar(this);
+  });
+
+  // Abrir modal al hacer clic normal (móvil o escritorio)
+  span.addEventListener('click', function(e) {
+    e.stopPropagation();
+    abrirModalNombrar(this);
+  });
+});
+
+function abrirModalNombrar(elemento) {
+  const id = elemento.getAttribute('data-id');
+  const modal = document.getElementById('modal-nombrar');
+  const form = document.getElementById('form-nombrar');
+  form.action = `/Inforise/nombrar/${id}`;
+  modal.style.display = 'block';
+  document.getElementById('nombre').focus();
+}
+
+function cerrarModalNombrar() {
+  document.getElementById('modal-nombrar').style.display = 'none';
+  document.getElementById('form-nombrar').reset();
+}
+</script>
+<script>
+  function activarEliminacion() {
+    document.querySelectorAll(".checkbox-eliminar").forEach(cb => cb.style.display = "inline-block");
+  }
+
+  function mostrarModalEliminar() {
+    const seleccionados = document.querySelectorAll(".checkbox-eliminar:checked");
+    if (seleccionados.length === 0) {
+      alert("Selecciona al menos un reporte para eliminar.");
+      return;
+    }
+
+    const form = document.getElementById("form-eliminar-modal");
+    form.innerHTML = `
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      ${Array.from(seleccionados).map(cb => `<input type="hidden" name="reportes" value="${cb.value}">`).join("")}
+      <label>¿Confirmas eliminar los reportes seleccionados?</label>
+      <div class="botones-modal mt-3">
+        <button type="submit" class="btn btn-sm btn-danger">
+          <i class="fa-solid fa-circle-check"></i> Sí, eliminar
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="cerrarModalEliminar()">Cancelar</button>
+      </div>
+    `;
+    document.getElementById("modal-eliminar").style.display = "block";
+  }
+
+  function cerrarModalEliminar() {
+    document.getElementById("modal-eliminar").style.display = "none";
+  }
+</script>
+
+<script>
+  function activarEliminacion() {
+    document.querySelectorAll(".fila-reporte").forEach(div => div.classList.add("seleccionable"));
+    document.querySelectorAll(".checkbox-eliminar").forEach(cb => cb.style.display = "inline-block");
+    actualizarBotonConfirmar();
+  }
+
+  function actualizarBotonConfirmar() {
+    const seleccionados = document.querySelectorAll(".checkbox-eliminar:checked");
+    const boton = document.getElementById("btn-confirmar-eliminacion");
+    if (seleccionados.length > 0) {
+      boton.classList.add("visible");
+    } else {
+      boton.classList.remove("visible");
+    }
+  }
+
+  document.querySelectorAll(".checkbox-eliminar").forEach(cb => {
+    cb.addEventListener("change", actualizarBotonConfirmar);
+  });
+</script>
+
+<script>
+  function togglePanelFiltros() {
+    const panel = document.getElementById("panel-filtros");
+    panel.style.display = panel.style.display === "none" || panel.style.display === "" ? "block" : "none";
+  }
+</script>
+{% endblock %}
+

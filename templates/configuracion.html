@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block titulo %}Configuración de Usuario{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <h2 class="mb-4">Configuración de perfil</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, msg in messages %}
+        <div class="alert alert-{{ category }}">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" enctype="multipart/form-data" class="formulario-configuracion" autocomplete="off">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <!-- Campos de texto y selects -->
+    <div class="form-group mb-3">
+      <label for="nombre">Nombres:</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario[0] }}" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="apellido">Apellidos:</label>
+      <input type="text" class="form-control" id="apellido" name="apellido" value="{{ usuario[1] }}" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="id_tipo_identificacion">Tipo de identificación:</label>
+      <select class="form-select" id="id_tipo_identificacion" name="id_tipo_identificacion" required>
+        <option value="">Selecciona un tipo</option>
+        {% for t in tipos_identificacion %}
+          <option value="{{ t.id }}" {% if t.id == usuario[2] %}selected{% endif %}>
+            {{ t.nombre }} ({{ t.sigla }})
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="identificacion">Número de identificación:</label>
+      <input type="text" class="form-control" id="identificacion" name="identificacion" value="{{ usuario[3] }}" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="correo">Correo electrónico:</label>
+      <input type="email" class="form-control" id="correo" name="correo" value="{{ usuario[4] }}" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="tipo">Tipo de usuario:</label>
+      <select class="form-select" id="tipo" name="tipo" required>
+        <option value="">Selecciona un tipo</option>
+        {% for opcion in tipos %}
+          <option value="{{ opcion }}" {% if opcion == usuario[5] %}selected{% endif %}>{{ opcion }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+       <!-- Firma digital (sin vista previa embebida) -->
+    <div class="form-group mb-4">
+      <label for="firma">Firma digital:</label>
+      <input type="file"
+             class="form-control"
+             id="firma"
+             name="firma"
+             accept="image/png">
+      <p class="form-text text-warning mb-1">
+        Nota: la imagen de la firma debe estar en formato PNG.
+      </p>
+      <small class="form-text text-muted">
+        {% if usuario[6] %}
+          Firma guardada. Si deseas reemplazarla, sube una nueva imagen.
+          <a href="{{ url_for('firma_usuario', usuario_id=id_usuario) }}" target="_blank">
+            Ver firma actual
+          </a>
+        {% else %}
+          No has subido una firma aún. Sube una imagen para guardarla.
+        {% endif %}
+      </small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+    </button>
+  </form>
+</div>
+
+<script>
+  // Forzar mayúsculas en tiempo real
+  document.getElementById('nombre').addEventListener('input', function () {
+    this.value = this.value.toUpperCase();
+  });
+
+  document.getElementById('apellido').addEventListener('input', function () {
+    this.value = this.value.toUpperCase();
+  });
+
+</script>
+{% endblock %}
+

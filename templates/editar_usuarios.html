@@ -1,0 +1,83 @@
+<div class="modal fade" id="modalActualizar{{ usuario[0] }}" tabindex="-1" aria-labelledby="labelActualizar{{ usuario[0] }}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      
+      <!-- Encabezado -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="labelActualizar{{ usuario[0] }}">Actualizar Usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="modal-body">
+        <form action="{{ url_for('editar_usuario', id=usuario[0]) }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="id" value="{{ usuario[0] }}">
+
+          <!-- Identificación -->
+          <div class="mb-3">
+            <label for="identificacion{{ usuario[0] }}" class="form-label">Identificación</label>
+            <input type="text" class="form-control" id="identificacion{{ usuario[0] }}" name="identificacion" value="{{ usuario[1] }}">
+          </div>
+
+          <!-- Tipo de identificación -->
+          <div class="mb-3">
+            <label for="id_tipo_identificacion{{ usuario[0] }}" class="form-label">Tipo de identificación</label>
+            <select class="form-select" id="id_tipo_identificacion{{ usuario[0] }}" name="id_tipo_identificacion" required>
+              <option value="">Selecciona un tipo</option>
+              {% for t in tipos_identificacion %}
+                <option value="{{ t.id }}" {% if t.id == usuario[2] %}selected{% endif %}>
+                  {{ t.nombre }} ({{ t.sigla }})
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Nombres -->
+          <div class="mb-3">
+            <label for="nombre{{ usuario[0] }}" class="form-label">Nombres</label>
+            <input type="text" class="form-control text-uppercase" id="nombre{{ usuario[0] }}" name="nombre" value="{{ usuario[3] }}">
+          </div>
+
+          <!-- Apellidos -->
+          <div class="mb-3">
+            <label for="apellido{{ usuario[0] }}" class="form-label">Apellidos</label>
+            <input type="text" class="form-control text-uppercase" id="apellido{{ usuario[0] }}" name="apellido" value="{{ usuario[4] }}">
+          </div>
+
+          <!-- Correo -->
+          <div class="mb-3">
+            <label for="correo{{ usuario[0] }}" class="form-label">Correo</label>
+            <input type="email" class="form-control" id="correo{{ usuario[0] }}" name="correo" value="{{ usuario[5] }}">
+          </div>
+
+          <!-- Tipo de usuario -->
+          <div class="mb-3">
+            <label for="tipo{{ usuario[0] }}" class="form-label">Tipo de usuario</label>
+            <select class="form-select" id="tipo{{ usuario[0] }}" name="tipo" required>
+              <option value="">Selecciona un tipo</option>
+              {% for opcion in tipos %}
+                <option value="{{ opcion }}" {% if opcion == usuario[6] %}selected{% endif %}>{{ opcion }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Estado -->
+          <div class="mb-3">
+            <label for="estado{{ usuario[0] }}" class="form-label">Estado</label>
+            <select class="form-select" id="estado{{ usuario[0] }}" name="estado" required>
+              <option value="activo" {% if usuario[7] %}selected{% endif %}>Activo</option>
+              <option value="inactivo" {% if not usuario[7] %}selected{% endif %}>Inactivo</option>
+            </select>
+          </div>
+
+          <!-- Botón -->
+          <div class="text-end">
+            <button type="submit" class="btn btn-success btn-guardar">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

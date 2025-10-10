@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}Reportes de ambiente{% endblock %}</title>
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilos/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilos/responsive.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logosena.png') }}">
+</head>
+<body>
+  <input type="checkbox" id="menu-toggle">
+  <label for="menu-toggle" class="menu-icon"></label>
+
+  <nav class="sidebar">
+    <a href="{{ url_for('inicio_principal') }}"><i class="fa-solid fa-house"></i>Inicio</a>
+
+    {% if session.get("cuenta_actual") %}
+      {% set tipo = (session["cuentas_activas"] | selectattr("id", "equalto", session["cuenta_actual"]) | list)[0]["tipo"] %}
+      {% if tipo == "Admin" %}
+        <a href="{{ url_for('panel_control') }}" class="admin-opcion"><i class="fa-solid fa-chart-column"></i>Panel de control</a>
+        <a href="{{ url_for('gestion_reportes') }}" class="admin-opcion"><i class="fa-solid fa-folder-closed"></i>Gestión de reportes</a>
+        <a href="{{ url_for('gestion_users') }}" class="admin-opcion"><i class="fa-solid fa-users-gear"></i>Gestión de usuarios</a>
+      {% elif tipo == "Instructor" %}
+        <a href="{{ url_for('crear') }}"><i class="fa-solid fa-circle-plus"></i>Crear</a>
+        <a href="{{ url_for('reportes') }}"><i class="fa-solid fa-folder-closed"></i>Reportes</a>
+      {% elif tipo == "Coordinador" %}
+        <a href="{{ url_for('revisiones') }}"><i class="fa-solid fa-check-double"></i>Revisiones</a>
+        <a href="{{ url_for('instructores_pendientes') }}"><i class="fa-solid fa-id-badge"></i>Instructores pendientes</a>
+      {% endif %}
+    {% endif %}
+  </nav>
+
+  <header>
+    <nav class="d-flex justify-content-between align-items-center px-3 py-2">
+      <div class="nav-izquierda">
+        <a href="{{ url_for('registrarse') }}">Registrarse</a>
+      </div>
+      <div class="nav-derecha d-flex align-items-center gap-3">
+
+        {% if session.get("cuenta_actual") %}
+  <!-- 🔔 Dropdown de notificaciones -->
+  <div class="dropdown">
+    <button class="btn btn-link nav-link" type="button" id="notificacionesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="fa-solid fa-bell" id="iconoCampanita"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end p-3 shadow" aria-labelledby="notificacionesDropdown" style="min-width: 300px; max-height: 400px; overflow-y: auto;">
+      <li class="mb-2"><strong style="color: #38aa16;"><i class="fa-solid fa-bell"></i> Notificaciones</strong></li>
+      <li><hr class="dropdown-divider"></li>
+      {% set id_actual = session["cuenta_actual"] %}
+{% set todas = session.get("notificaciones_por_usuario", {}) %}
+{% set notificaciones = todas.get(id_actual|string, []) %}
+
+{% if notificaciones %}
+  {% for mensaje in notificaciones %}
+    <li class="dropdown-item text-wrap">{{ mensaje }}</li>
+  {% endfor %}
+{% else %}
+  <li class="dropdown-item text-muted">No hay notificaciones recientes.</li>
+{% endif %}
+    </ul>
+  </div>
+{% endif %}
+        <!-- 🌙 Modo oscuro -->
+        <label for="toggle" id="label_toggle"><i class="fa-solid fa-moon"></i></label>
+        <input type="checkbox" id="toggle">
+        <script src="{{ url_for('static', filename='estilos/app.js') }}"></script>
+
+        <!-- 👤 Selector de cuentas -->
+        {% if session.get("cuentas_activas") %}
+        <div class="dropdown">
+          <button class="perfil-btn" type="button" data-bs-toggle="dropdown">
+          {% for cuenta in session["cuentas_activas"] %}
+            {% if cuenta.id == session["cuenta_actual"] %}
+              {{ cuenta.nombre[0]|upper }}
+            {% endif %}
+          {% endfor %}
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end p-3" style="min-width: 300px;">
+            <li class="mb-2"><strong>Cuentas</strong></li>
+               <li class="dropdown-submenu position-relative mb-2">
+  <button class="dropdown-item btn btn-sm btn-primary w-100 text-start" id="cuentaToggle">
+    <i class="fa-solid fa-user-check"></i>
+    {% for cuenta in session["cuentas_activas"] %}
+      {% if cuenta.id == session["cuenta_actual"] %}
+        {{ cuenta.nombre }}
+      {% endif %}
+    {% endfor %}
+  </button>
+  <ul class="dropdown-menu p-2 keep-open-submenu" id="cuentaSubmenu" style="right: 100%; top: 0; margin-right: 0.5rem; display: none;">
+    {% for cuenta in session["cuentas_activas"] %}
+      {% if cuenta.id != session["cuenta_actual"] %}
+      <li>
+        <form method="POST" action="{{ url_for('cambiar_cuenta') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="id_cuenta" value="{{ cuenta.id }}">
+          <button type="submit" class="dropdown-item">
+            <i class="fa-solid fa-user"></i> {{ cuenta.nombre }}
+          </button>
+        </form>
+      </li>
+      {% endif %}
+    {% endfor %}
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <a href="{{ url_for('login') }}" class="dropdown-item text-success">
+        <i class="fa-solid fa-user-plus"></i> Agregar otra cuenta
+      </a>
+    </li>
+  </ul>
+</li>
+
+            <li><hr class="dropdown-divider"></li>
+            <li class="mb-2">
+              <a href="{{ url_for('configuracion') }}" class="btn btn-sm btn-info w-100">
+                <i class="fa-solid fa-gear"></i> Configuración
+              </a>
+            </li>
+            {% if session.get("cuenta_actual") %}
+  <li class="mb-2">
+    <form method="POST" action="{{ url_for('quitar_cuenta') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="id_cuenta" value="{{ session['cuenta_actual'] }}">
+      <button type="submit" class="btn btn-sm btn-danger w-100">
+        <i class="fa-solid fa-xmark"></i> Cerrar sesión
+      </button>
+    </form>
+  </li>
+  {% if session["cuentas_activas"]|length > 1 %}
+    <li>
+      <a class="btn btn-sm btn-outline-secondary w-100" href="{{ url_for('logout') }}">
+        <i class="fa-solid fa-right-from-bracket"></i> Cerrar todas las cuentas
+      </a>
+    </li>
+  {% endif %}
+{% endif %}         
+          </ul>
+        </div>
+        {% else %}
+          <a href="{{ url_for('login') }}">Iniciar sesión</a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+
+  <main class="container-fluid">
+   {% block contenido %}
+     <!-- Aquí se insertará el contenido de cada página -->
+   {% endblock %}
+  </main>
+
+  <!-- 🔒 Script para controlar el ojito de contraseña sin duplicación -->
+  <script>
+    document.querySelectorAll('.toggle-password').forEach(button => {
+      const icons = button.querySelectorAll('i');
+      icons.forEach((icon, index) => {
+        if (index > 0) icon.remove();
+      });
+
+      if (icons.length === 0) {
+        const newIcon = document.createElement('i');
+        newIcon.className = 'fa-solid fa-eye';
+        button.appendChild(newIcon);
+      }
+
+      button.addEventListener('click', () => {
+        const input = button.previousElementSibling;
+        const icon = button.querySelector('i');
+        const tipo = input.type === 'password' ? 'text' : 'password';
+        input.type = tipo;
+
+        icon.classList.remove('fa-eye', 'fa-eye-slash');
+        icon.classList.add(tipo === 'password' ? 'fa-eye' : 'fa-eye-slash');
+      });
+    });
+  </script>
+
+  <script>
+  const dropdown = document.getElementById("notificacionesDropdown");
+  const iconoCampanita = document.getElementById("iconoCampanita");
+
+  dropdown.addEventListener("show.bs.dropdown", () => {
+    iconoCampanita.classList.add("campanita-activa");
+  });
+
+  dropdown.addEventListener("hide.bs.dropdown", () => {
+    iconoCampanita.classList.remove("campanita-activa");
+  });
+</script>
+<script>
+  const cuentaToggle = document.getElementById("cuentaToggle");
+  const cuentaSubmenu = document.getElementById("cuentaSubmenu");
+
+  cuentaToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const visible = cuentaSubmenu.style.display === "block";
+    cuentaSubmenu.style.display = visible ? "none" : "block";
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!cuentaToggle.contains(e.target) && !cuentaSubmenu.contains(e.target)) {
+      cuentaSubmenu.style.display = "none";
+    }
+  });
+</script>
+<script>
+  if (window.innerWidth <= 576) {
+  const submenu = document.getElementById("cuentaSubmenu");
+  const perfil = document.getElementById("perfilToggle");
+  perfil.insertAdjacentElement("afterend", submenu);
+}
+</script>
+<!-- jQuery (requerido por Select2) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('.form-select').select2({
+      width: '100%',
+      dropdownAutoWidth: true
+    });
+  });
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

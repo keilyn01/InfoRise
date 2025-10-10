@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block titulo %}Iniciar sesión{% endblock %}
+
+{% block contenido %}
+<div class="login-container">
+  <h1>Iniciar Sesión</h1>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST" action="{{ url_for('login') }}" autocomplete="off" onsubmit="return validarLogin();">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <!-- Tipo de identificación -->
+    <div class="form-group mb-3">
+      <label for="id_tipo_identificacion">Tipo de identificación:</label>
+      <select class="form-select" name="id_tipo_identificacion" id="id_tipo_identificacion" required>
+        <option value="">Selecciona un tipo</option>
+        {% for tipo in tipos_identificacion %}
+          <option value="{{ tipo.id }}">{{ tipo.nombre }} ({{ tipo.sigla }})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Documento -->
+    <div class="form-group mb-3">
+      <label for="identificacion">Número de documento:</label>
+      <input type="text" id="identificacion" name="identificacion" class="form-control" required>
+    </div>
+
+    <!-- Contraseña -->
+    <div class="form-group mb-4">
+      <label for="contrasena">Contraseña:</label>
+      <div class="input-group">
+        <input type="password" class="form-control campo-contrasena" name="contrasena" required>
+        
+      </div>
+    </div>
+
+    <!-- Botón -->
+    <div class="text-center mt-3">
+       <a href="{{ url_for('recuperar_contrasena') }}">¿Olvidaste tu contraseña?</a>
+    </div>
+    <button type="submit" class="btn-login w-100">Iniciar Sesión</button>
+  </form>
+</div>
+
+<script>
+  function validarLogin() {
+    const tipoId = document.getElementById('id_tipo_identificacion').value;
+    if (!tipoId) {
+      alert("⚠️ Debes seleccionar un tipo de identificación.");
+      return false;
+    }
+    return true;
+  }
+</script>
+{% endblock %}

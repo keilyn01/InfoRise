@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block titulo %}Registro de usuarios{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <h1 class="titulo-formulario">Registro de usuarios</h1>
+
+  <form class="formulario-registro" action="/Inforise/registrarse" method="POST" enctype="multipart/form-data" autocomplete="off" onsubmit="return validarRegistro();">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <!-- Nombre -->
+    <div class="form-group mb-3">
+      <label for="nombre">Nombres:</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" required>
+    </div>
+
+    <!-- Apellido -->
+    <div class="form-group mb-3">
+      <label for="apellido">Apellidos:</label>
+      <input type="text" class="form-control" id="apellido" name="apellido" required>
+    </div>
+
+    <!-- Tipo de identificación -->
+    <div class="form-group mb-3">
+      <label for="id_tipo_identificacion">Tipo de identificación:</label>
+      <select class="form-select" name="id_tipo_identificacion" id="id_tipo_identificacion" required>
+        <option value="">Selecciona un tipo</option>
+        {% for tipo in tipos_identificacion %}
+          <option value="{{ tipo.id }}">{{ tipo.nombre }} ({{ tipo.sigla }})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Identificación -->
+    <div class="form-group mb-3">
+      <label for="identificacion">Identificación:</label>
+      <input type="text" class="form-control" id="identificacion" name="identificacion" required>
+    </div>
+
+    <!-- Correo -->
+    <div class="form-group mb-3">
+      <label for="correo">Correo:</label>
+      <input type="email" class="form-control" id="correo" name="correo" required>
+    </div>
+
+    <!-- Firma -->
+    <div class="form-group mb-3">
+      <label for="firma">Firma escaneada:</label>
+      <input type="file" class="form-control" id="firma" name="firma" accept="image/*">
+      <div class="form-text text-muted">Puedes subirla ahora o más adelante.</div>
+      <img id="preview-firma" src="#" alt="Vista previa de la firma" style="display:none;">
+    </div>
+
+    <!-- Tipo de usuario -->
+    <div class="form-group mb-3">
+      <label for="tipo">Tipo de usuario:</label>
+      <select class="form-select" id="tipo" name="tipo" required>
+        <option value="">Selecciona un tipo</option>
+        {% for tipo in tipos %}
+          <option value="{{ tipo }}">{{ tipo }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Contraseña -->
+    <div class="form-group mb-3">
+      <label for="contrasena">Contraseña:</label>
+      <div class="input-group">
+        <input type="password" class="form-control campo-contrasena" name="contrasena" required>
+      </div>
+    </div>
+
+    <!-- Botón -->
+    <button type="submit" class="btn btn-primary">Registrar</button>
+  </form>
+</div>
+
+<script>
+  // Forzar mayúsculas en tiempo real
+  document.getElementById('nombre').addEventListener('input', function () {
+    this.value = this.value.toUpperCase();
+  });
+
+  document.getElementById('apellido').addEventListener('input', function () {
+    this.value = this.value.toUpperCase();
+  });
+
+  function validarRegistro() {
+    const tipoId = document.getElementById('id_tipo_identificacion').value;
+    if (!tipoId) {
+      alert("⚠️ Debes seleccionar un tipo de identificación.");
+      return false;
+    }
+    return true;
+  }
+
+  const firmaInput = document.getElementById('firma');
+  const preview = document.getElementById('preview-firma');
+
+  firmaInput.addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = '#';
+      preview.style.display = 'none';
+    }
+  });
+</script>
+
+
+{% endblock %}

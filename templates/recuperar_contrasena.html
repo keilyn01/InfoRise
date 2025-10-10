@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}Recuperar contraseña{% endblock %}
+
+{% block contenido %}
+<div class="login-container">
+  <h1>Recuperar contraseña</h1>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% elif mensaje %}
+    <div class="alert alert-success">{{ mensaje }}</div>
+  {% endif %}
+
+  <form method="POST" action="{{ url_for('recuperar_contrasena') }}" autocomplete="off">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="form-group mb-3">
+      <label for="id_tipo_identificacion">Tipo de identificación:</label>
+      <select class="form-select" name="id_tipo_identificacion" required>
+        <option value="">Selecciona un tipo</option>
+        {% for tipo in tipos_identificacion %}
+          <option value="{{ tipo.id }}">{{ tipo.nombre }} ({{ tipo.sigla }})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="identificacion">Número de documento:</label>
+      <input type="text" name="identificacion" class="form-control" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="correo">Correo registrado:</label>
+      <input type="email" name="correo" class="form-control" required>
+    </div>
+
+    <div class="form-group mb-4">
+      <label for="nueva_contrasena">Nueva contraseña:</label>
+      <input type="password" name="nueva_contrasena" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn-login w-100">Actualizar contraseña</button>
+  </form>
+</div>
+{% endblock %}

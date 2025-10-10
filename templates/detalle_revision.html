@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block titulo %}Detalle Reporte{% endblock %}
+
+{% block contenido %}
+<div class="detalle-revision">
+  <h2 class="titulo-detalle">1. Información General</h2>
+
+  <section class="tabla-revision" style="display: grid; grid-template-columns: 1fr 1.5fr 1fr 1.5fr;">
+    <!-- Fila 1: Regional y Centro de Formación -->
+    <div class="fila-revision celda-titulo">Regional:</div>
+    <div class="fila-revision celda-valor">{{ reporte.regional }}</div>
+    <div class="fila-revision celda-titulo">Centro de Formación:</div>
+    <div class="fila-revision celda-valor">{{ reporte.centro_formacion }}</div>
+
+    <!-- Fila 2: Programa y Código -->
+    <div class="fila-revision celda-titulo">Programa de Formación:</div>
+    <div class="fila-revision celda-valor">{{ reporte.programa }}</div>
+    <div class="fila-revision celda-titulo">Código del Programa:</div>
+    <div class="fila-revision celda-valor">{{ reporte.codigo_programa }}</div>
+
+    <!-- Fila 3: Subtítulo y ambiente -->
+    <div class="fila-revision subtitulo-revision" style="grid-row: span 3; grid-column: 1 / 2;">
+      Identificación del ambiente de aprendizaje
+    </div>
+    <div class="fila-revision celda-titulo">Localización:</div>
+    <div class="fila-revision celda-valor" style="grid-column: 3 / 5;">{{ reporte.localizacion }}</div>
+
+    <div class="fila-revision celda-titulo">Denominación:</div>
+    <div class="fila-revision celda-valor" style="grid-column: 3 / 5;">{{ reporte.denominacion }}</div>
+
+    <div class="fila-revision celda-titulo">Tipo de Ambiente:</div>
+    <div class="fila-revision celda-valor" style="grid-column: 3 / 5;">
+      <div class="casillas-revision">
+        <div class="casilla">
+          <span>Interno:</span>
+          <div class="checkbox-custom">
+            {% if reporte.tipo == 'Interno' %}
+              <span class="x-marcada">X</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="casilla">
+          <span>Externo:</span>
+          <div class="checkbox-custom">
+            {% if reporte.tipo == 'Externo' %}
+              <span class="x-marcada">X</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <h2 class="titulo-detalle">2. IDENTIFICACIÓN DE NOVEDADES</h2>
+  <table class="tabla-novedades">
+    <thead>
+      <tr>
+        <th class="encabezado-novedad">TIPO DE NOVEDAD</th>
+        <th class="encabezado-novedad">DETALLE DE NOVEDAD</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Ambiente, aula o laboratorio</td><td>{{ novedad.nov_ambiente }}</td></tr>
+      <tr><td>Equipos, máquinas y mobiliario</td><td>{{ novedad.nov_equipos }}</td></tr>
+      <tr><td>Materiales de formación</td><td>{{ novedad.nov_materiales }}</td></tr>
+      <tr><td>Biblioteca y bibliografía</td><td>{{ novedad.nov_biblioteca }}</td></tr>
+      <tr>
+        <td colspan="2" class="celda-viabilidad">
+          <span class="texto-viabilidad">DECISIÓN SOBRE LA VIABILIDAD DE USO DEL AMBIENTE:</span>
+          <span class="casilla-inline">
+            Apto:
+            <span class="checkbox-custom">
+              {% if novedad.decision_ambiente == 'Apto' %}
+                <span class="x-marcada">X</span>
+              {% else %}
+                <span style="visibility: hidden;">X</span>
+              {% endif %}
+            </span>
+          </span>
+          <span class="casilla-inline">
+            No apto:
+            <span class="checkbox-custom">
+              {% if novedad.decision_ambiente == 'No apto' %}
+                <span class="x-marcada">X</span>
+              {% else %}
+                <span style="visibility: hidden;">X</span>
+              {% endif %}
+            </span>
+          </span>
+        </td>
+      </tr>
+      <tr><td>Ciudad:</td><td>{{ novedad.ciudad }}</td></tr>
+    </tbody>
+  </table>
+
+  <form method="POST" action="{{ url_for('guardar_revision', id_reporte=reporte.id) }}">
+    {% if csrf_token %}
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% endif %}
+    <label for="ciudad">Ciudad del coordinador:</label>
+    <input type="text" name="ciudad" id="ciudad" required class="form-control">
+    <button type="submit" class="btn btn-success mt-2">
+      <i class="fa-solid fa-check"></i> Guardar revisión
+    </button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+Flask==2.3.3
+psycopg2-binary
+flask-wtf
+pdfkit
+Pillow
+python-dotenv
+gunicorn
+Werkzeug

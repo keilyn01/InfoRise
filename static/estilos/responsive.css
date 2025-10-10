@@ -1,0 +1,462 @@
+@media (max-width: 576px) {
+  html, body {
+    overflow-x: hidden;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* 📋 Formularios */
+  .formulario-reporte,
+  .formulario-configuracion,
+  form {
+    padding: 0 12px;
+    margin: 20px auto;
+  }
+
+  .formulario-reporte .btn,
+  .formulario-configuracion button,
+  form .btn-success {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-top: 10px !important;
+  }
+
+  .form-nombrar {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .form-nombrar button {
+    width: 100% !important;
+  }
+
+  /* 📊 Tablas tipo Excel */
+  .tabla-reporte,
+  .tabla-revision,
+  .tabla-novedades,
+  .tabla-validacion {
+    display: block !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+    border: 1px solid #ccc !important;
+  }
+
+  .tabla-reporte td,
+  .tabla-revision td,
+  .tabla-novedades td,
+  .tabla-validacion td {
+    min-width: 120px !important;
+    white-space: nowrap !important;
+  }
+
+  .tabla-scroll {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  margin-bottom: 16px !important;
+}
+
+.table-usuarios {
+  width: 100% !important;
+  min-width: 700px !important;
+  border: 1px solid #ccc !important;
+  border-collapse: collapse !important;
+}
+
+.table-usuarios th,
+.table-usuarios td {
+  white-space: nowrap !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  text-align: left !important;
+}
+
+  /* 📄 Fila de reporte */
+  .fila-reporte {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 12px 16px !important;
+  }
+
+  .descargar-reporte .btn-descargar {
+    justify-content: flex-start !important;
+  }
+
+  /* 🧾 Modales */
+  .modal-nombrar {
+    width: 90% !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+    padding: 16px !important;
+    border-radius: 8px !important;
+  }
+
+  .modal-nombrar label {
+    font-size: 16px !important;
+  }
+
+  .modal-nombrar input {
+    font-size: 15px !important;
+  }
+
+  .botones-modal {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .botones-modal .btn {
+    width: 100% !important;
+  }
+
+  /* 📦 Casillas y opciones */
+  .casillas-ambiente,
+  .casillas-revision,
+  .casilla-inline {
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: flex-start !important;
+  }
+
+  .casilla {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  /* 📉 Cards resumen */
+  .resumen-card {
+    padding: 16px !important;
+    text-align: center !important;
+  }
+
+  .resumen-card .card-text {
+    font-size: 20px !important;
+  }
+
+  /* 📥 Botón de confirmación */
+  #btn-confirmar-eliminacion {
+    width: 100% !important;
+    justify-content: center !important;
+    font-size: 14px !important;
+    padding: 10px !important;
+  }
+
+  /* 📄 Footer */
+  .footer-principal,
+  .footer-inicio {
+    font-size: 13px !important;
+    padding: 8px 10px !important;
+  }
+
+  /* 🧾 Encabezado institucional */
+  .texto-institucional {
+    font-size: 14px !important;
+    text-align: center !important;
+    padding: 0 10px !important;
+  }
+
+  .titulo-detalle {
+    font-size: 20px !important;
+    margin-top: 40px !important;
+  }
+
+  /* 📍 Encabezado de tabla de reportes */
+  .encabezado-reportes {
+    display: none !important;
+  }
+
+  /* 👤 Botón de perfil */
+  .perfil-btn {
+    font-size: 16px !important;
+    padding: 6px 10px !important;
+    margin: 0 auto 12px auto !important;
+    border-radius: 6px !important;
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    border: 1px solid #ccc !important;
+    max-width: 90% !important;
+    display: block !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+
+  /* 👥 Submenú de cuentas */
+  .dropdown-submenu .dropdown-menu {
+    position: static !important;
+    margin-top: 8px !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+  }
+
+  .dropdown-submenu {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* 🧭 Filtros de reportes */
+  .filtro-fechas {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .filtro-fechas label {
+    font-size: 14px !important;
+  }
+
+  .filtro-fechas input {
+    width: 100% !important;
+  }
+
+  .filtro-fechas button,
+  .filtro-fechas a {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* 📢 Flash messages */
+  .alert {
+    font-size: 14px !important;
+    padding: 10px !important;
+  }
+
+  /* 📱 Aviso para tablas */
+  .aviso-scroll {
+    font-size: 13px !important;
+    text-align: center !important;
+    margin-bottom: 8px !important;
+    color: #555 !important;
+  }
+
+  /* 📚 Sidebar centrado */
+  .sidebar {
+    padding: 20px 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .sidebar a {
+    width: 100% !important;
+    text-align: center !important;
+    margin-bottom: 12px !important;
+    font-size: 15px !important;
+  }
+
+  /* 📑 Selectores tipo documento, tipo usuario, etc. */
+select,
+.form-select,
+.form-control {
+  display: block !important;
+  width: calc(100% - 24px) !important;
+  max-width: 100% !important;
+  font-size: 15px !important;
+  padding: 10px 12px !important;
+  margin: 0 auto 16px auto !important;
+  box-sizing: border-box !important;
+  border-radius: 6px !important;
+  border: 1px solid #ccc !important;
+  background-color: #fff !important;
+  color: #212529 !important;
+  line-height: 1.4 !important;
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+}
+
+  label {
+    font-size: 14px !important;
+    margin-bottom: 4px !important;
+  }
+}
+
+.select2-container--default .select2-selection--single {
+  height: auto !important;
+  padding: 10px 12px !important;
+  font-size: 15px !important;
+  border-radius: 6px !important;
+  border: 1px solid #ccc !important;
+  background-color: #fff !important;
+  color: #212529 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+.select2-container--default .select2-results__option {
+  font-size: 15px !important;
+  padding: 8px 12px !important;
+}
+
+/* 🌙 Estilo para Select2 en modo oscuro */
+body.dark .select2-container--default .select2-selection--single {
+  background-color: #222 !important;
+  color: #f1f1f1 !important;
+  border: 1px solid #444 !important;
+}
+
+body.dark .select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #f1f1f1 !important;
+}
+
+body.dark .select2-container--default .select2-selection--single .select2-selection__arrow {
+  color: #f1f1f1 !important;
+}
+
+body.dark .select2-container--default .select2-results__option {
+  background-color: #222 !important;
+  color: #f1f1f1 !important;
+}
+
+body.dark .select2-container--default .select2-results__option--highlighted {
+  background-color: #444 !important;
+  color: #fff !important;
+}
+
+/* 🌞 Modo claro: Select2 personalizado */
+.select2-container--default .select2-selection--single {
+  background-color: #fff !important;
+  color: #212529 !important;
+  border: 1px solid #ccc !important;
+  border-radius: 6px !important;
+  padding: 10px 12px !important;
+  font-size: 15px !important;
+  height: auto !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #212529 !important;
+  line-height: 1.4 !important;
+  padding-left: 0 !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 100% !important;
+  right: 10px !important;
+}
+
+.select2-container--default .select2-results__option {
+  font-size: 15px !important;
+  padding: 8px 12px !important;
+  color: #212529 !important;
+}
+
+.select2-container--default .select2-results__option--highlighted {
+  background-color: #e9ecef !important;
+  color: #000 !important;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+textarea,
+.form-control {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  font-size: 15px !important;
+  padding: 10px 12px !important;
+  margin-bottom: 16px !important;
+  box-sizing: border-box !important;
+  border-radius: 6px !important;
+  border: 1px solid #ccc !important;
+  background-color: #fff !important;
+  color: #212529 !important;
+}
+
+/* 🌙 Modo oscuro: campos de entrada */
+body.dark input,
+body.dark textarea,
+body.dark select,
+body.dark .form-control,
+body.dark .form-select {
+  background-color: #222 !important;
+  color: #f1f1f1 !important;
+  border: 1px solid #444 !important;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: #aaa !important;
+}
+
+/* 📢 Ajuste de flash message */
+.alert {
+  font-size: 14px !important;
+  padding: 8px 12px !important;
+  margin-bottom: 12px !important;
+  border-radius: 6px !important;
+  box-sizing: border-box !important;
+  line-height: 1.4 !important;
+  max-width: 100% !important;
+  word-break: break-word !important;
+}
+
+/* 🌙 Modo oscuro: alerta */
+body.dark .alert {
+  background-color: #333 !important;
+  color: #f1f1f1 !important;
+  border: 1px solid #555 !important;
+}
+
+@media screen and (orientation: landscape) {
+  /* 📱 Estilos para modo horizontal en móviles */
+
+  .tabla-scroll {
+    max-height: 80vh !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px !important;
+  }
+
+  .table-usuarios {
+    min-width: 700px !important;
+    font-size: 15px !important;
+    border-collapse: collapse !important;
+  }
+
+  .table-usuarios th,
+  .table-usuarios td {
+    white-space: nowrap !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    text-align: left !important;
+  }
+
+  .btn-accion,
+  .btn-confirmar,
+  .btn-sm {
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+  }
+
+  .aviso-scroll::after {
+    content: "📱 Estás en modo horizontal. Desliza si es necesario.";
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  .modal-nombrar {
+    max-width: 90% !important;
+    margin: auto !important;
+  }
+
+  .form-control,
+  .form-select {
+    font-size: 15px !important;
+    padding: 10px 12px !important;
+  }
+
+  .alert {
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+  }
+}

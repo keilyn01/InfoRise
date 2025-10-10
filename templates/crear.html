@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block titulo %}Creación de reportes{% endblock %}
+
+{% block contenido %}
+  <div class="container mt-5">
+    <h1 class="titulo-formulario">Creación de reporte</h1>
+
+    <form class="formulario-reporte" action="/Inforise/crear" method="POST">
+     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      
+      <div class="form-group mb-3">
+        <label for="nombre_reporte">Nombre del reporte:</label>
+        <input type="text" class="form-control" id="nombre_reporte" name="nombre_reporte" placeholder="Opcional">
+      </div>
+
+      <!-- Regional con valor por defecto -->
+      <div class="form-group mb-3">
+        <label for="regional">Regional:</label>
+        <input type="text" class="form-control" id="regional" name="regional" value=ATLANTICO>
+      </div>
+
+      <!-- Centro de formación -->
+      <div class="form-group mb-3">
+        <label for="centro_de_formacion">Centro de formación:</label>
+        <select class="form-select" id="centro_de_formacion" name="centro_de_formacion" required>
+          <option value="">Selecciona tu centro</option>
+          {% for centro in centros %}
+            <option value="{{ centro[0] }}">{{ centro[1] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+          <!-- Programa de formación -->
+<div class="form-group mb-3">
+  <label for="programa">Programa de formación:</label>
+  <select class="form-select" id="programa" name="programa" required>
+    <option value="">Selecciona tu programa</option>
+    {% for programa in programas %}
+      <option value="{{ programa[0] }}" data-codigo="{{ programa[2] }}">{{ programa[1] }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<!-- Código del programa -->
+<div class="form-group mb-3">
+  <label for="codigo">Código del Programa:</label>
+  <input type="text" class="form-control" id="codigo" name="codigo" required>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const selectPrograma = document.getElementById('programa');
+  const inputCodigo = document.getElementById('codigo');
+  selectPrograma.addEventListener('change', function() {
+    const selectedOption = selectPrograma.options[selectPrograma.selectedIndex];
+    const codigo = selectedOption.getAttribute('data-codigo') || '';
+    inputCodigo.value = codigo;
+  });
+});
+</script>
+
+      <h2 class="subtitulo-reporte">Identificación del ambiente de aprendizaje</h2>
+      <!-- Localización del ambiente -->
+      <div class="form-group mb-3">
+        <label for="localizacion">Localización del ambiente:</label>
+        <input type="text" class="form-control" id="localizacion" name="localizacion" required>
+      </div>
+
+      <!-- Denominación del ambiente -->
+      <div class="form-group mb-3">
+        <label for="denominacion">Denominación del ambiente:</label>
+        <input type="text" class="form-control" id="denominacion" name="denominacion" required>
+      </div>
+
+      <!-- Tipo de ambiente -->
+<div class="form-group mb-3">
+  <label class="mb-2">Tipo de ambiente:</label>
+  <div class="tipo-opciones">
+    {% for tipo in tipos %}
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipo" id="tipo_{{ loop.index }}" value="{{ tipo }}" required>
+        <label class="form-check-label" for="tipo_{{ loop.index }}">{{ tipo }}</label>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+      <!-- Botones -->
+      <div class="d-flex justify-content-between mt-4">
+        <button type="submit" class="btn btn-primary">Crear reporte</button>
+        
+      </div>
+    </form>         
+  </div>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const camposMayuscula = ['regional', 'localizacion', 'denominacion'];
+
+  camposMayuscula.forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+      });
+    }
+  });
+});
+</script>
+{% endblock %}

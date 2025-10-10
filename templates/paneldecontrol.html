@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block titulo %}Panel de Control{% endblock %}
+
+{% block contenido %}
+<div class="container">
+  <h1 class="titulo-pagina mt-5">Panel de Control</h1>
+
+  <!-- 🔔 Tarjetas resumen -->
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <div class="card resumen-card">
+        <div class="card-body">
+          <h5 class="card-title">Usuarios activos</h5>
+          <p class="card-text">{{ total_usuarios_activos }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card resumen-card">
+        <div class="card-body">
+          <h5 class="card-title">Usuarios eliminables</h5>
+          <p class="card-text">{{ total_usuarios_eliminables }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card resumen-card">
+        <div class="card-body">
+          <h5 class="card-title">Reportes enviados</h5>
+          <p class="card-text">{{ total_reportes_enviados }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card resumen-card">
+        <div class="card-body">
+          <h5 class="card-title">Reportes no revisados</h5>
+          <p class="card-text">{{ total_reportes_pendientes }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card resumen-card">
+        <div class="card-body">
+          <h5 class="card-title">Reportes revisados</h5>
+          <p class="card-text">{{ total_reportes_revisados }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📊 Gráfico de usuarios -->
+  <div class="row mt-5">
+    <div class="col-md-4 offset-md-4">
+      <div class="card resumen-card">
+        <div class="card-body text-center">
+          <h5 class="card-title">Distribución de usuarios</h5>
+          <canvas id="graficoUsuarios" style="max-width: 250px; margin: auto;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 📈 Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const totalActivos = Number("{{ total_usuarios_activos }}");
+    const totalEliminables = Number("{{ total_usuarios_eliminables }}");
+
+    const ctx = document.getElementById('graficoUsuarios').getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Activos', 'Eliminables'],
+        datasets: [{
+          data: [totalActivos, totalEliminables],
+          backgroundColor: ['#4caf50', '#f44336'],
+          borderColor: '#fff',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            align: 'start', // ✅ fuerza alineación horizontal
+            labels: {
+              color: '#b0b0b0', // ✅ gris neutro compatible con ambos modos
+              boxWidth: 20,
+              padding: 15,
+              font: {
+                size: 14,
+                weight: 'bold'
+              }
+            }
+          },
+          tooltip: {
+            backgroundColor: '#ffffff',
+            titleColor: '#000000',
+            bodyColor: '#000000',
+            borderColor: '#ccc',
+            borderWidth: 1
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

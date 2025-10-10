@@ -1,0 +1,27 @@
+# 🔐 Archivos sensibles
+.env
+config.py
+
+# 🗃️ Base de datos exportada desde pgAdmin
+*.sql
+base_datos/
+
+# 🗃️ Base de datos local (si usas SQLite para pruebas)
+*.db
+
+# 🐍 Archivos temporales de Python
+__pycache__/
+*.pyc
+
+# 🧪 Entornos virtuales
+venv/
+env/
+
+# 🧠 Archivos de configuración del editor
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 📦 Archivos de paquetes o dependencias
+*.egg-info/
+*.log

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block titulo %}Inicio Admin{% endblock %}
+
+{% block contenido %}
+<section class="encabezado-completo">
+  <h1>InfoRise</h1>
+  <div class="logo-centro">
+    <img src="{{ url_for('static', filename='logosena.png') }}" alt="Logo SENA">
+  </div>
+  <p class="descripcion">
+    Aplicación web para gestionar los reportes de ambiente en las instituciones articuladas con el SENA, con el propósito de digitalizar la información, mejorar el seguimiento de los reportes y responder de una forma más sencilla ante necesidades de mantenimiento o mejoras de los ambientes de formación.
+  </p>
+</section>
+<div class="footer-inicio text-center mt-5">
+       <hr>
+       <small>© 2025 Todos los derechos reservados – SENA | Contacto: <a href="mailto:inforise.sena@gmail.com">inforise.sena@gmail.com</a></small>
+</div>
+
+{% endblock %}

@@ -1,0 +1,214 @@
+/* 📄 Tipografía y márgenes generales */
+body {
+  font-family: Arial, sans-serif;
+  font-size: 12pt;
+  margin: 40px;
+  color: #000;
+}
+
+/* 🏛️ Encabezado institucional persistente */
+.encabezado-pdf {
+  position: running(header);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.encabezado-pdf img {
+  max-height: 80px;
+  margin-bottom: 10px;
+}
+
+/* 📌 Texto institucional debajo del logo */
+.texto-institucional {
+  text-align: center;
+  font-weight: bold;
+  line-height: 1.4;
+  font-size: 11pt;
+  margin-bottom: 20px;
+}
+
+/* Repetir encabezado en cada página */
+@page {
+  margin: 40px;
+  @top-center {
+    content: element(header);
+  }
+}
+
+/* 🟩 Títulos de sección */
+.titulo-detalle {
+  font-weight: bold;
+  font-size: 12pt;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  text-align: center;
+  text-transform: uppercase;
+  
+}
+
+.encabezado-novedad {
+  background-color: #e0e0e0;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+}
+
+/* 🧾 Tablas generales */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #000;
+  padding: 6px 8px;
+  font-size: 11pt;
+  vertical-align: middle;
+}
+
+/* 🧾 Tabla de información general */
+.celda-titulo {
+  background-color: #e0e0e0;
+
+}
+
+.celda-valor {
+  background-color: #fff;
+}
+
+.subtitulo-ambiente {
+  background-color: #e0e0e0;
+  text-align: center;
+  color: #000;
+}
+
+/* ✅ Casillas tipo checkbox con X */
+.casillas-linea {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.casillas-ambiente {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11pt;
+}
+
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.x-marcada {
+  font-size: 11pt;
+  font-weight: bold;
+  color: #000;
+}
+
+/* 🧾 DECISIÓN SOBRE LA VIABILIDAD */
+.texto-viabilidad {
+  
+  font-size: 11pt;
+  margin: 0;
+  padding: 0;
+  color: #000;
+  border: none;
+  background: none;
+}
+
+/* ✍️ Tabla de validación y firma */
+.tabla-validacion td:first-child {
+  background-color: #e0e0e0;
+  
+}
+
+.celda-firma-titulo {
+  background-color: #e0e0e0;
+  color: #000;
+  
+  padding: 6px 8px;
+}
+
+.nombre-firma {
+  margin-top: 24px; /* Aproximadamente tres líneas de espacio */
+}
+
+.tabla-validacion td img {
+  max-height: 80px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.text-muted {
+  color: #666;
+  font-style: italic;
+}
+
+.celda-viabilidad {
+  padding: 12px 8px;
+  border: 1px solid #000;
+  background-color: #fff;
+  font-size: 11pt;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.texto-viabilidad {
+  
+  margin-right: 20px;
+}
+
+.casilla-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 30px;
+}
+
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 1px solid #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.x-marcada {
+  font-size: 11pt;
+  font-weight: bold;
+  color: #000;
+}
+
+.celda-fecha-ciudad {
+  font-size: 11pt;
+  line-height: 1.6;
+  text-align: left;
+  vertical-align: middle;
+  padding: 6px 8px;
+  border: 1px solid #000;
+}
+
+.celda-fecha-ciudad .ciudad {
+  display: block;
+  margin-top: 4px;
+  font-size: 10.5pt;
+}
+
+

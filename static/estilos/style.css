@@ -1,0 +1,2726 @@
+/* 🌐 Fuente principal */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    transition: all 1.5s ease;
+    background-color: #ffffff;
+    color: #0d0d0d;
+}
+
+body.dark {
+    background-color: #0e0d0d;
+    color: #ffffff;
+}
+
+body.dark .encabezado-completo {
+    background-color: #0d0d0d;
+    color: #ffffff;
+}
+
+body.dark .descripcion {
+    color: #e0e0e0;
+}
+
+body.dark nav,
+body.dark .sidebar {
+    background-color: #16aa0b;
+}
+
+body.dark nav a,
+body.dark .sidebar a {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+body.dark nav a:hover,
+body.dark .sidebar a:hover {
+    background-color: #038001;
+    color: #ffffff;
+}
+
+body.dark #label_toggle {
+    color: #ffffff;
+}
+
+body.dark #label_toggle i.fa-sun {
+    color: #ffeb3b;
+}
+
+/* 🌙 Toggle modo oscuro */
+#toggle {
+    display: none;
+}
+
+#label_toggle {
+    font-size: 1.6em;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 5px 15px;
+    border-radius: 30px;
+    transition: background-color 0.3s ease; 
+    display: inline-block;
+    margin: 0 5px;
+}
+
+/* Hover en modo oscuro */
+body.dark #label_toggle:hover {
+    background-color: #038001;
+    color: #ffffff;
+}
+
+/* Hover en modo claro */
+body:not(.dark) #label_toggle:hover {
+    background-color: #0c791e;
+    color: #ffffff;
+}
+
+/*Encabezado*/
+header {
+    background-color: #38aa16;
+    text-align: left;
+    padding: 0.25rem 1.5rem 0.25rem 1rem;
+    transition: all 1.5s ease;
+    font-size: 18px;
+    z-index: 200;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-bottom: 1px solid #2e7d0d;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 45px;
+    transition: all 1.5s ease;
+    width: 100%;
+}
+
+.nav-izquierda,
+.nav-derecha {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.nav-izquierda a:first-child {
+    margin-left: 85px; 
+}
+
+.nav-derecha a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header nav a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 5px 15px;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin: 0 5px;
+}
+
+header nav a:hover {
+    background-color: #0c791e;
+    color: #fff;
+}
+
+header nav i {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.nav-derecha a i.fa-bell {
+    font-size: 22px;
+    color: #ffffff;
+    transition: transform 0.3s ease;
+}
+
+.nav-derecha a i.fa-bell:hover {
+    transform: scale(1.15);
+    color: #ffeb3b;
+}
+
+/* 🧩 Encabezado principal */
+.encabezado-completo {
+    text-align: center;
+    padding: 100px 25px 40px;
+    background-color: #ffffff;
+    color: #0d0d0d;
+    transition: all 1.5s ease;
+}
+
+.encabezado-completo h1 {
+    font-size: 40px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
+
+.logo-centro img {
+    height: 140px;
+    width: auto;
+    margin-bottom: 30px;
+}
+
+.descripcion {
+    max-width: 850px;
+    margin: 0 auto;
+    text-align: justify;
+    font-size: 21px;
+    line-height: 1.6;
+    transition: all 1.5s ease;
+}
+
+/* Sidebar y menú hamburguesa */
+#menu-toggle {
+    display: none;
+}
+
+.menu-icon {
+    font-size: 25px;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #38aa16;
+    color: #ffffff;
+    position: fixed;
+    top: 11px;
+    left: 45px;
+    z-index: 201;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 40%;
+}
+
+.menu-icon::before {
+    content: "\2630"; /* ☰ */
+    font-size: 25px;
+}
+
+#menu-toggle:checked + .menu-icon::before {
+    content: "\2715"; /* ✕ */
+}
+
+.sidebar {
+    height: 100%;
+    width: 150px;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    background-color: #38aa16;
+    overflow-x: hidden;
+    transition: .5s;
+    padding-top: 60px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; 
+    justify-content: center;
+}
+
+/* ✅ Sidebar: corrección de hover y sombra */
+.sidebar a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 17px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+    width: 100%;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin: 0;
+    border-radius: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar a i {
+    font-size: 30px;
+    margin-bottom: 4px;
+    transition: transform 0.3s ease;
+}
+
+/* 🎯 Ajuste visual para opciones de Admin con texto largo */
+.sidebar a.admin-opcion {
+  font-size: 17px;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+
+.sidebar a.admin-opcion i {
+  font-size: 30px;
+  margin-bottom: 4px;
+}
+
+.sidebar a:hover {
+    background-color: #038001;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transform: scale(1.02);
+}
+
+.sidebar a:hover i {
+    transform: scale(1.1);
+}
+
+#menu-toggle:checked + .menu-icon + .sidebar {
+    left: 0;
+}
+
+@media (max-width: 768px) {
+  nav {
+    padding: 0 25px;
+  }
+
+  .menu-icon {
+    left: 25px;
+  }
+}
+
+/* 📏 Uniformidad visual entre dropdown y campos */
+.dropdown-toggle {
+  height: 45px;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #0d0d0d;
+  border: 1px solid #ced4da;
+  box-shadow: none;
+  width: 100%;
+  text-align: left;
+}
+
+.dropdown-menu {
+  width: 100% !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 🌙 Modo oscuro */
+body.dark .dropdown-toggle {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+body.dark .dropdown-menu {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+body.dark .dropdown-item {
+  color: #ffffff;
+}
+
+body.dark .dropdown-item:hover {
+  background-color: #333;
+}
+
+
+/* ✅ Eliminar borde azul al enfocar campos */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #38aa16;
+  box-shadow: none;
+}
+
+body.dark input:focus,
+body.dark select:focus,
+body.dark textarea:focus {
+  outline: none;
+  border-color: #888;
+  box-shadow: none;
+}
+
+/* 🧭 Contenedor centrado para login */
+.login-container {
+  max-width: 400px;
+  margin: 140px auto 60px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  transition: all 1.5s ease;
+}
+
+.login-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #38aa16;
+}
+
+body.dark .login-container h1 {
+  color: #ffffff;
+}
+
+/* 🌙 Estilo para inputs en modo oscuro */
+body.dark .login-container input[type="text"],
+body.dark .login-container input[type="password"] {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #555;
+  padding: 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+/* ✅ Eliminar borde azul al enfocar campos */
+.login-container input[type="text"]:focus,
+.login-container input[type="password"]:focus {
+  outline: none;
+  border-color: #38aa16;
+  box-shadow: none;
+}
+
+body.dark .login-container input[type="text"]:focus,
+body.dark .login-container input[type="password"]:focus {
+  outline: none;
+  border-color: #888;
+  box-shadow: none;
+}
+
+/* 📋 Estilos para el formulario de registro */
+.formulario-registro {
+  max-width: 600px;
+  margin: 40px auto 60px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: all 1.5s ease;
+}
+
+body.dark .formulario-registro {
+  background: none;
+  box-shadow: none;
+}
+
+.formulario-registro label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: #0d0d0d;
+  transition: color 1.5s ease;
+}
+
+body.dark .formulario-registro label {
+  color: #ffffff;
+}
+
+.formulario-registro input,
+.formulario-registro select {
+  height: 45px;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 1px solid #38aa16;
+  border-radius: 4px;
+  background-color: transparent;
+  color: inherit;
+  transition: border-color 0.3s ease;
+  outline: none;
+}
+
+body.dark .formulario-registro input,
+body.dark .formulario-registro select {
+  border: 1px solid #555;
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* ✅ Eliminar borde azul al enfocar campos */
+.formulario-registro input:focus,
+.formulario-registro select:focus {
+  outline: none;
+  border-color: #38aa16;
+  box-shadow: none;
+}
+
+body.dark .formulario-registro input:focus,
+body.dark .formulario-registro select:focus {
+  outline: none;
+  border-color: #888;
+  box-shadow: none;
+}
+
+body.dark select option {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* ✅ Hover en opciones de select */
+select option:hover {
+  background-color: #f0f0f0;
+  color: #0d0d0d;
+}
+
+body.dark select option:hover {
+  background-color: #2e2e2e;
+  color: #ffffff;
+}
+
+.formulario-registro input::placeholder {
+  color: #999999;
+}
+
+body.dark .formulario-registro input::placeholder {
+  color: #bbbbbb;
+}
+
+/* 🖼️ Vista previa de firma */
+#preview-firma {
+  max-width: 300px;
+  margin-top: 10px;
+  display: none;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: all 1.5s ease;
+}
+
+body.dark #preview-firma {
+  border: 1px solid #555;
+}
+
+.formulario-registro input[type="file"]::file-selector-button {
+  background-color: #e0e0e0;
+  color: #0d0d0d;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark .formulario-registro input[type="file"]::file-selector-button {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  border: 1px solid #555 !important;
+}
+
+body.dark .formulario-registro input[type="file"]::file-selector-button:hover,
+body.dark .formulario-registro input[type="file"]::file-selector-button:active {
+  background-color: #444 !important;
+  color: #ffffff !important;
+}
+
+.form-text.text-muted {
+  color: #0d0d0d;
+  font-size: 15px;
+  margin-top: 5px;
+}
+
+body.dark .form-text.text-muted {
+  color: #ffffff !important;
+}
+
+/* 🟢 Botón de acción unificado */
+.btn-login,
+.formulario-registro button[type="submit"] {
+  padding: 12px 24px;
+  background-color: #38aa16;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+  width: auto;
+  margin-top: 20px;
+  align-self: flex-start;
+}
+
+body.dark .formulario-registro button[type="submit"] {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+.btn-login:hover,
+.formulario-registro button[type="submit"]:hover {
+  background-color: #2e8c12;
+}
+
+body.dark .btn-login,
+body.dark .formulario-registro button[type="submit"] {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+body.dark .btn-login:hover,
+body.dark .formulario-registro button[type="submit"]:hover {
+  background-color: #388e3c;
+}
+
+/* 📝 Título principal de registrarse.html */
+.titulo-formulario {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 160px;
+  margin-bottom: 10px;
+  color: #38aa16;
+  transition: all 1.5s ease;
+}
+
+body.dark .titulo-formulario {
+  color: #ffffff;
+}
+
+/* 📁 Campo de archivo */
+.formulario-registro input[type="file"].form-control {
+  background-color: transparent;
+  color: #0d0d0d;
+  border: none;
+  border-bottom: 2px solid #38aa16;
+  padding: 10px 0;
+  font-size: 16px;
+  transition: all 1.5s ease;
+}
+
+body.dark .formulario-registro input[type="file"].form-control {
+  border-bottom: 2px solid #ffffff;
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* 🌙 Botón interno del input file */
+.formulario-registro input[type="file"]::file-selector-button {
+  background-color: #e0e0e0;
+  color: #0d0d0d;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.formulario-registro input[type="file"]::file-selector-button:hover {
+  background-color: #cccccc;
+}
+
+body.dark .formulario-registro input[type="file"]::file-selector-button {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #555;
+}
+
+/* ✅ Evitar fondo blanco al presionar botón en modo oscuro */
+body.dark .formulario-registro input[type="file"]::file-selector-button:active {
+  background-color: #444;
+  color: #ffffff;
+}
+
+body.dark .formulario-registro input[type="file"]::file-selector-button:hover {
+  background-color: #444;
+}
+
+
+/* 🧾 Estilo minimalista para el formulario de creación de reportes */
+.formulario-reporte {
+  max-width: 700px;
+  margin: 60px auto;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: all 1.5s ease;
+}
+
+body.dark .formulario-reporte {
+  background: none;
+  box-shadow: none;
+}
+
+.formulario-reporte label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: #0d0d0d;
+  transition: color 1.5s ease;
+}
+
+body.dark .formulario-reporte label {
+  color: #ffffff;
+}
+
+.formulario-reporte input,
+.formulario-reporte select {
+  height: 45px;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 1px solid #38aa16;
+  border-radius: 4px;
+  background-color: transparent;
+  color: inherit;
+  transition: border-color 0.3s ease;
+  outline: none;
+}
+
+body.dark .formulario-reporte input,
+body.dark .formulario-reporte select {
+  border: 1px solid #555;
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* ✅ Eliminar borde azul al enfocar campos */
+.formulario-reporte input:focus,
+.formulario-reporte select:focus {
+  outline: none;
+  border-color: #38aa16;
+  box-shadow: none;
+}
+
+body.dark .formulario-reporte input:focus,
+body.dark .formulario-reporte select:focus {
+  outline: none;
+  border-color: #888;
+  box-shadow: none;
+}
+
+body.dark .formulario-reporte select option {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* ✅ Hover en opciones de select */
+.formulario-reporte select option:hover {
+  background-color: #f0f0f0;
+  color: #0d0d0d;
+}
+
+body.dark .formulario-reporte select option:hover {
+  background-color: #2e2e2e;
+  color: #ffffff;
+}
+
+.formulario-reporte input::placeholder {
+  color: #999999;
+}
+
+body.dark .formulario-reporte input::placeholder {
+  color: #bbbbbb;
+}
+
+/* 🟢 Botones del formulario */
+.formulario-reporte .btn {
+  padding: 12px 24px;
+  font-weight: 600;
+  border-radius: 25px;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.formulario-reporte .btn-primary {
+  background-color: #38aa16;
+  color: white;
+}
+
+.formulario-reporte .btn-primary:hover {
+  background-color: #2e8c12;
+}
+
+.formulario-reporte .btn-secondary {
+  background-color: #cccccc;
+  color: #0d0d0d;
+}
+
+.formulario-reporte .btn-secondary:hover {
+  background-color: #aaaaaa;
+}
+
+body.dark .formulario-reporte .btn-primary {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+body.dark .formulario-reporte .btn-primary:hover {
+  background-color: #388e3c;
+}
+
+body.dark .formulario-reporte .btn-secondary {
+  background-color: #444;
+  color: #ffffff;
+}
+
+body.dark .formulario-reporte .btn-secondary:hover {
+  background-color: #666;
+}
+
+/* 📝 Título del formulario de reportes */
+body.dark .formulario-reporte .titulo-formulario {
+  color: #ffffff;
+}
+
+.subtitulo-reporte {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #38aa16;
+  transition: all 1.5s ease;
+}
+
+body.dark .subtitulo-reporte {
+  color: #ffffff;
+}
+
+/* 🟩 Opciones tipo ambiente como casillas únicas con X */
+.tipo-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tipo-opciones .form-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tipo-opciones .form-check-input[type="radio"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #38aa16;
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+  background-color: transparent;
+  transition: border-color 0.3s ease;
+}
+
+.tipo-opciones .form-check-input[type="radio"]:checked::before {
+  content: "X";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: bold;
+  color: #38aa16;
+}
+
+.tipo-opciones .form-check-label {
+  font-weight: 500;
+  color: #0d0d0d;
+}
+
+body.dark .tipo-opciones .form-check-input[type="radio"] {
+  border-color: #888;
+}
+
+body.dark .tipo-opciones .form-check-input[type="radio"]:checked::before {
+  color: #4caf50;
+}
+
+body.dark .tipo-opciones .form-check-label {
+  color: #ffffff;
+}
+
+/* 🌐 Contenedor principal */
+.contenedor-reportes {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+  transition: all 1.5s ease;
+}
+
+body.dark .contenedor-reportes {
+  background: none;
+}
+
+/* 📝 Título */
+.titulo-pagina {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  padding-top: 100px;
+  margin-bottom: 40px;
+  color: #38aa16;
+}
+
+body.dark .titulo-pagina {
+  color: #ffffff;
+}
+
+/* 🟩 Botones de acción: Eliminar, Confirmar, Ordenar */
+.btn-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid #38aa16;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #0d0d0d;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-accion i {
+  font-size: 16px;
+  color: #0d0d0d;
+}
+
+.btn-accion:hover {
+  background-color: #f0fdf0;
+  border-color: #2e8c12;
+}
+
+body.dark .btn-accion {
+  background-color: #000000;
+  border: 1px solid #cccccc;
+  color: #ffffff;
+}
+
+body.dark .btn-accion i {
+  color: #ffffff;
+}
+
+body.dark .btn-accion:hover {
+  background-color: #1a1a1a;
+  border-color: #aaaaaa;
+}
+
+/* 📅 Filtro por fecha */
+.filtro-fechas {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+}
+
+.filtro-fechas label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+  display: block;
+  color: #0d0d0d;
+}
+
+body.dark .filtro-fechas label {
+  color: #ffffff;
+}
+
+.filtro-fechas input[type="date"] {
+  height: 34px;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #38aa16;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #0d0d0d;
+  width: 130px;
+}
+
+body.dark .filtro-fechas input[type="date"] {
+  border: 1px solid #cccccc;
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* 🌞 Modo claro */
+.encabezado-reportes,
+.fila-reporte {
+  border-bottom: 1px solid #ccc;
+  color: #0d0d0d;
+}
+
+body.dark .encabezado-reportes,
+body.dark .fila-reporte {
+  border-bottom: 1px solid #444;
+  color: #ffffff;
+}
+
+/* 🧾 Encabezado tipo Word */
+.encabezado-reportes {
+  display: grid;
+  grid-template-columns: 1fr 130px 100px 100px;
+  align-items: center;
+  padding: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  color: #0d0d0d;
+}
+
+body.dark .encabezado-reportes {
+  border-bottom: 1px solid #444;
+  color: #ffffff; /* ✅ Color uniforme para todos los títulos */
+}
+
+/* ✅ Asegura que todos los títulos tengan mismo peso, tamaño y color */
+.encabezado-reportes span {
+  font-weight: 600;
+  font-size: 16px;
+  color: inherit;
+  text-align: center;
+}
+
+/* 🌙 Corrección específica para el encabezado en modo oscuro */
+body.dark .encabezado-reportes .fecha-reporte {
+  color: #ffffff !important;     /* ✅ Igual que los demás títulos */
+  font-weight: 600 !important;   /* ✅ Mismo grosor que "Nombre", "Editar", etc. */
+  font-size: 16px !important;    /* ✅ Tamaño uniforme */
+}
+
+.encabezado-reportes .nombre-reporte {
+  text-align: left;
+  padding-left: 10px;
+}
+
+.encabezado-reportes .fecha-reporte,
+.encabezado-reportes .editar-reporte,
+.encabezado-reportes .descargar-reporte {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 📄 Fila de reporte */
+.fila-reporte {
+  display: grid;
+  grid-template-columns: 1fr 130px 100px 100px;
+  align-items: center;
+  padding: 10px;
+  gap: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.fila-reporte > div:nth-child(3),
+.fila-reporte > div:nth-child(4) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 📅 Fecha */
+.fecha-reporte {
+  font-size: 14px;
+  text-align: center;
+  width: 130px;
+}
+
+/* 🟢 Botones de acción */
+.btn-editar,
+.btn-descargar {
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-weight: 600;
+  border: none;
+  font-size: 14px;
+  background-color: #38aa16;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-left: 0; /* ✅ Alineación perfecta con encabezado */
+}
+
+.btn-editar i,
+.btn-descargar i {
+  color: #ffffff;
+  background-color: #38aa16;
+  border-radius: 4px;
+  padding: 6px;
+  font-size: 14px;
+  display: inline-block;
+  box-sizing: content-box;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+body.dark .btn-editar,
+body.dark .btn-descargar {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+body.dark .btn-editar i,
+body.dark .btn-descargar i {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+
+/* 📝 Formulario de nombrar reporte */
+.form-nombrar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.form-nombrar input[type="text"] {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #38aa16;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #0d0d0d;
+}
+
+body.dark .form-nombrar input[type="text"] {
+  border: 1px solid #555;
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.form-nombrar button {
+  padding: 6px 12px;
+  background-color: #38aa16;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.form-nombrar button:hover {
+  background-color: #2e8c12;
+}
+
+body.dark .form-nombrar button {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+body.dark .form-nombrar button:hover {
+  background-color: #388e3c;
+}
+
+/* Elimina subrayado azul del nombre */
+.nombre-reporte span {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Hover visual para toda la fila */
+.fila-reporte-link:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+body.dark .fila-reporte-link:hover {
+  background-color: #2a2a2a;
+}
+
+/* 📄 Contenedor principal */
+.detalle-reporte {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.titulo-detalle {
+  margin-top: 120px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #38aa16;
+  text-align: center;
+}
+
+body.dark .titulo-detalle {
+  color: #ffffff;
+}
+
+/* 🧾 Tabla estructurada tipo Excel */
+.tabla-reporte {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr 1.5fr; /* 4 columnas */
+  border: 1px solid #e9e8e8;
+  border-radius: 6px;
+  background-color: #fefefe;
+}
+
+body.dark .tabla-reporte {
+  border-color: #444;
+  background-color: #1a1a1a;
+}
+
+.fila-celda {
+  border: 1px solid #dddddd;
+  padding: 14px 16px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+body.dark .fila-celda {
+  border: 1px solid #444;
+}
+
+/* 🟫 Títulos */
+.celda-titulo {
+  background-color: #f0f0f0;
+  font-weight: 600;
+  color: #0d0d0d;
+}
+
+body.dark .celda-titulo {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+/* 🟦 Valores */
+.celda-valor {
+  background-color: #ffffff;
+  color: #333;
+}
+
+body.dark .celda-valor {
+  background-color: #1a1a1a;
+  color: #dddddd;
+}
+
+/* 🟩 Subtítulo de ambiente */
+.subtitulo-ambiente {
+  grid-row: span 3;
+  grid-column: 1 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  color: #38aa16;
+  font-weight: 700;
+  font-size: 15px;
+  border-top: 2px solid #ccc;
+  padding: 20px 16px;
+}
+
+body.dark .subtitulo-ambiente {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border-top: 2px solid #444;
+}
+
+/* 🟩 Casillas tipo checkbox con X */
+.casillas-ambiente {
+  display: flex;
+  gap: 40px;
+  margin-top: 8px;
+}
+
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #38aa16;
+  border-radius: 4px;
+  position: relative;
+}
+
+.x-marcada {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: bold;
+  color: #38aa16;
+}
+
+body.dark .checkbox-custom {
+  border-color: #4caf50;
+}
+
+body.dark .x-marcada {
+  color: #4caf50;
+}
+
+/* 📝 Formulario de novedades */
+.contenedor-novedades {
+  background-color: #fefefe;
+  padding: 7px;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+body.dark .contenedor-novedades {
+  background-color: #121212;
+  border-color: #444;
+}
+
+.titulo-novedades {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 50px;
+  color: #38aa16;
+  text-align: center;
+}
+
+body.dark .titulo-novedades {
+  color: #ffffff;
+}
+
+.formulario-reporte .form-group {
+  margin-bottom: 20px;
+}
+
+.formulario-reporte label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+  display: block;
+  color: #0d0d0d;
+}
+
+body.dark .formulario-reporte label {
+  color: #ffffff;
+}
+
+.formulario-reporte input,
+.formulario-reporte select,
+.formulario-reporte textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #38aa16;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #0d0d0d;
+}
+
+body.dark .formulario-reporte input,
+body.dark .formulario-reporte select,
+body.dark .formulario-reporte textarea {
+  border: 1px solid #555;
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* 🟢 Botón de envío */
+.formulario-reporte button {
+  padding: 8px 16px;
+  background-color: #38aa16;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.formulario-reporte button:hover {
+  background-color: #2e8c12;
+}
+
+body.dark .formulario-reporte button {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+body.dark .formulario-reporte button:hover {
+  background-color: #388e3c;
+}
+
+/* 🟩 Casillas visuales tipo radio con X */
+.casillas-ambiente {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.casilla-radio {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.casilla-radio input[type="radio"] {
+  appearance: none;
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.casilla-visual {
+  padding: 6px 12px;
+  border: 2px solid #38aa16;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+  min-width: 80px;
+  text-align: center;
+  color: #0d0d0d;
+}
+
+.casilla-radio input[type="radio"]:checked + .casilla-visual::after {
+  content: "X";
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  font-weight: bold;
+  color: #38aa16;
+}
+
+body.dark .casilla-visual {
+  border-color: #4caf50;
+  color: #ffffff;
+}
+
+body.dark .casilla-radio input[type="radio"]:checked + .casilla-visual::after {
+  color: #4caf50;
+}
+
+.input-ciudad {
+  max-width: 250px;
+  min-width: 120px;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  display: block;
+}
+
+.fila-celda {
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.btn-enviar {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.btn-enviar:hover {
+  background-color: #0b5ed7;
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  right: 100%;
+  left: auto;
+  margin-right: 0.5rem;
+  min-width: 220px;
+  display: none;
+  z-index: 1050;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+}
+
+/* 🧩 Contenedor del formulario de configuración */
+.container .formulario-configuracion {
+  max-width: 720px;
+  margin: 40px auto 30px auto;
+  padding: 0 20px;
+}
+
+body.dark .formulario-configuracion {
+  background-color: transparent;
+  border: none;
+}
+
+/* 🟢 Título */
+.container h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 120px; /* ← este es el que baja el título */
+  margin-bottom: 30px;
+  color: #38aa16;
+  text-align: center;
+}
+
+body.dark .container h2 {
+  color: #ffffff;
+}
+
+/* 📝 Campos del formulario */
+.formulario-configuracion .form-group {
+  margin-bottom: 20px;
+}
+
+.formulario-configuracion label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+  display: block;
+  color: #0d0d0d;
+}
+
+body.dark .formulario-configuracion label {
+  color: #ffffff;
+}
+
+.formulario-configuracion input,
+.formulario-configuracion select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #38aa16;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #0d0d0d;
+}
+
+body.dark .formulario-configuracion input,
+body.dark .formulario-configuracion select {
+  border: 1px solid #555;
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* 🖼️ Firma digital */
+.formulario-configuracion img {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  max-height: 100px;
+  margin-top: 8px;
+}
+
+body.dark .formulario-configuracion img {
+  border-color: #666;
+}
+
+/* ✅ Botón de guardar */
+.formulario-configuracion button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #38aa16;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.formulario-configuracion button[type="submit"]:hover {
+  background-color: #2e8c12;
+}
+
+body.dark .formulario-configuracion button[type="submit"] {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+body.dark .formulario-configuracion button[type="submit"]:hover {
+  background-color: #388e3c;
+}
+
+.perfil-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #000000;
+  font-weight: bold;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  transition: transform 0.3s ease;
+}
+
+.perfil-btn:hover {
+  transform: scale(1.05);
+}
+
+.dropdown-menu {
+  background-color: #0c791e !important; /* Verde del header */
+  border: none;
+  border-radius: 10px;
+}
+
+.dropdown-menu .dropdown-item,
+.dropdown-menu .btn {
+  color: #ffffff !important;
+  background-color: transparent;
+  font-weight: 600;
+  border: none;
+  text-align: left;
+}
+
+.dropdown-menu .dropdown-item i,
+.dropdown-menu .btn i {
+  color: #ffffff !important;
+  margin-right: 8px;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.perfil-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #000000;
+  font-weight: bold;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: transform 0.3s ease;
+}
+
+.perfil-btn:hover {
+  transform: scale(1.05);
+}
+
+.dropdown-menu {
+  background-color: #38aa16 !important;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.dropdown-menu .dropdown-item,
+.dropdown-menu .btn {
+  color: #ffffff !important;
+  background-color: transparent;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+   text-align: left; /* 👈 Asegura que el texto no se centre */
+  width: 100%;       /* 👈 Evita que se reduzca el ancho y se centre */
+  justify-content: flex-start; /* 👈 Alinea ícono + texto a la izquierda */
+}
+
+
+.dropdown-menu .dropdown-item i,
+.dropdown-menu .btn i {
+  color: #ffffff !important;
+  font-size: 16px;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .btn:hover {
+  background-color: #0a5f14;
+  color: #ffffff;
+}
+
+.dropdown-menu hr {
+  border-top: 1px solid #ffffff;
+  opacity: 0.3;
+  margin: 8px 0;
+}
+
+.dropdown-menu strong {
+  color: #ffffff;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: block;
+}
+
+input#nombre,
+input#apellido {
+  text-transform: uppercase;
+}
+
+/* 📄 Contenedor principal */
+.detalle-revision {
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 40px 20px;
+}
+
+/* 🟩 Título institucional */
+.titulo-detalle {
+  margin-bottom: 40px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #38aa16;
+  text-align: center;
+}
+
+body.dark .titulo-detalle {
+  color: #ffffff;
+}
+
+/* 🧾 Tabla tipo Excel con grid */
+.tabla-revision {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr 1.5fr;
+  border: 1px solid #e9e8e8;
+  border-radius: 6px;
+  background-color: #fefefe;
+  margin-bottom: 40px;
+}
+
+body.dark .tabla-revision {
+  border-color: #444;
+  background-color: #1a1a1a;
+}
+
+.fila-revision {
+  border: 1px solid #dddddd;
+  padding: 14px 16px;
+  font-size: 14px;
+  box-sizing: border-box;
+  text-align: justify;
+}
+
+body.dark .fila-revision {
+  border: 1px solid #444;
+}
+
+/* 🟫 Títulos */
+.celda-titulo {
+  background-color: #f0f0f0;
+  font-weight: 600;
+  color: #0d0d0d;
+}
+
+body.dark .celda-titulo {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+/* 🟦 Valores */
+.celda-valor {
+  background-color: #ffffff;
+  color: #333;
+}
+
+body.dark .celda-valor {
+  background-color: #1a1a1a;
+  color: #dddddd;
+}
+
+/* 🟩 Subtítulo de ambiente */
+.subtitulo-revision {
+  grid-row: span 3;
+  grid-column: 1 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  color: #38aa16;
+  font-weight: 700;
+  font-size: 15px;
+  border-top: 2px solid #ccc;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+body.dark .subtitulo-revision {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border-top: 2px solid #444;
+}
+
+/* ✅ Casillas tipo checkbox con X */
+.casillas-revision,
+.casilla-inline {
+  display: flex;
+  gap: 24px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #0d0d0d;
+}
+
+body.dark .casilla {
+  color: #ffffff;
+}
+
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #38aa16;
+  border-radius: 4px;
+  position: relative;
+  background-color: transparent;
+}
+
+body.dark .checkbox-custom {
+  border-color: #4caf50;
+}
+
+.x-marcada {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: bold;
+  color: #38aa16;
+}
+
+body.dark .x-marcada {
+  color: #4caf50;
+}
+
+/* 🧾 Tabla de novedades */
+.tabla-novedades {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #e9e8e8;
+  border-radius: 6px;
+  background-color: #fefefe;
+  margin: 40px auto;
+}
+
+body.dark .tabla-novedades {
+  border-color: #444;
+  background-color: #1a1a1a;
+}
+
+.tabla-novedades th,
+.tabla-novedades td {
+  border: 1px solid #dddddd;
+  padding: 14px 16px;
+  font-size: 14px;
+  text-align: justify;
+  vertical-align: top;
+}
+
+body.dark .tabla-novedades th,
+body.dark .tabla-novedades td {
+  border: 1px solid #444;
+}
+
+/* 🟨 Encabezados de novedades */
+.encabezado-novedad {
+  background-color: #f0f0f0;
+  font-weight: 600;
+  color: #0d0d0d;
+  text-align: center;
+}
+
+body.dark .encabezado-novedad {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+/* 🧾 Viabilidad */
+.celda-viabilidad {
+  padding: 20px;
+  font-size: 14px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  text-align: justify;
+}
+
+body.dark .celda-viabilidad {
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  color: #dddddd;
+}
+
+.texto-viabilidad {
+  font-weight: 600;
+  margin-right: 20px;
+  display: inline-block;
+  color: #0d0d0d;
+}
+
+body.dark .texto-viabilidad {
+  color: #ffffff;
+}
+
+/* ✍️ Formulario de revisión */
+form {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+form label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+  display: block;
+  color: #0d0d0d;
+}
+
+body.dark form label {
+  color: #ffffff;
+}
+
+form input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #38aa16;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #0d0d0d;
+}
+
+body.dark form input[type="text"] {
+  border: 1px solid #555;
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+/* 🟢 Botón de envío */
+form .btn-success {
+  padding: 8px 16px;
+  background-color: #38aa16;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+form .btn-success:hover {
+  background-color: #2e8c12;
+}
+
+body.dark form .btn-success {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+body.dark form .btn-success:hover {
+  background-color: #388e3c;
+}
+
+.modal-nombrar {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #38aa16;
+  border-radius: 8px;
+  z-index: 1000;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+}
+
+body.dark .modal-nombrar {
+  background-color: #1a1a1a;
+  color: #fff;
+  border-color: #4caf50;
+}
+
+.form-nombrar input[type="text"] {
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.botones-modal {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+  .btn-filtrar {
+    background: none;
+    border: none;
+    padding: 4px;
+    font-size: 16px;
+    color: #38aa16;
+  }
+
+  body.dark .btn-filtrar {
+    color: #4caf50;
+  }
+
+  /* Circulitos estilo galería */
+  .checkbox-eliminar {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%) scale(1.1);
+    accent-color: #dc3545;
+    transition: opacity 0.2s ease;
+  }
+
+  body.dark .checkbox-eliminar {
+    accent-color: #ff6b6b;
+  }
+
+  .fila-reporte {
+    position: relative;
+    padding-left: 40px; /* espacio para el circulito */
+    transition: padding-left 0.2s ease;
+  }
+
+  .fila-reporte:not(.seleccionable) .checkbox-eliminar {
+    display: none !important;
+  }
+
+  /* Ocultar botón de confirmación si no hay selección */
+  #btn-confirmar-eliminacion {
+    display: none;
+  }
+
+  #btn-confirmar-eliminacion.visible {
+    display: inline-block;
+  }
+
+  #btn-confirmar-eliminacion {
+  display: none;
+  font-size: 16px;
+  padding: 10px 17px; /* más alto y más ancho */
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #28a745; /* verde */
+  color: #fff;
+  margin-top: 20px; /* más separación del filtro */
+  margin-left: auto;
+  margin-right: 0;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+#btn-confirmar-eliminacion.visible {
+  display: inline-flex;
+}
+
+#btn-confirmar-eliminacion i {
+  font-size: 18px;
+  margin-right: 8px;
+  color: #fff;
+}
+
+#btn-confirmar-eliminacion span {
+  display: inline-block;
+  vertical-align: middle;
+  color: inherit;
+}
+
+/* 🌞 Botones de acción en modo claro */
+.btn-success.btn-actualizar,
+.btn-success.btn-guardar {
+  background-color: #38aa16;
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success.btn-actualizar:hover,
+.btn-success.btn-guardar:hover {
+  background-color: #2e8c12;
+}
+
+/* 🌚 Botones en modo oscuro */
+body.dark .btn-success.btn-actualizar,
+body.dark .btn-success.btn-guardar {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+body.dark .btn-success.btn-actualizar:hover,
+body.dark .btn-success.btn-guardar:hover {
+  background-color: #000000;
+}
+
+/* 🌞 Tabla en modo claro */
+.table {
+  background-color: #ffffff;
+  color: #212529;
+  border-collapse: collapse;
+}
+
+.table th {
+  background-color: #f0f0f0;
+  color: #333333;
+  font-weight: 600;
+  border-bottom: 2px solid #38aa16;
+}
+
+.table td {
+  border-top: 1px solid #dddddd;
+  vertical-align: middle;
+}
+
+.table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* 🌚 Tabla en modo oscuro */
+body.dark .table {
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+}
+
+body.dark .table th {
+  background-color: #2a2a2a;
+  color: #4caf50;
+  border-bottom: 2px solid #4caf50;
+}
+
+body.dark .table td {
+  border-top: 1px solid #333333;
+}
+
+body.dark .table tbody tr:hover {
+  background-color: #2c2c2c;
+}
+
+/* ✅ Botón de confirmación de eliminación */
+#btn-confirmar-eliminacion {
+  display: none;
+  font-size: 16px;
+  padding: 10px 17px;
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #28a745;
+  color: #fff;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: 0;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+#btn-confirmar-eliminacion.visible {
+  display: inline-flex;
+}
+
+#btn-confirmar-eliminacion i {
+  font-size: 18px;
+  margin-right: 8px;
+  color: #fff;
+}
+
+#btn-confirmar-eliminacion span {
+  display: inline-block;
+  vertical-align: middle;
+  color: inherit;
+}
+
+/* ✅ Modal personalizado */
+.modal-nombrar {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  color: #0d0d0d;
+  padding: 20px;
+  border: 1px solid #a9a9a9;
+  border-radius: 8px;
+  z-index: 1050;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* 🌙 Modo oscuro */
+body.dark .modal-nombrar {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border-color: #505050;
+}
+
+/* ✅ Inputs del modal */
+.modal-nombrar input[type="text"] {
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #0d0d0d;
+}
+
+body.dark .modal-nombrar input[type="text"] {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #666;
+}
+
+/* ✅ Botones dentro del modal */
+.botones-modal {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.botones-modal .btn {
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+/* 🎨 Botón Cancelar con estilo igual al de Guardar pero gris */
+.btn-cancelar {
+  background-color: #6c757d !important; /* gris Bootstrap */
+  color: #ffffff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+body.dark .btn-cancelar {
+  background-color: #444444;
+  color: #ffffff;
+}
+
+/* ✅ Botón de filtro */
+.btn-filtrar {
+  background: none;
+  border: none;
+  padding: 4px;
+  font-size: 16px;
+  color: #38aa16;
+}
+
+body.dark .btn-filtrar {
+  color: #4caf50;
+}
+
+/* ✅ Checkbox estilo galería */
+.checkbox-eliminar {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%) scale(1.1);
+  accent-color: #dc3545;
+  transition: opacity 0.2s ease;
+}
+
+body.dark .checkbox-eliminar {
+  accent-color: #ff6b6b;
+}
+
+/* ✅ Fila con espacio para checkbox */
+.fila-reporte {
+  position: relative;
+  padding-left: 40px;
+  transition: padding-left 0.2s ease;
+}
+
+.fila-reporte:not(.seleccionable) .checkbox-eliminar {
+  display: none !important;
+}
+
+/* 🧾 Encabezado de reportes */
+.encabezado-reportes {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 1.5fr 1.5fr 1fr;
+  font-weight: bold; /* Negrilla */
+  padding: 12px 20px;
+  border-bottom: 2px solid #38aa16; /* Línea verde */
+  background-color: transparent; /* Sin fondo diferenciado */
+  color: #212529;
+}
+
+body.dark .encabezado-reportes {
+  background-color: transparent;
+  color: #f0f0f0;
+  border-bottom: 2px solid #4caf50;
+}
+
+.encabezado-reportes span {
+  font-weight: bold;
+}
+
+/* 📄 Fila de reporte */
+.fila-reporte {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 1.5fr 1.5fr 1fr;
+  align-items: start;
+  padding: 12px 20px;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.2s ease;
+}
+
+.fila-reporte:hover {
+  background-color: #f5f5f5;
+}
+
+body.dark .fila-reporte {
+  border-bottom: 1px solid #333;
+}
+
+body.dark .fila-reporte:hover {
+  background-color: #2c2c2c;
+}
+
+/* 🎯 Ajustes individuales */
+.nombre-reporte {
+  font-weight: 500;
+  color: #212529;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+body.dark .nombre-reporte {
+  color: #f0f0f0;
+}
+
+.nombre-reporte .badge {
+  align-self: flex-start;
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+.instructor-reporte,
+.coordinador-revisiones {
+  text-align: center;
+  font-weight: 400;
+  color: #444;
+}
+
+body.dark .instructor-reporte,
+body.dark .coordinador-revisiones {
+  color: #ccc;
+}
+
+.fecha-reporte {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+body.dark .fecha-reporte {
+  color: #bbb;
+}
+
+.estado-reporte {
+  text-align: center;
+  font-size: 14px;
+  color: #040404;
+  font-weight: 400;
+}
+
+.estado-texto {
+  color: inherit;
+  font-weight: normal;
+}
+
+body.dark .estado-texto {
+  color: inherit;
+}
+
+body.dark .estado-reporte {
+  color: #f0f0f0;
+}
+
+.descargar-reporte {
+  text-align: center;
+}
+
+.descargar-reporte .btn-descargar {
+  background: none;
+  border: none;
+  color: #38aa16;
+  font-size: 16px;
+}
+
+.descargar-reporte .btn-descargar:hover {
+  color: #2e8c12;
+}
+
+body.dark .descargar-reporte .btn-descargar {
+  color: #4caf50;
+}
+
+body.dark .descargar-reporte .btn-descargar:hover {
+  color: #388e3c;
+}
+
+/* 🌞 Modo claro */
+.table-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  color: #212529;
+}
+
+.table-usuarios thead {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.table-usuarios th,
+.table-usuarios td {
+  padding: 12px;
+  border: 1px solid #dee2e6;
+}
+
+/* 🌙 Modo oscuro */
+body.dark .table-usuarios {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.dark .table-usuarios thead {
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+body.dark .table-usuarios tbody tr {
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #333;
+}
+
+body.dark .table-usuarios tbody tr:hover {
+  background-color: #2c2c2c;
+}
+
+body.dark .table-usuarios th,
+body.dark .table-usuarios td {
+  color: #f0f0f0;
+  border-color: #444;
+}
+
+body.dark .btn-actualizar {
+  background-color: #38aa16 !important; /* color verde Bootstrap */
+  color: #fff !important;
+  border: 1px solid #38aa16 !important;
+}
+
+body.dark .btn-actualizar:hover {
+  background-color: #38aa16 !important;
+  border-color: #38aa16 !important;
+}
+
+/* 🌞 Modo claro */
+.resumen-card {
+  background-color: #f8f9fa;
+  color: #212529;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.resumen-card .card-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.resumen-card .card-text {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* 🌙 Modo oscuro */
+body.dark .resumen-card {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
+
+body.dark .resumen-card .card-title {
+  color: #ffffff;
+}
+
+body.dark .resumen-card .card-text {
+  color: #cccccc;
+}
+
+/* 🔗 Estilo para enlace de recuperación de contraseña */
+.login-container a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.login-container a:hover {
+  text-decoration: underline;
+  color: #999; /* Gris medio compatible con ambos modos */
+}
+
+/* 🌞 Modo claro */
+.form-control,
+.form-select {
+  background-color: #ffffff;
+  color: #212529;
+  border: 1px solid #ced4da;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 🌙 Modo oscuro */
+body.dark .form-control,
+body.dark .form-select {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
+
+/* 🌞 Modo claro por defecto (Bootstrap modal) */
+.modal-content {
+  background-color: #ffffff;
+  color: #212529;
+  border: 1px solid #dee2e6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.modal-header,
+.modal-body,
+.modal-footer {
+  background-color: inherit;
+  color: inherit;
+}
+
+/* 🌙 Modo oscuro para Bootstrap modal */
+body.dark .modal-content {
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+  border: 1px solid #242824;
+}
+
+body.dark .modal-header,
+body.dark .modal-body,
+body.dark .modal-footer {
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+}
+
+body.dark .modal-header .modal-title {
+  color: #ffffff;
+}
+
+body.dark .btn-close {
+  filter: invert(1);
+}
+
+.campanita-activa {
+  color: #ffeb3b !important; /* Amarillo Bootstrap */
+}
+
+.alerta-pendientes {
+  max-width: 600px;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+}
+
+.alerta-final {
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* 🛠️ Estabiliza contenido dentro de la columna "nombre-reporte" */
+.nombre-reporte {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 🧩 Estabiliza botón de descarga */
+.fila-reporte .btn-descargar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🧩 Asegura que el ícono dentro del botón no se desplace */
+.btn-descargar i {
+  margin: 0;
+  padding: 6px;
+  min-width: 24px;
+  min-height: 24px;
+  display: inline-block;
+  box-sizing: content-box;
+}
+
+/* 🔒 Evita que el botón de enviar o los badges empujen el nombre */
+.nombre-reporte form,
+.nombre-reporte .badge {
+  flex-shrink: 0;
+}
+
+/* 🧩 El nombre del reporte se mantiene estable */
+.nombre-reporte span {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 🌙 Modo oscuro para tabla de instructores pendientes */
+body.dark table.table {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #444 !important;
+}
+
+body.dark table.table thead {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+body.dark table.table thead th {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  border-color: #444 !important;
+}
+
+body.dark table.table tbody tr {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #444 !important;
+}
+
+body.dark table.table tbody tr:hover {
+  background-color: #2e2e2e !important;
+}
+
+body.dark table.table td {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-color: #444 !important;
+}
+
+/* 🌙 Corrige botones dentro de la tabla */
+body.dark table.table .btn-warning {
+  background-color: #ffaa00 !important;
+  color: #000000 !important;
+  border: none;
+}
+
+body.dark .alerta-pendientes {
+  background-color: #333333 !important;
+  color: #ffffff !important;
+  border-color: #555555 !important;
+}
+
+body.dark .alerta-final {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  border-color: #444444 !important;
+}
+
+/* 🌞 Modo claro */
+.footer-principal,
+.footer-inicio {
+  background-color: #ffffff;
+  color: #333;
+  font-size: 14px;
+  padding: 12px 0;
+  border-top: 1px solid #ffffff;
+  text-align: center;
+}
+
+.footer-principal a,
+.footer-inicio a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* 🌙 Modo oscuro */
+body.dark .footer-principal,
+body.dark .footer-inicio {
+  background-color: #0e0d0d;
+  color: #ccc;
+  border-top: 1px solid #0e0d0d;
+}
+
+body.dark .footer-principal a,
+body.dark .footer-inicio a {
+  color: #ccc;
+  text-decoration: underline;
+}
+
+.nombre-click {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.nombre-click:hover {
+  text-decoration: underline;
+}
+
+.dropdown-menu.show {
+  display: block;
+}

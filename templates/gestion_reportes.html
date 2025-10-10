@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block titulo %}Gestión de reportes{% endblock %}
+
+{% block contenido %}
+<div class="container contenedor-reportes">
+  <h1 class="titulo-pagina mt-5">Gestión de Reportes</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mt-3">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- 🔍 Filtro y orden -->
+  <form method="GET" class="filtro-fechas d-flex align-items-end gap-3 mb-4">
+    <div>
+      <label for="fecha_inicio">Desde:</label>
+      <input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ request.args.get('fecha_inicio', '') }}">
+    </div>
+    <div>
+      <label for="fecha_fin">Hasta:</label>
+      <input type="date" name="fecha_fin" id="fecha_fin" value="{{ request.args.get('fecha_fin', '') }}">
+    </div>
+    <button type="submit" class="btn-accion">
+      <i class="fa-solid fa-filter"></i>
+      <span>Filtrar</span>
+    </button>
+    <a
+      href="?fecha_inicio={{ request.args.get('fecha_inicio', '') }}&fecha_fin={{ request.args.get('fecha_fin', '') }}&orden={% if request.args.get('orden') == 'asc' %}desc{% else %}asc{% endif %}"
+      class="btn-accion text-decoration-none"
+      title="Ordenar"
+    >
+      <i class="fa-solid {% if request.args.get('orden') == 'asc' %}fa-arrow-up-wide-short{% else %}fa-arrow-down-wide-short{% endif %}"></i>
+      <span>Ordenar</span>
+    </a>
+  </form>
+
+  <!-- 🧾 Encabezado tipo Word -->
+  <div class="encabezado-reportes fila-reporte">
+    <span class="nombre-reporte">Nombre</span>
+    <span class="instructor-reporte">Instructor</span>
+    <span class="coordinador-revisiones">Coordinador</span>
+    <span class="fecha-reporte">Fecha</span>
+    <span class="estado-reporte">Estado</span>
+    <span class="descargar-reporte">Descargar</span>
+  </div>
+
+  <!-- 📄 Lista de reportes -->
+  {% for reporte in reportes %}
+  <div class="fila-reporte">
+    <div class="nombre-reporte d-flex flex-column gap-1">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fa-solid fa-file-lines text-success"></i>
+        <span>{{ reporte[3] or 'Reporte sin nombre' }}</span>
+      </div>
+      {% if reporte[6] %}
+        <span class="badge bg-primary">Revisado</span>
+      {% endif %}
+    </div>
+    <div class="instructor-reporte">{{ reporte[4] }}</div>
+    <div class="coordinador-revisiones">{{ reporte[5] }}</div>
+    <div class="fecha-reporte">{{ reporte[2] }}</div>
+    <div class="estado-reporte">
+      <span class="estado-texto">{{ 'Activo' if reporte[7] else 'Inactivo' }}</span>
+    </div>
+    <div class="descargar-reporte">
+      <a href="{{ url_for('generar_pdf', id_reporte=reporte[0]) }}" class="btn btn-sm btn-descargar" title="Descargar">
+        <i class="fa-solid fa-download"></i>
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
