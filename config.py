@@ -8,3 +8,10 @@ def conectar():
     except Exception as e:
         print("Error al conectar a PostgreSQL:", e)
         return None
+    
+def desconectar(conn):
+    try:
+        if conn:
+            conn.close()
+    except Exception as e:
+        print("Error al cerrar conexión:", e)    
