@@ -6,7 +6,8 @@ from flask_wtf import CSRFProtect
 from flask import session
 import pdfkit
 from flask import make_response
-import base64, imghdr
+import base64
+import mimetypes
 from PIL import Image
 import io
 import os
@@ -126,12 +127,12 @@ def instructores_pendientes():
 
 @app.template_filter("b64img")
 def b64img_filter(data):
-
     if data and isinstance(data, (bytes, bytearray)) and len(data) > 0:
         try:
-            mime = imghdr.what(None, h=data)
+            image = Image.open(io.BytesIO(data))
+            mime = image.format.lower()
             if not mime or mime in ("heic", "avif", "webp"):
-                image = Image.open(io.BytesIO(data)).convert("RGBA")
+                image = image.convert("RGBA")
                 buffer = io.BytesIO()
                 image.save(buffer, format="PNG")
                 data = buffer.getvalue()
