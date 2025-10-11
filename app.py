@@ -1359,7 +1359,6 @@ def descargar(id_reporte):
 def generar_pdf(id_reporte):
     reporte, novedad = obtener_datos_reporte(id_reporte)
 
-    
     # Fecha de creación
     if 'fecha' in novedad and novedad['fecha']:
         novedad['fecha_formateada'] = novedad['fecha'].strftime('%d/%m/%Y')
@@ -1372,32 +1371,32 @@ def generar_pdf(id_reporte):
     else:
         novedad['fecha_revision_formateada'] = None
 
+    if os.name == 'nt':
+        config = pdfkit.configuration(wkhtmltopdf=r"C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
+    else:
+        config = None
 
-    
-    # Ruta absoluta al logo del SENA
     logo_path = os.path.join(app.root_path, 'static', 'logosena.png')
-
-    # Renderiza el HTML con la ruta del logo incluida
     rendered_html = render_template("descargar.html", reporte=reporte, novedad=novedad, logo_path=logo_path)
 
-    config = pdfkit.configuration(wkhtmltopdf=r"C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
     options = {
         'enable-local-file-access': None
     }
 
-    # Ruta absoluta al CSS
     css_path = os.path.join(app.root_path, 'static', 'estilos', 'descargar.css')
 
-    pdf = pdfkit.from_string(rendered_html, False, configuration=config, options=options, css=css_path)
+    try:
+        pdf = pdfkit.from_string(rendered_html, False, configuration=config, options=options, css=css_path)
+    except Exception as e:
+        print("Error al generar PDF:", e)
+        return "Error interno al generar el PDF", 500
 
-    # Sanitiza el nombre del archivo
     nombre_archivo = reporte['nombre_reporte'].strip().replace(" ", "_").replace("/", "-")
 
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename={nombre_archivo}.pdf'
     return response
-
 
 @app.route("/Inforise/registrarse", methods=["GET", "POST"])
 def registrarse():
