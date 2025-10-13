@@ -46,7 +46,7 @@
     <!-- Código del programa -->
     <div class="form-group mb-3">
       <label for="codigo">Código del Programa:</label>
-      <input type="text" class="form-control" id="codigo" name="codigo" required>
+      <input type="text" class="form-control" id="codigo" name="codigo" required readonly>
     </div>
 
     <h2 class="subtitulo-reporte">Identificación del ambiente de aprendizaje</h2>
@@ -83,39 +83,25 @@
   </form>
 </div>
 
-<!-- JavaScript para autocompletar y mayúsculas -->
+<!-- JavaScript funcional sin Select2 -->
 <script>
-$(document).ready(function () {
-  const $selectPrograma = $('#programa');
-  const $inputCodigo = $('#codigo');
+document.addEventListener('DOMContentLoaded', function () {
+  const selectPrograma = document.getElementById('programa');
+  const inputCodigo = document.getElementById('codigo');
 
-  // Inicializa Select2 si está disponible
-  if ($.fn.select2) {
-    $selectPrograma.select2({
-      placeholder: "Selecciona tu programa",
-      width: '100%'
-    });
-  }
-
-  // Función para actualizar el campo de código
   function actualizarCodigo() {
-    const selectedValue = $selectPrograma.val();
-    const selectedOption = $selectPrograma.find('option[value="' + selectedValue + '"]');
-    const codigo = selectedOption.data('codigo') || '';
-    $inputCodigo.val(codigo);
+    const selectedOption = selectPrograma.options[selectPrograma.selectedIndex];
+    const codigo = selectedOption.getAttribute('data-codigo') || '';
+    inputCodigo.value = codigo;
   }
 
-  // Al cambiar el programa, actualiza el código
-  $selectPrograma.on('change', actualizarCodigo);
-
-  // Al cargar la página, si ya hay algo seleccionado, actualiza el código
+  selectPrograma.addEventListener('change', actualizarCodigo);
   actualizarCodigo();
 
-  // Convertir campos a mayúsculas automáticamente
   ['regional', 'localizacion', 'denominacion'].forEach(id => {
-    const $campo = $('#' + id);
-    $campo.on('input', function () {
-      this.value = this.value.toUpperCase();
+    const campo = document.getElementById(id);
+    campo.addEventListener('input', () => {
+      campo.value = campo.value.toUpperCase();
     });
   });
 });
