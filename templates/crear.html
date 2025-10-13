@@ -85,43 +85,37 @@
 
 <!-- JavaScript para autocompletar y mayúsculas -->
 <script>
-$(document).ready(function() {
-  const $selectPrograma = $('#programa');
-  const $inputCodigo = $('#codigo');
+document.addEventListener('DOMContentLoaded', function() {
+  const selectPrograma = document.getElementById('programa');
+  const inputCodigo = document.getElementById('codigo');
+
+  if (!selectPrograma || !inputCodigo) return;
 
   // Inicializa Select2
-  $selectPrograma.select2({
+  $(selectPrograma).select2({
     placeholder: "Selecciona tu programa",
-    width: '100%',
-    templateSelection: function (data) {
-      // Este bloque se ejecuta al mostrar la opción seleccionada
-      const selectedOption = $selectPrograma.find('option:selected');
-      const codigo = selectedOption.data('codigo') || '';
-      $inputCodigo.val(codigo);
-      return data.text;
-    }
+    width: '100%'
   });
 
-  // Refuerzo: actualiza el campo al cambiar manualmente
-  $selectPrograma.on('change', function() {
-    const selectedOption = $(this).find('option:selected');
-    const codigo = selectedOption.data('codigo') || '';
-    $inputCodigo.val(codigo);
+  // Actualiza el campo al cambiar de opción
+  selectPrograma.addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const codigo = selectedOption.getAttribute('data-codigo') || '';
+    inputCodigo.value = codigo;
   });
 
-  // Refuerzo adicional: carga el código si ya hay una opción seleccionada al cargar la página
-  const initialOption = $selectPrograma.find('option:selected');
-  if (initialOption.length && initialOption.data('codigo')) {
-    $inputCodigo.val(initialOption.data('codigo'));
+  // Carga inicial si ya hay una opción seleccionada
+  const selectedOption = selectPrograma.options[selectPrograma.selectedIndex];
+  if (selectedOption && selectedOption.getAttribute('data-codigo')) {
+    inputCodigo.value = selectedOption.getAttribute('data-codigo');
   }
 
   // Convertir campos a mayúsculas automáticamente
-  const camposMayuscula = ['regional', 'localizacion', 'denominacion'];
-  camposMayuscula.forEach(id => {
-    const input = document.getElementById(id);
-    if (input) {
-      input.addEventListener('input', function() {
-        this.value = this.value.toUpperCase();
+  ['regional', 'localizacion', 'denominacion'].forEach(id => {
+    const campo = document.getElementById(id);
+    if (campo) {
+      campo.addEventListener('input', () => {
+        campo.value = campo.value.toUpperCase();
       });
     }
   });
