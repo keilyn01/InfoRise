@@ -91,20 +91,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (!selectPrograma || !inputCodigo) return;
 
-  // Inicializa Select2
-  $(selectPrograma).select2({
-    placeholder: "Selecciona tu programa",
-    width: '100%'
-  });
-
-  // Actualiza el campo al cambiar de opción
+  // Refuerzo: actualiza el campo al cambiar de opción
   selectPrograma.addEventListener('change', function() {
-    const selectedOption = this.options[this.selectedIndex];
+    const selectedOption = selectPrograma.options[selectPrograma.selectedIndex];
     const codigo = selectedOption.getAttribute('data-codigo') || '';
     inputCodigo.value = codigo;
   });
 
-  // Carga inicial si ya hay una opción seleccionada
+  // Refuerzo: actualiza el campo si ya hay una opción seleccionada al cargar
   const selectedOption = selectPrograma.options[selectPrograma.selectedIndex];
   if (selectedOption && selectedOption.getAttribute('data-codigo')) {
     inputCodigo.value = selectedOption.getAttribute('data-codigo');
