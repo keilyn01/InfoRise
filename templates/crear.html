@@ -89,7 +89,7 @@ $(document).ready(function () {
   const $selectPrograma = $('#programa');
   const $inputCodigo = $('#codigo');
 
-  // Inicializa Select2 si lo estás usando
+  // Inicializa Select2 si está disponible
   if ($.fn.select2) {
     $selectPrograma.select2({
       placeholder: "Selecciona tu programa",
@@ -99,7 +99,9 @@ $(document).ready(function () {
 
   // Función para actualizar el campo de código
   function actualizarCodigo() {
-    const codigo = $selectPrograma.find(':selected').data('codigo') || '';
+    const selectedValue = $selectPrograma.val();
+    const selectedOption = $selectPrograma.find('option[value="' + selectedValue + '"]');
+    const codigo = selectedOption.data('codigo') || '';
     $inputCodigo.val(codigo);
   }
 
