@@ -85,33 +85,36 @@
 
 <!-- JavaScript para autocompletar y mayúsculas -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const selectPrograma = document.getElementById('programa');
-  const inputCodigo = document.getElementById('codigo');
+$(document).ready(function () {
+  const $selectPrograma = $('#programa');
+  const $inputCodigo = $('#codigo');
 
-  if (!selectPrograma || !inputCodigo) return;
-
-  // Refuerzo: actualiza el campo al cambiar de opción
-  selectPrograma.addEventListener('change', function() {
-    const selectedOption = selectPrograma.options[selectPrograma.selectedIndex];
-    const codigo = selectedOption.getAttribute('data-codigo') || '';
-    inputCodigo.value = codigo;
-  });
-
-  // Refuerzo: actualiza el campo si ya hay una opción seleccionada al cargar
-  const selectedOption = selectPrograma.options[selectPrograma.selectedIndex];
-  if (selectedOption && selectedOption.getAttribute('data-codigo')) {
-    inputCodigo.value = selectedOption.getAttribute('data-codigo');
+  // Inicializa Select2 si lo estás usando
+  if ($.fn.select2) {
+    $selectPrograma.select2({
+      placeholder: "Selecciona tu programa",
+      width: '100%'
+    });
   }
+
+  // Función para actualizar el campo de código
+  function actualizarCodigo() {
+    const codigo = $selectPrograma.find(':selected').data('codigo') || '';
+    $inputCodigo.val(codigo);
+  }
+
+  // Al cambiar el programa, actualiza el código
+  $selectPrograma.on('change', actualizarCodigo);
+
+  // Al cargar la página, si ya hay algo seleccionado, actualiza el código
+  actualizarCodigo();
 
   // Convertir campos a mayúsculas automáticamente
   ['regional', 'localizacion', 'denominacion'].forEach(id => {
-    const campo = document.getElementById(id);
-    if (campo) {
-      campo.addEventListener('input', () => {
-        campo.value = campo.value.toUpperCase();
-      });
-    }
+    const $campo = $('#' + id);
+    $campo.on('input', function () {
+      this.value = this.value.toUpperCase();
+    });
   });
 });
 </script>
