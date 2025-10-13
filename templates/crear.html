@@ -47,17 +47,6 @@
   <label for="codigo">Código del Programa:</label>
   <input type="text" class="form-control" id="codigo" name="codigo" required>
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const selectPrograma = document.getElementById('programa');
-  const inputCodigo = document.getElementById('codigo');
-  selectPrograma.addEventListener('change', function() {
-    const selectedOption = selectPrograma.options[selectPrograma.selectedIndex];
-    const codigo = selectedOption.getAttribute('data-codigo') || '';
-    inputCodigo.value = codigo;
-  });
-});
-</script>
 
       <h2 class="subtitulo-reporte">Identificación del ambiente de aprendizaje</h2>
       <!-- Localización del ambiente -->
@@ -92,10 +81,20 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     </form>         
   </div>
-  <script>
+<script>
 document.addEventListener('DOMContentLoaded', function() {
-  const camposMayuscula = ['regional', 'localizacion', 'denominacion'];
+  const selectPrograma = document.getElementById('programa');
+  const inputCodigo = document.getElementById('codigo');
 
+  if (selectPrograma && inputCodigo) {
+    selectPrograma.addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const codigo = selectedOption.dataset.codigo || '';
+      inputCodigo.value = codigo;
+    });
+  }
+
+  const camposMayuscula = ['regional', 'localizacion', 'denominacion'];
   camposMayuscula.forEach(id => {
     const input = document.getElementById(id);
     if (input) {
