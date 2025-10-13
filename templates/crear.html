@@ -94,20 +94,26 @@ $(document).ready(function() {
     placeholder: "Selecciona tu programa",
     width: '100%',
     templateSelection: function (data) {
-      if (data.element) {
-        const codigo = data.element.dataset.codigo || '';
-        $inputCodigo.val(codigo);
-      }
+      // Este bloque se ejecuta al mostrar la opción seleccionada
+      const selectedOption = $selectPrograma.find('option:selected');
+      const codigo = selectedOption.data('codigo') || '';
+      $inputCodigo.val(codigo);
       return data.text;
     }
   });
 
-  // También actualiza al cambiar manualmente
+  // Refuerzo: actualiza el campo al cambiar manualmente
   $selectPrograma.on('change', function() {
-    const selected = this.options[this.selectedIndex];
-    const codigo = selected.dataset.codigo || '';
+    const selectedOption = $(this).find('option:selected');
+    const codigo = selectedOption.data('codigo') || '';
     $inputCodigo.val(codigo);
   });
+
+  // Refuerzo adicional: carga el código si ya hay una opción seleccionada al cargar la página
+  const initialOption = $selectPrograma.find('option:selected');
+  if (initialOption.length && initialOption.data('codigo')) {
+    $inputCodigo.val(initialOption.data('codigo'));
+  }
 
   // Convertir campos a mayúsculas automáticamente
   const camposMayuscula = ['regional', 'localizacion', 'denominacion'];
