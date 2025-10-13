@@ -65,9 +65,8 @@ def notificar_usuario(destinatario, asunto, cuerpo_texto, cuerpo_html=None):
         if cuerpo_html:
             mensaje.add_alternative(cuerpo_html, subtype='html')
 
-        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-            smtp.starttls()
-            smtp.login("inforise.sena@gmail.com", "sslfkdjgrhbuyhqh")
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+            smtp.login(os.getenv("CORREO_REMITENTE"), os.getenv("CLAVE_CORREO"))
             smtp.send_message(mensaje)
         return True
     except Exception as e:
