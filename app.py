@@ -87,7 +87,17 @@ def notificar_instructor(id_usuario):
         conn = conectar()
         cursor = conn.cursor()
         cursor.execute("SELECT nombre, apellido, correo FROM usuarios WHERE id = %s", (id_usuario,))
-        nombre, apellido, correo = cursor.fetchone()
+        resultado = cursor.fetchone()
+
+        if not resultado:
+            flash("Error al enviar el recordatorio: el usuario no existe.", "danger")
+            return redirect(url_for("instructores_pendientes"))
+
+        nombre, apellido, correo = resultado
+
+        if not correo:
+            flash("Error al enviar el recordatorio: el usuario no tiene correo registrado.", "danger")
+            return redirect(url_for("instructores_pendientes"))
 
         nombre_completo = f"{nombre} {apellido}"
         cuerpo_texto = "Aún no ha enviado su reporte en el sistema Inforise."
@@ -103,6 +113,7 @@ def notificar_instructor(id_usuario):
 
     except Exception as e:
         flash(f"Error al enviar el recordatorio: {e}", "danger")
+
     finally:
         cursor.close()
         desconectar(conn)
@@ -214,7 +225,7 @@ def obtener_programas():
     """)
     resultados = cursor.fetchall()
     desconectar(conn)
-    return resultados  # [(id, nombre, abreviatura)]
+    return resultados  # [(id, nombre, codigo, abreviatura)] ✅
 
 # Obtener centros de formación
 def obtener_centros():
