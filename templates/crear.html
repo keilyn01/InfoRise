@@ -15,7 +15,7 @@
       <input type="text" class="form-control" id="nombre_reporte" name="nombre_reporte" placeholder="Opcional">
     </div>
 
-    <!-- Regional con valor por defecto -->
+    <!-- Regional -->
     <div class="form-group mb-3">
       <label for="regional">Regional:</label>
       <input type="text" class="form-control" id="regional" name="regional" value="ATLANTICO">
@@ -38,26 +38,31 @@
       <select class="form-select" id="programa" name="programa" required>
         <option value="">Selecciona tu programa</option>
         {% for programa in programas %}
-          <option value="{{ programa[0] }}" data-codigo="{{ programa[2] or '' }}">{{ programa[1] }}</option>
+          <option value="{{ programa[0] }}">{{ programa[1] }}</option>
         {% endfor %}
       </select>
     </div>
 
-    <!-- Código del programa -->
+    <!-- Código del programa con tooltip -->
     <div class="form-group mb-3">
       <label for="codigo">Código del Programa:</label>
-      <input type="text" class="form-control" id="codigo" name="codigo" required readonly>
+      <select class="form-select" id="codigo" name="codigo" required>
+        <option value="">Selecciona el código</option>
+        {% for programa in programas %}
+          <option value="{{ programa[2] }}" title="{{ programa[1] }}">{{ programa[2] }}</option>
+        {% endfor %}
+      </select>
     </div>
 
     <h2 class="subtitulo-reporte">Identificación del ambiente de aprendizaje</h2>
 
-    <!-- Localización del ambiente -->
+    <!-- Localización -->
     <div class="form-group mb-3">
       <label for="localizacion">Localización del ambiente:</label>
       <input type="text" class="form-control" id="localizacion" name="localizacion" required>
     </div>
 
-    <!-- Denominación del ambiente -->
+    <!-- Denominación -->
     <div class="form-group mb-3">
       <label for="denominacion">Denominación del ambiente:</label>
       <input type="text" class="form-control" id="denominacion" name="denominacion" required>
@@ -76,35 +81,37 @@
       </div>
     </div>
 
-    <!-- Botones -->
+    <!-- Botón -->
     <div class="d-flex justify-content-between mt-4">
       <button type="submit" class="btn btn-primary">Crear reporte</button>
     </div>
   </form>
 </div>
 
-<!-- JavaScript corregido con Select2 -->
+<!-- JavaScript con Select2 y tooltips -->
 <script>
 $(document).ready(function () {
-  const $selectPrograma = $('#programa');
-  const $inputCodigo = $('#codigo');
+  // Inicializa Select2 en el campo de código
+  $('#codigo').select2({
+    placeholder: "Selecciona el código",
+    width: 'resolve',
+    templateResult: function (data) {
+      if (!data.id) return data.text;
+      const title = $(data.element).attr('title');
+      const $result = $('<span></span>').text(data.text);
+      if (title) $result.attr('title', title);
+      return $result;
+    },
+    templateSelection: function (data) {
+      return data.text;
+    }
+  });
 
-  // Inicializa Select2 con estilos responsivos
-  if ($.fn.select2) {
-    $selectPrograma.select2({
-      placeholder: "Selecciona tu programa",
-      width: 'resolve'
-    });
+  // Inicializa Select2 en otros campos si deseas
+  $('#programa').select2({ placeholder: "Selecciona tu programa", width: 'resolve' });
+  $('#centro_de_formacion').select2({ placeholder: "Selecciona tu centro", width: 'resolve' });
 
-    // Usa el evento select2:select para actualizar el código
-    $selectPrograma.on('select2:select', function (e) {
-      const selectedElement = e.params.data.element;  // Accede al elemento original
-      const codigo = selectedElement.dataset.codigo || '';  // Obtiene el data-codigo
-      $inputCodigo.val(codigo);  // Actualiza el campo
-    });
-  }
-
-  // Convierte campos a mayúsculas automáticamente
+  // Convertir campos a mayúsculas automáticamente
   ['regional', 'localizacion', 'denominacion'].forEach(id => {
     const $campo = $('#' + id);
     $campo.on('input', function () {
