@@ -83,7 +83,7 @@
   </form>
 </div>
 
-<!-- JavaScript funcional con Select2 -->
+<!-- JavaScript corregido con Select2 -->
 <script>
 $(document).ready(function () {
   const $selectPrograma = $('#programa');
@@ -95,18 +95,14 @@ $(document).ready(function () {
       placeholder: "Selecciona tu programa",
       width: 'resolve'
     });
-  }
 
-  // Actualiza el campo de código al seleccionar
-  function actualizarCodigo() {
-    const selectedValue = $selectPrograma.val();
-    const selectedOption = $selectPrograma.find('option[value="' + selectedValue + '"]');
-    const codigo = selectedOption.data('codigo') || '';
-    $inputCodigo.val(codigo);
+    // Usa el evento select2:select para actualizar el código
+    $selectPrograma.on('select2:select', function (e) {
+      const selectedElement = e.params.data.element;  // Accede al elemento original
+      const codigo = selectedElement.dataset.codigo || '';  // Obtiene el data-codigo
+      $inputCodigo.val(codigo);  // Actualiza el campo
+    });
   }
-
-  $selectPrograma.on('change', actualizarCodigo);
-  actualizarCodigo();
 
   // Convierte campos a mayúsculas automáticamente
   ['regional', 'localizacion', 'denominacion'].forEach(id => {
