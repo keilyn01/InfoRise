@@ -17,6 +17,7 @@ from email.message import EmailMessage
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 import os
+import requests
 
 load_dotenv()
 app = Flask(__name__)
@@ -56,19 +57,40 @@ def agregar_notificacion(mensaje):
 def notificar_usuario(destinatario, asunto, cuerpo_texto, cuerpo_html=None):
     try:
         print(f"Enviando correo a: {destinatario} con asunto: {asunto}")
-        mensaje = EmailMessage()
-        mensaje["Subject"] = asunto
-        mensaje["From"] = "inforise.sena@gmail.com"
-        mensaje["To"] = destinatario
-        mensaje.set_content(cuerpo_texto)
+        data = {
+            "personalizations": [{
+                "to": [{"email": destinatario}],
+                "subject": asunto
+            }],
+            "from": {"email": "inforise.sena@gmail.com"},
+            "content": [{
+                "type": "text/plain",
+                "value": cuerpo_texto
+            }]
+        }
 
         if cuerpo_html:
-            mensaje.add_alternative(cuerpo_html, subtype='html')
+            data["content"].append({
+                "type": "text/html",
+                "value": cuerpo_html
+            })
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-            smtp.login(os.getenv("CORREO_REMITENTE"), os.getenv("CLAVE_CORREO"))
-            smtp.send_message(mensaje)
-        return True
+        response = requests.post(
+            "https://api.sendgrid.com/v3/mail/send",
+            headers={
+                "Authorization": f"Bearer {os.getenv('SENDGRID_KEY')}",
+                "Content-Type": "application/json"
+            },
+            json=data
+        )
+
+        if response.status_code >= 200 and response.status_code < 300:
+            print("Correo enviado correctamente")
+            return True
+        else:
+            print(f"Error al enviar correo: {response.text}")
+            return False
+
     except Exception as e:
         print(f"Error al enviar correo: {e}")
         return False
