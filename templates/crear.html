@@ -83,25 +83,36 @@
   </form>
 </div>
 
-<!-- JavaScript funcional sin Select2 -->
+<!-- JavaScript funcional con Select2 -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const selectPrograma = document.getElementById('programa');
-  const inputCodigo = document.getElementById('codigo');
+$(document).ready(function () {
+  const $selectPrograma = $('#programa');
+  const $inputCodigo = $('#codigo');
 
-  function actualizarCodigo() {
-    const selectedOption = selectPrograma.options[selectPrograma.selectedIndex];
-    const codigo = selectedOption.getAttribute('data-codigo') || '';
-    inputCodigo.value = codigo;
+  // Inicializa Select2 con estilos responsivos
+  if ($.fn.select2) {
+    $selectPrograma.select2({
+      placeholder: "Selecciona tu programa",
+      width: 'resolve'
+    });
   }
 
-  selectPrograma.addEventListener('change', actualizarCodigo);
+  // Actualiza el campo de código al seleccionar
+  function actualizarCodigo() {
+    const selectedValue = $selectPrograma.val();
+    const selectedOption = $selectPrograma.find('option[value="' + selectedValue + '"]');
+    const codigo = selectedOption.data('codigo') || '';
+    $inputCodigo.val(codigo);
+  }
+
+  $selectPrograma.on('change', actualizarCodigo);
   actualizarCodigo();
 
+  // Convierte campos a mayúsculas automáticamente
   ['regional', 'localizacion', 'denominacion'].forEach(id => {
-    const campo = document.getElementById(id);
-    campo.addEventListener('input', () => {
-      campo.value = campo.value.toUpperCase();
+    const $campo = $('#' + id);
+    $campo.on('input', function () {
+      this.value = this.value.toUpperCase();
     });
   });
 });
