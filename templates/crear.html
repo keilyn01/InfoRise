@@ -85,23 +85,29 @@
 
 <!-- JavaScript para autocompletar y mayúsculas -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const selectPrograma = document.getElementById('programa');
-  const inputCodigo = document.getElementById('codigo');
+$(document).ready(function() {
+  const $selectPrograma = $('#programa');
+  const $inputCodigo = $('#codigo');
 
-  if (selectPrograma && inputCodigo) {
-    // Cargar el código si ya hay un programa seleccionado
-    const selectedOption = selectPrograma.options[selectPrograma.selectedIndex];
-    if (selectedOption && selectedOption.dataset.codigo) {
-      inputCodigo.value = selectedOption.dataset.codigo;
+  // Inicializa Select2
+  $selectPrograma.select2({
+    placeholder: "Selecciona tu programa",
+    width: '100%',
+    templateSelection: function (data) {
+      if (data.element) {
+        const codigo = data.element.dataset.codigo || '';
+        $inputCodigo.val(codigo);
+      }
+      return data.text;
     }
+  });
 
-    // Actualizar el código al cambiar de programa
-    selectPrograma.addEventListener('change', function() {
-      const selected = this.options[this.selectedIndex];
-      inputCodigo.value = selected.dataset.codigo || '';
-    });
-  }
+  // También actualiza al cambiar manualmente
+  $selectPrograma.on('change', function() {
+    const selected = this.options[this.selectedIndex];
+    const codigo = selected.dataset.codigo || '';
+    $inputCodigo.val(codigo);
+  });
 
   // Convertir campos a mayúsculas automáticamente
   const camposMayuscula = ['regional', 'localizacion', 'denominacion'];
