@@ -90,7 +90,7 @@
     <div class="nombre-reporte d-flex align-items-center gap-2" data-id="{{ reporte[0] }}">
   <i class="fa-solid fa-file-lines text-success"></i>
   <span class="nombre-click" data-id="{{ reporte[0] }}" style="text-decoration: none; color: inherit;">
-     {{ reporte[7] or 'Reporte sin nombre' }}
+     {{ reporte[7] }}
   </span>
   {% if not reporte_enviado.get(reporte[0]) %}
   <form method="POST" action="{{ url_for('enviar_reporte', id_reporte=reporte[0]) }}" onsubmit="event.stopPropagation();" class="ms-2">
