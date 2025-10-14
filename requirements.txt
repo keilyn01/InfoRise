@@ -7,4 +7,3 @@ python-dotenv
 gunicorn
 Werkzeug
 requests
-pytz
