@@ -84,10 +84,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>Ambiente, aula o laboratorio</td><td>{{ novedad.nov_ambiente | safe }}</td></tr>
-      <tr><td>Equipos, máquinas y mobiliario</td><td>{{ novedad.nov_equipos | safe }}</td></tr>
-      <tr><td>Materiales de formación</td><td>{{ novedad.nov_materiales | safe }}</td></tr>
-      <tr><td>Biblioteca y bibliografía</td><td>{{ novedad.nov_biblioteca | safe }}</td></tr>
+      <tr><td>Ambiente, aula o laboratorio</td><td><div class="contenido-html">{{ novedad.nov_ambiente | safe }}</div></td></tr>
+      <tr><td>Equipos, máquinas y mobiliario</td><td><div class="contenido-html">{{ novedad.nov_equipos | safe }}</div></td></tr>
+      <tr><td>Materiales de formación</td><td><div class="contenido-html">{{ novedad.nov_materiales | safe }}</div></td></tr>
+      <tr><td>Biblioteca y bibliografía</td><td><div class="contenido-html">{{ novedad.nov_biblioteca | safe }}</div></td></tr>
       <tr>
         <td colspan="2" class="celda-viabilidad">
           <span class="texto-viabilidad">DECISIÓN SOBRE LA VIABILIDAD DE USO DEL AMBIENTE:</span>
