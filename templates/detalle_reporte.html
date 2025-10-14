@@ -19,7 +19,7 @@
     <div class="fila-celda celda-titulo">Código del Programa:</div>
     <div class="fila-celda celda-valor">{{ reporte[4] }}</div>
 
-    <!-- Fila 3: Subtítulo de ambiente (ocupa 1 columna), y campos de ambiente (ocupa 3 columnas en 3 filas) -->
+    <!-- Fila 3: Subtítulo de ambiente -->
     <div class="fila-celda subtitulo-ambiente" style="grid-row: span 3; grid-column: 1 / 2; display: flex; align-items: center; justify-content: center;">
       Identificación del ambiente de aprendizaje
     </div>
@@ -53,55 +53,61 @@
   </section>
 </div>
 
-  <!-- 📝 Formulario de novedades -->
-  <section class="contenedor-novedades">
-    <h2 class="titulo-novedades">2. Identificación de novedades</h2>
+<!-- 📝 Formulario de novedades -->
+<section class="contenedor-novedades">
+  <h2 class="titulo-novedades">2. Identificación de novedades</h2>
 
-    <form class="formulario-reporte" action="/Inforise/reporte/{{ reporte[0] }}/novedad" method="POST">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <form class="formulario-reporte" action="/Inforise/reporte/{{ reporte[0] }}/novedad" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-      <div class="form-group">
-        <label for="nov_ambiente">Ambiente, aula o laboratorio:</label>
-        <textarea id="nov_ambiente" name="nov_ambiente" required></textarea>
+    <div class="form-group">
+      <label for="nov_ambiente">Ambiente, aula o laboratorio:</label>
+      <textarea id="nov_ambiente" name="nov_ambiente" class="ckeditor" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="nov_equipos">Equipos, máquinas y mobiliario:</label>
+      <textarea id="nov_equipos" name="nov_equipos" class="ckeditor" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="nov_materiales">Materiales de formación:</label>
+      <textarea id="nov_materiales" name="nov_materiales" class="ckeditor" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="nov_biblioteca">Biblioteca y bibliografía:</label>
+      <textarea id="nov_biblioteca" name="nov_biblioteca" class="ckeditor" required></textarea>
+    </div>
+
+    <div class="form-group mb-3">
+      <label class="mb-2">Decisión de la viabilidad del ambiente:</label>
+      <div class="tipo-opciones">
+        {% for decision in decisiones %}
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="decision_ambiente" id="decision_{{ loop.index }}" value="{{ decision }}" required>
+            <label class="form-check-label" for="decision_{{ loop.index }}">{{ decision }}</label>
+          </div>
+        {% endfor %}
       </div>
+    </div>
 
-      <div class="form-group">
-        <label for="nov_equipos">Equipos, máquinas y mobiliario:</label>
-        <textarea id="nov_equipos" name="nov_equipos" required></textarea>
-      </div>
+    <div class="form-group">
+      <label for="ciudad">Ciudad:</label>
+      <input type="text" id="ciudad" name="ciudad" class="input-ciudad" required>
+    </div>
 
-      <div class="form-group">
-        <label for="nov_materiales">Materiales de formación:</label>
-        <textarea id="nov_materiales" name="nov_materiales" required></textarea>
-      </div>
+    <div class="form-group">
+      <button type="submit">Agregar novedad</button>
+    </div>
+  </form>
+</section>
 
-      <div class="form-group">
-        <label for="nov_biblioteca">Biblioteca y bibliografía:</label>
-        <textarea id="nov_biblioteca" name="nov_biblioteca" required></textarea>
-      </div>
-
-      <div class="form-group mb-3">
-        <label class="mb-2">Decisión de la viabilidad del ambiente:</label>
-        <div class="tipo-opciones">
-          {% for decision in decisiones %}
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="decision_ambiente" id="decision_{{ loop.index }}" value="{{ decision }}" required>
-              <label class="form-check-label" for="decision_{{ loop.index }}">{{ decision }}</label>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="ciudad">Ciudad:</label>
-        <input type="text" id="ciudad" name="ciudad" class="input-ciudad" required>
-      </div>
-
-      <div class="form-group">
-        <button type="submit">Agregar novedad</button>
-      </div>
-    </form>
-  </section>
-
-</div>
+<!-- ✅ CKEditor script -->
+<script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
+<script>
+  document.querySelectorAll('.ckeditor').forEach(textarea => {
+    CKEDITOR.replace(textarea);
+  });
+</script>
 {% endblock %}

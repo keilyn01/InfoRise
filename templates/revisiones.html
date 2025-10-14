@@ -55,7 +55,7 @@
     <div class="nombre-reporte d-flex align-items-center gap-2">
       <i class="fa-solid fa-file-lines text-success"></i>
       <span style="text-decoration: none; color: inherit;">
-        {{ reporte[7] or 'Reporte sin nombre' }}
+        {{ reporte[7] }}
       </span>
       {% if not reporte[9] %}
         <form method="POST" action="{{ url_for('marcar_revisado', id_reporte=reporte[0]) }}" onsubmit="event.stopPropagation();" class="ms-2">
