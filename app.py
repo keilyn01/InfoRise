@@ -1435,21 +1435,11 @@ def generar_pdf(id_reporte):
     reporte, novedad = obtener_datos_reporte(id_reporte)
 
     # Formatear fechas
-    if 'fecha' in novedad and novedad['fecha']:
-        novedad['fecha_formateada'] = novedad['fecha'].strftime('%d/%m/%Y')
-    else:
-        novedad['fecha_formateada'] = 'Sin fecha'
-
-    if 'fecha_revision' in novedad and novedad['fecha_revision']:
-        novedad['fecha_revision_formateada'] = novedad['fecha_revision'].strftime('%d/%m/%Y')
-    else:
-        novedad['fecha_revision_formateada'] = None
+    novedad['fecha_formateada'] = novedad.get('fecha').strftime('%d/%m/%Y') if novedad.get('fecha') else 'Sin fecha'
+    novedad['fecha_revision_formateada'] = novedad.get('fecha_revision').strftime('%d/%m/%Y') if novedad.get('fecha_revision') else None
 
     # Ruta al ejecutable wkhtmltopdf (Windows)
-    if os.name == 'nt':
-        config = pdfkit.configuration(wkhtmltopdf=r"C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
-    else:
-        config = None  # Linux/Mac usa wkhtmltopdf global
+    config = pdfkit.configuration(wkhtmltopdf=r"C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe") if os.name == 'nt' else None
 
     # Ruta al logo institucional
     logo_path = os.path.join(app.root_path, 'static', 'logosena.png')
@@ -1471,13 +1461,18 @@ def generar_pdf(id_reporte):
         print("Error al generar PDF:", e)
         return "Error interno al generar el PDF", 500
 
-    # Nombre del archivo
-    nombre_archivo = reporte['nombre_reporte'].strip().replace(" ", "_").replace("/", "-")
+    # Validar nombre del archivo
+    nombre_base = reporte.get('nombre_reporte', '').strip()
+    if not nombre_base:
+        nombre_base = f"reporte_{id_reporte}"
+    nombre_archivo = nombre_base.replace(" ", "_").replace("/", "-").replace("\\", "-")
+    if not nombre_archivo.lower().endswith(".pdf"):
+        nombre_archivo += ".pdf"
 
     # Respuesta PDF
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = f'attachment; filename={nombre_archivo}.pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename="{nombre_archivo}"'
     return response
 
 @app.route("/Inforise/registrarse", methods=["GET", "POST"])
