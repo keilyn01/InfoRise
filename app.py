@@ -1173,7 +1173,6 @@ def marcar_revisado(id_reporte):
             INSERT INTO revisiones (id_reporte, revisado) VALUES (%s, TRUE)
         """, (id_reporte,))
 
-        conexion.commit()
         # Datos del instructor
         cursor.execute("""
         SELECT u.nombre, u.apellido, u.correo
@@ -1209,6 +1208,9 @@ def marcar_revisado(id_reporte):
         """
         cuerpo_html = construir_mensaje_html(nombre_completo, cuerpo_principal)
         notificar_usuario(correo_coord, "Revisión completada – Inforise", cuerpo_texto, cuerpo_html)
+
+    # ✅ Guardar cambios en ambos casos
+    conexion.commit()
 
     cursor.close()
     desconectar(conexion)
