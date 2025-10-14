@@ -570,6 +570,7 @@ def crear():
     tipos = obtener_tipo_ambiente()
     return render_template("crear.html", programas=programas, centros=centros, tipos=tipos)
 
+
 @app.route("/Inforise/reportes", methods=["GET"])
 def reportes():
     fecha_inicio = request.args.get("fecha_inicio")
@@ -596,9 +597,8 @@ def reportes():
             JOIN programas p ON r.id_programa = p.id
             JOIN ambientes a ON r.id_ambiente = a.id
             LEFT JOIN revisiones rev ON rev.id_reporte = r.id
-            WHERE r.id IN (
-                SELECT id_reporte FROM notificaciones WHERE id_usuario = %s
-            )
+            JOIN notificaciones n ON n.id_reporte = r.id
+            WHERE n.id_usuario = %s
             ORDER BY r.fecha {orden_sql}
         """, (id_usuario,))
     elif tipo_usuario == "Coordinador":
