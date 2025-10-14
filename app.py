@@ -1081,21 +1081,22 @@ def revisiones():
     conexion = conectar()
     cursor = conexion.cursor()
 
-    # 🔍 Consulta principal con nombre y apellido del instructor
+    # 🔍 Consulta principal con nombre y apellido del instructor + abreviatura
     consulta_base = f"""
     SELECT r.id, r.regional, r.fecha,
            p.nombre AS programa,
            a.localizacion, a.denominacion, a.tipo,
            r.nombre_reporte,
            CONCAT(u.nombre, ' ', u.apellido) AS instructor,
-           rev.revisado
+           rev.revisado,
+           p.abreviatura
     FROM reportes r
     JOIN programas p ON r.id_programa = p.id
     JOIN ambientes a ON r.id_ambiente = a.id
     JOIN notificaciones n ON n.id_reporte = r.id
     JOIN usuarios u ON n.id_usuario = u.id
     LEFT JOIN revisiones rev ON rev.id_reporte = r.id
-"""
+    """
 
     datos = []
     if fecha_inicio and fecha_fin:
@@ -1108,17 +1109,22 @@ def revisiones():
     cursor.execute(consulta_base, tuple(datos))
     reportes = cursor.fetchall()
 
-    # ✅ Formatear fecha como '21 Sep 2025'
+    # ✅ Formatear fecha y generar nombre si falta
     for i in range(len(reportes)):
         fecha = reportes[i][2]
         if isinstance(fecha, (datetime, date)):
             reportes[i] = list(reportes[i])
-            reportes[i][2] = fecha.strftime('%d %b %Y')
+            reportes[i][2] = fecha.strftime('%d %b %Y')  # para mostrar
+            fecha_numerica = fecha.strftime('%d%m%Y')    # para nombre dinámico
 
-    # ✅ Formatear nombre del instructor
-    nombre_instructor = reportes[i][8]
-    if isinstance(nombre_instructor, str):
-        reportes[i][8] = nombre_instructor.title()        
+            if not reportes[i][7]:  # nombre_reporte
+                abreviatura = reportes[i][10] or "SINABREV"
+                reportes[i][7] = f"{abreviatura}-{fecha_numerica}"
+
+        # ✅ Formatear nombre del instructor
+        nombre_instructor = reportes[i][8]
+        if isinstance(nombre_instructor, str):
+            reportes[i][8] = nombre_instructor.title()
 
     # ✅ Obtener novedades por reporte
     cursor.execute("""
