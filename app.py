@@ -595,9 +595,10 @@ def reportes():
             FROM reportes r
             JOIN programas p ON r.id_programa = p.id
             JOIN ambientes a ON r.id_ambiente = a.id
-            JOIN notificaciones n ON r.id = n.id_reporte
             LEFT JOIN revisiones rev ON rev.id_reporte = r.id
-            WHERE n.id_usuario = %s
+            WHERE r.id IN (
+                SELECT id_reporte FROM notificaciones WHERE id_usuario = %s
+            )
             ORDER BY r.fecha {orden_sql}
         """, (id_usuario,))
     elif tipo_usuario == "Coordinador":
