@@ -1202,60 +1202,29 @@ def marcar_revisado(id_reporte):
     conexion = conectar()
     cursor = conexion.cursor()
 
-    # Verifica si ya existe una revisión para este reporte
+    id_coord = session.get("id_usuario")
+    ciudad = request.form.get("ciudad") or "Sin ciudad"
+
+    # Verifica si ya existe una revisión
     cursor.execute("SELECT id FROM revisiones WHERE id_reporte = %s", (id_reporte,))
     existe = cursor.fetchone()
 
     if existe:
-        # Si existe, actualiza el campo revisado
         cursor.execute("""
-            UPDATE revisiones SET revisado = TRUE WHERE id_reporte = %s
-        """, (id_reporte,))
+            UPDATE revisiones
+            SET revisado = TRUE,
+                fecha_revision = CURRENT_DATE,
+                ciudad = %s,
+                id_usuario = %s
+            WHERE id_reporte = %s
+        """, (ciudad, id_coord, id_reporte))
     else:
-        # Si no existe, inserta una nueva revisión marcada como revisada
         cursor.execute("""
-            INSERT INTO revisiones (id_reporte, revisado) VALUES (%s, TRUE)
-        """, (id_reporte,))
+            INSERT INTO revisiones (id_reporte, revisado, fecha_revision, ciudad, id_usuario, estado)
+            VALUES (%s, TRUE, CURRENT_DATE, %s, %s, TRUE)
+        """, (id_reporte, ciudad, id_coord))
 
-        # Datos del instructor
-        cursor.execute("""
-        SELECT u.nombre, u.apellido, u.correo
-        FROM notificaciones n
-        JOIN usuarios u ON n.id_usuario = u.id
-        WHERE n.id_reporte = %s
-        """, (id_reporte,))
-        nombre, apellido, correo_instructor = cursor.fetchone()
-
-        # Datos del coordinador
-        id_coord = session.get("id_usuario")
-        cursor.execute("SELECT nombre, correo FROM usuarios WHERE id = %s", (id_coord,))
-        nombre_coord, correo_coord = cursor.fetchone()
-
-        # Notificación al instructor
-        nombre_completo = f"{nombre} {apellido}"
-        cuerpo_texto = f"Su reporte #{id_reporte} ha sido revisado por el coordinador."
-        cuerpo_principal = f"""
-        Le informamos que su reporte <strong>#{id_reporte}</strong> ha sido revisado por el coordinador asignado.
-
-        Gracias por su compromiso con el proceso académico institucional.
-        """
-        cuerpo_html = construir_mensaje_html(nombre_completo, cuerpo_principal)
-        notificar_usuario(correo_instructor, "Su reporte ha sido revisado – Inforise", cuerpo_texto, cuerpo_html)
-
-        # Notificación al coordinador
-        nombre_completo = f"{nombre_coord}"
-        cuerpo_texto = f"Ha marcado el reporte #{id_reporte} como revisado."
-        cuerpo_principal = f"""
-        Se ha registrado correctamente la revisión del reporte <strong>#{id_reporte}</strong> en el sistema Inforise.
-
-        Gracias por su gestión académica como coordinador del SENA.
-        """
-        cuerpo_html = construir_mensaje_html(nombre_completo, cuerpo_principal)
-        notificar_usuario(correo_coord, "Revisión completada – Inforise", cuerpo_texto, cuerpo_html)
-
-    # ✅ Guardar cambios en ambos casos
     conexion.commit()
-
     cursor.close()
     desconectar(conexion)
 
