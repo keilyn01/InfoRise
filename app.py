@@ -1461,10 +1461,8 @@ def generar_pdf(id_reporte):
         print("Error al generar PDF:", e)
         return "Error interno al generar el PDF", 500
 
-    # Validar nombre del archivo
-    nombre_base = reporte.get('nombre_reporte', '').strip()
-    if not nombre_base:
-        nombre_base = f"reporte_{id_reporte}"
+    # Usar directamente el nombre del reporte
+    nombre_base = reporte['nombre_reporte'].strip()
     nombre_archivo = nombre_base.replace(" ", "_").replace("/", "-").replace("\\", "-")
     if not nombre_archivo.lower().endswith(".pdf"):
         nombre_archivo += ".pdf"
