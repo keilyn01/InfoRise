@@ -1254,7 +1254,7 @@ def ver_revision(id_reporte):
     # Verificar si el reporte ya fue revisado
     cursor.execute("SELECT revisado FROM revisiones WHERE id_reporte = %s", (id_reporte,))
     estado = cursor.fetchone()
-    if estado and estado[0]:  # Si ya fue revisado
+    if estado and estado[0]:
         cursor.close()
         desconectar(conn)
         flash("Este reporte ya fue revisado y no puede abrirse nuevamente.", "warning")
@@ -1427,37 +1427,42 @@ def obtener_datos_reporte(id_reporte):
 @app.route("/Inforise/reporte/<int:id_reporte>")
 def descargar(id_reporte):
     reporte, novedad = obtener_datos_reporte(id_reporte)
-    return render_template("descargar.html", reporte=reporte, novedad=novedad)
-
+    logo_path = os.path.join(app.root_path, 'static', 'logosena.png')
+    return render_template("descargar.html", reporte=reporte, novedad=novedad, logo_path=logo_path)
 
 @app.route("/Inforise/pdf/<int:id_reporte>")
 def generar_pdf(id_reporte):
     reporte, novedad = obtener_datos_reporte(id_reporte)
 
-    # Fecha de creación
+    # Formatear fechas
     if 'fecha' in novedad and novedad['fecha']:
         novedad['fecha_formateada'] = novedad['fecha'].strftime('%d/%m/%Y')
     else:
         novedad['fecha_formateada'] = 'Sin fecha'
 
-    # Fecha de revisión
     if 'fecha_revision' in novedad and novedad['fecha_revision']:
         novedad['fecha_revision_formateada'] = novedad['fecha_revision'].strftime('%d/%m/%Y')
     else:
         novedad['fecha_revision_formateada'] = None
 
+    # Ruta al ejecutable wkhtmltopdf (Windows)
     if os.name == 'nt':
         config = pdfkit.configuration(wkhtmltopdf=r"C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
     else:
-        config = None
+        config = None  # Linux/Mac usa wkhtmltopdf global
 
+    # Ruta al logo institucional
     logo_path = os.path.join(app.root_path, 'static', 'logosena.png')
+
+    # Renderizar HTML con contenido enriquecido
     rendered_html = render_template("descargar.html", reporte=reporte, novedad=novedad, logo_path=logo_path)
 
+    # Opciones PDF
     options = {
         'enable-local-file-access': None
     }
 
+    # Ruta al CSS institucional
     css_path = os.path.join(app.root_path, 'static', 'estilos', 'descargar.css')
 
     try:
@@ -1466,8 +1471,10 @@ def generar_pdf(id_reporte):
         print("Error al generar PDF:", e)
         return "Error interno al generar el PDF", 500
 
+    # Nombre del archivo
     nombre_archivo = reporte['nombre_reporte'].strip().replace(" ", "_").replace("/", "-")
 
+    # Respuesta PDF
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename={nombre_archivo}.pdf'
