@@ -711,7 +711,7 @@ def eliminar_reportes():
         cursor = conexion.cursor()
 
         # ✅ Verificar cuáles no han sido enviados
-        cursor.execute("SELECT id FROM reportes WHERE enviado = FALSE AND id = ANY(%s)", (ids,))
+        cursor.execute("SELECT id FROM reportes WHERE enviado = FALSE AND id IN %s", (tuple(ids),))
         ids_permitidos = [row[0] for row in cursor.fetchall()]
 
         if ids_permitidos:
@@ -719,15 +719,16 @@ def eliminar_reportes():
             cursor.execute("""
                 DELETE FROM novedades
                 WHERE id_notificacion IN (
-                    SELECT id FROM notificaciones WHERE id_reporte = ANY(%s)
+                    SELECT id FROM notificaciones WHERE id_reporte IN %s
                 )
-            """, (ids_permitidos,))
+            """, (tuple(ids_permitidos),))
 
             # ✅ Eliminar notificaciones relacionadas
-            cursor.execute("DELETE FROM notificaciones WHERE id_reporte = ANY(%s)", (ids_permitidos,))
+            cursor.execute("DELETE FROM notificaciones WHERE id_reporte IN %s", (tuple(ids_permitidos),))
 
             # ✅ Eliminar reportes
-            cursor.execute("DELETE FROM reportes WHERE id = ANY(%s)", (ids_permitidos,))
+            cursor.execute("DELETE FROM reportes WHERE id IN %s", (tuple(ids_permitidos),))
+
             conexion.commit()
             flash(f"{len(ids_permitidos)} reporte(s) eliminado(s) con éxito.", "success")
             agregar_notificacion(f"Se eliminaron {len(ids_permitidos)} reporte(s).")
