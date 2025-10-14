@@ -1099,7 +1099,7 @@ def revisiones():
     conexion = conectar()
     cursor = conexion.cursor()
 
-    # 🔍 Consulta principal con nombre y apellido del instructor + abreviatura
+    # 🔍 Consulta principal con datos de revisión y coordinador
     consulta_base = f"""
     SELECT r.id, r.regional, r.fecha,
            p.nombre AS programa,
@@ -1107,7 +1107,10 @@ def revisiones():
            r.nombre_reporte,
            CONCAT(u.nombre, ' ', u.apellido) AS instructor,
            rev.revisado,
-           p.abreviatura
+           p.abreviatura,
+           rev.fecha_revision,
+           rev.ciudad,
+           rev.id_usuario AS id_coordinador
     FROM reportes r
     JOIN programas p ON r.id_programa = p.id
     JOIN ambientes a ON r.id_ambiente = a.id
@@ -1130,8 +1133,6 @@ def revisiones():
     # ✅ Formatear fecha, nombre del instructor y nombre del reporte si falta
     for i in range(len(reportes)):
         fecha_raw = reportes[i][2]
-
-        # Convertir a objeto date si viene como string
         if isinstance(fecha_raw, str):
             try:
                 fecha_obj = datetime.strptime(fecha_raw, "%Y-%m-%d").date()
@@ -1154,6 +1155,20 @@ def revisiones():
         nombre_instructor = reportes[i][8]
         if isinstance(nombre_instructor, str):
             reportes[i][8] = nombre_instructor.title()
+
+        # ✅ Obtener nombre del coordinador si existe
+        id_coordinador = reportes[i][13]
+        if id_coordinador:
+            cursor_coord = conexion.cursor()
+            cursor_coord.execute("SELECT nombre, apellido FROM usuarios WHERE id = %s AND tipo = 'Coordinador'", (id_coordinador,))
+            datos_coord = cursor_coord.fetchone()
+            if datos_coord:
+                reportes[i].append(f"{datos_coord[0]} {datos_coord[1]}")
+            else:
+                reportes[i].append("—")
+            cursor_coord.close()
+        else:
+            reportes[i].append("—")
 
     # ✅ Obtener novedades por reporte
     cursor.execute("""
