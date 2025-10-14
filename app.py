@@ -569,7 +569,6 @@ def crear():
     centros = obtener_centros()
     tipos = obtener_tipo_ambiente()
     return render_template("crear.html", programas=programas, centros=centros, tipos=tipos)
-
 @app.route("/Inforise/reportes", methods=["GET"])
 def reportes():
     fecha_inicio = request.args.get("fecha_inicio")
@@ -591,7 +590,7 @@ def reportes():
         cursor.execute(f"""
             SELECT r.id, r.regional, r.fecha, p.nombre AS programa,
                    a.localizacion, a.denominacion, a.tipo, r.nombre_reporte,
-                   rev.revisado
+                   rev.revisado, p.abreviatura
             FROM reportes r
             JOIN programas p ON r.id_programa = p.id
             JOIN ambientes a ON r.id_ambiente = a.id
@@ -605,7 +604,7 @@ def reportes():
         cursor.execute(f"""
             SELECT r.id, r.regional, r.fecha, p.nombre AS programa,
                    a.localizacion, a.denominacion, a.tipo, r.nombre_reporte,
-                   rev.revisado
+                   rev.revisado, p.abreviatura
             FROM reportes r
             JOIN programas p ON r.id_programa = p.id
             JOIN ambientes a ON r.id_ambiente = a.id
@@ -621,7 +620,7 @@ def reportes():
                 cursor.execute(f"""
                     SELECT r.id, r.regional, r.fecha, p.nombre AS programa,
                            a.localizacion, a.denominacion, a.tipo, r.nombre_reporte,
-                           rev.revisado
+                           rev.revisado, p.abreviatura
                     FROM reportes r
                     JOIN programas p ON r.id_programa = p.id
                     JOIN ambientes a ON r.id_ambiente = a.id
@@ -634,7 +633,7 @@ def reportes():
                 cursor.execute(f"""
                     SELECT r.id, r.regional, r.fecha, p.nombre AS programa,
                            a.localizacion, a.denominacion, a.tipo, r.nombre_reporte,
-                           rev.revisado
+                           rev.revisado, p.abreviatura
                     FROM reportes r
                     JOIN programas p ON r.id_programa = p.id
                     JOIN ambientes a ON r.id_ambiente = a.id
@@ -645,7 +644,7 @@ def reportes():
             cursor.execute(f"""
                 SELECT r.id, r.regional, r.fecha, p.nombre AS programa,
                        a.localizacion, a.denominacion, a.tipo, r.nombre_reporte,
-                       rev.revisado
+                       rev.revisado, p.abreviatura
                 FROM reportes r
                 JOIN programas p ON r.id_programa = p.id
                 JOIN ambientes a ON r.id_ambiente = a.id
@@ -655,12 +654,17 @@ def reportes():
 
     reportes = cursor.fetchall()
 
-    # ✅ Formatear la fecha como '08 Sep 2025'
+    # ✅ Formatear la fecha y generar nombre si falta
     for i in range(len(reportes)):
         fecha = reportes[i][2]
         if isinstance(fecha, (datetime, date)):
             reportes[i] = list(reportes[i])
-            reportes[i][2] = fecha.strftime('%d %b %Y')
+            reportes[i][2] = fecha.strftime('%d %b %Y')  # para mostrar
+            fecha_numerica = fecha.strftime('%d%m%Y')    # para nombre dinámico
+
+            if not reportes[i][7]:  # nombre_reporte vacío
+                abreviatura = reportes[i][9] or "SINABREV"
+                reportes[i][7] = f"{abreviatura}-{fecha_numerica}"
 
     # ✅ Obtener novedades por reporte
     cursor.execute("""
