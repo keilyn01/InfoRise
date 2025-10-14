@@ -1444,7 +1444,7 @@ def generar_pdf(id_reporte):
     # Ruta al logo institucional
     logo_path = os.path.join(app.root_path, 'static', 'logosena.png')
 
-    # Renderizar HTML con contenido enriquecido
+    # Renderizar HTML
     rendered_html = render_template("descargar.html", reporte=reporte, novedad=novedad, logo_path=logo_path)
 
     # Opciones PDF
@@ -1461,8 +1461,8 @@ def generar_pdf(id_reporte):
         print("Error al generar PDF:", e)
         return "Error interno al generar el PDF", 500
 
-    # Usar directamente el nombre del reporte
-    nombre_base = reporte['nombre_reporte'].strip()
+    # Nombre del archivo (siempre usa el nombre del reporte o respaldo)
+    nombre_base = (reporte.get('nombre_reporte') or f"reporte_{id_reporte}").strip()
     nombre_archivo = nombre_base.replace(" ", "_").replace("/", "-").replace("\\", "-")
     if not nombre_archivo.lower().endswith(".pdf"):
         nombre_archivo += ".pdf"
