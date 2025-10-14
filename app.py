@@ -931,17 +931,20 @@ def editar_reporte(id_reporte):
             """, (ciudad, nov_ambiente, nov_equipos, nov_materiales, nov_biblioteca, decision_ambiente, id_novedad))
 
             conexion.commit()
-            print("Reporte actualizado exitosamente")
-            agregar_notificacion(f"Reporte #{id_reporte} actualizado correctamente.")
-            return redirect(f"/Inforise/reporte/{id_reporte}")
+            flash("Reporte actualizado correctamente.", "success")
+            return redirect(url_for("editar_reporte", id_reporte=id_reporte))
+
         except Exception as error:
             import traceback
             traceback.print_exc()
+            flash("Error al actualizar el reporte.", "danger")
             return f"Error al actualizar el reporte: {error}"
+
         finally:
             if conexion:
                 cursor.close()
                 desconectar(conexion)
+
     else:
         conn = conectar()
         cursor = conn.cursor()
@@ -982,16 +985,18 @@ def editar_reporte(id_reporte):
             "id_centroformacion": row[5],
             "localizacion": row[6],
             "denominacion": row[7],
-            "tipo": row[8]
+            "tipo": row[8],
+            "codigo_programa": ""  # Puedes cargarlo si lo necesitas
         }
+
         novedad = {
             "id": row[9],
-            "ciudad": row[10],
-            "nov_ambiente": row[11],
-            "nov_equipos": row[12],
-            "nov_materiales": row[13],
-            "nov_biblioteca": row[14],
-            "decision_ambiente": row[15]
+            "ciudad": row[10] or "",
+            "nov_ambiente": row[11] or "",
+            "nov_equipos": row[12] or "",
+            "nov_materiales": row[13] or "",
+            "nov_biblioteca": row[14] or "",
+            "decision_ambiente": row[15] or ""
         }
 
         programas = obtener_programas()
