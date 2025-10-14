@@ -18,12 +18,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 import os
 import requests
+import pytz
 
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 csrf = CSRFProtect(app)
 
+zona_colombia = pytz.timezone("America/Bogota")
+fecha_local = datetime.now(zona_colombia).date()
 
 def construir_mensaje_html(nombre_completo, cuerpo_principal):
     return f"""
@@ -539,7 +542,7 @@ def crear():
             # 2. Insertar reporte
             cursor.execute("""
                 INSERT INTO reportes (regional, fecha, id_programa, id_ambiente, estado, nombre_reporte, id_centroformacion)
-                VALUES (%s, CURRENT_DATE, %s, %s, TRUE, %s, %s)
+                VALUES (%s, fecha_local, %s, %s, TRUE, %s, %s)
                 RETURNING id;
             """, (regional, id_programa, id_ambiente, nombre_reporte, id_centro))
             id_reporte = cursor.fetchone()[0]
@@ -547,7 +550,7 @@ def crear():
             # ✅ 3. Crear notificación para vincular al instructor
             cursor.execute("""
                 INSERT INTO notificaciones (id_reporte, tipo, id_usuario, estado, fecha)
-                VALUES (%s, %s, %s, TRUE, CURRENT_DATE)
+                VALUES (%s, %s, %s, TRUE, fecha_local)
             """, (id_reporte, 'Novedad', id_usuario))  # Usa un tipo válido del enum
 
             conexion.commit()
@@ -817,7 +820,7 @@ def agregar_novedad(id_reporte):
         # 2. Insertar la novedad con el id_notificacion
         consulta = """
             INSERT INTO novedades (ciudad, nov_ambiente, nov_equipos, nov_materiales, nov_biblioteca, decision_ambiente, estado, fecha, id_notificacion)
-            VALUES (%s, %s, %s, %s, %s, %s, TRUE, CURRENT_DATE, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, TRUE, fecha_local, %s)
         """
         datos = (ciudad, nov_ambiente, nov_equipos, nov_materiales, nov_biblioteca, decision_ambiente, id_notificacion)
         cursor.execute(consulta, datos)
@@ -919,7 +922,7 @@ def editar_reporte(id_reporte):
             # Actualizar reporte
             cursor.execute("""
                 UPDATE reportes
-                SET regional = %s, fecha = CURRENT_DATE, id_programa = %s, id_ambiente = %s, id_centroformacion = %s
+                SET regional = %s, fecha = fecha_local, id_programa = %s, id_ambiente = %s, id_centroformacion = %s
                 WHERE id = %s;
             """, (regional, id_programa, id_ambiente, id_centro, id_reporte))
 
@@ -1314,7 +1317,7 @@ def guardar_revision(id_reporte):
     # Insertar la revisión en la tabla correspondiente
     cursor.execute("""
         INSERT INTO revisiones (id_reporte, id_usuario, ciudad, fecha_revision, estado)
-        VALUES (%s, %s, %s, CURRENT_DATE, TRUE)
+        VALUES (%s, %s, %s, fecha_local, TRUE)
     """, (id_reporte, id_usuario, ciudad))
 
     conn.commit()
