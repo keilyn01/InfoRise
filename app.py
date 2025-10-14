@@ -569,6 +569,7 @@ def crear():
     centros = obtener_centros()
     tipos = obtener_tipo_ambiente()
     return render_template("crear.html", programas=programas, centros=centros, tipos=tipos)
+
 @app.route("/Inforise/reportes", methods=["GET"])
 def reportes():
     fecha_inicio = request.args.get("fecha_inicio")
@@ -656,15 +657,26 @@ def reportes():
 
     # ✅ Formatear la fecha y generar nombre si falta
     for i in range(len(reportes)):
-        fecha = reportes[i][2]
-        if isinstance(fecha, (datetime, date)):
-            reportes[i] = list(reportes[i])
-            reportes[i][2] = fecha.strftime('%d %b %Y')  # para mostrar
-            fecha_numerica = fecha.strftime('%d%m%Y')    # para nombre dinámico
+        fecha_raw = reportes[i][2]
 
-            if not reportes[i][7]:  # nombre_reporte vacío
-                abreviatura = reportes[i][9] or "SINABREV"
-                reportes[i][7] = f"{abreviatura}-{fecha_numerica}"
+        # Convertir a objeto date si viene como string
+        if isinstance(fecha_raw, str):
+            try:
+                fecha_obj = datetime.strptime(fecha_raw, "%Y-%m-%d").date()
+            except ValueError:
+                fecha_obj = date.today()
+        elif isinstance(fecha_raw, datetime):
+            fecha_obj = fecha_raw.date()
+        else:
+            fecha_obj = fecha_raw
+
+        reportes[i] = list(reportes[i])
+        reportes[i][2] = fecha_obj.strftime('%d %b %Y')  # Ej: 13 Oct 2025
+        fecha_numerica = fecha_obj.strftime('%d%m%Y')    # Ej: 13102025
+
+        if not reportes[i][7]:  # nombre_reporte vacío
+            abreviatura = reportes[i][9] or "SINABREV"
+            reportes[i][7] = f"{abreviatura}-{fecha_numerica}"
 
     # ✅ Obtener novedades por reporte
     cursor.execute("""
@@ -1071,6 +1083,7 @@ def enviar_reporte(id_reporte):
         agregar_notificacion(f"Reporte #{id_reporte} enviado correctamente.")
     return redirect(url_for("reportes"))
     
+
 @app.route("/Inforise/revisiones", methods=["GET"])
 def revisiones():
     fecha_inicio = request.args.get("fecha_inicio")
@@ -1109,17 +1122,28 @@ def revisiones():
     cursor.execute(consulta_base, tuple(datos))
     reportes = cursor.fetchall()
 
-    # ✅ Formatear fecha y generar nombre si falta
+    # ✅ Formatear fecha, nombre del instructor y nombre del reporte si falta
     for i in range(len(reportes)):
-        fecha = reportes[i][2]
-        if isinstance(fecha, (datetime, date)):
-            reportes[i] = list(reportes[i])
-            reportes[i][2] = fecha.strftime('%d %b %Y')  # para mostrar
-            fecha_numerica = fecha.strftime('%d%m%Y')    # para nombre dinámico
+        fecha_raw = reportes[i][2]
 
-            if not reportes[i][7]:  # nombre_reporte
-                abreviatura = reportes[i][10] or "SINABREV"
-                reportes[i][7] = f"{abreviatura}-{fecha_numerica}"
+        # Convertir a objeto date si viene como string
+        if isinstance(fecha_raw, str):
+            try:
+                fecha_obj = datetime.strptime(fecha_raw, "%Y-%m-%d").date()
+            except ValueError:
+                fecha_obj = date.today()
+        elif isinstance(fecha_raw, datetime):
+            fecha_obj = fecha_raw.date()
+        else:
+            fecha_obj = fecha_raw
+
+        reportes[i] = list(reportes[i])
+        reportes[i][2] = fecha_obj.strftime('%d %b %Y')  # Ej: 13 Oct 2025
+        fecha_numerica = fecha_obj.strftime('%d%m%Y')    # Ej: 13102025
+
+        if not reportes[i][7]:  # nombre_reporte vacío
+            abreviatura = reportes[i][10] or "SINABREV"
+            reportes[i][7] = f"{abreviatura}-{fecha_numerica}"
 
         # ✅ Formatear nombre del instructor
         nombre_instructor = reportes[i][8]
