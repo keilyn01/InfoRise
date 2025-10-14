@@ -30,48 +30,48 @@
     <h2 class="titulo-detalle">1. INFORMACIÓN GENERAL</h2>
     <p><strong>PRESENTACIÓN:</strong> Este formato permite la notificación a la Coordinación Académica de las novedades en los ambientes de aprendizaje antes de dar inicio al proceso de formación:</p>
 
-   <table class="tabla-reporte">
-  <tr>
-    <td class="celda-titulo">Regional:</td>
-    <td class="celda-valor">{{ reporte.regional }}</td>
-    <td class="celda-titulo">Centro de Formación:</td>
-    <td class="celda-valor">{{ reporte.centro_formacion }}</td>
-  </tr>
-  <tr>
-    <td class="celda-titulo">Programa de Formación:</td>
-    <td class="celda-valor">{{ reporte.programa }}</td>
-    <td class="celda-titulo">Código del Programa:</td>
-    <td class="celda-valor">{{ reporte.codigo_programa }}</td>
-  </tr>
-  <tr>
-    <td class="subtitulo-ambiente" rowspan="3">Identificación del ambiente de aprendizaje</td>
-    <td class="celda-titulo">Localización:</td>
-    <td class="celda-valor" colspan="2">{{ reporte.localizacion }}</td>
-  </tr>
-  <tr>
-    <td class="celda-titulo">Denominación:</td>
-    <td class="celda-valor" colspan="2">{{ reporte.denominacion }}</td>
-  </tr>
-  <tr>
-  <td class="celda-titulo">Tipo de Ambiente:</td>
-  <td class="celda-valor">
-    <div class="casilla">
-      <span>Interno:</span>
-      <div class="checkbox-custom">
-        {% if reporte.tipo == 'Interno' %}<span class="x-marcada">X</span>{% endif %}
-      </div>
-    </div>
-  </td>
-  <td class="celda-valor">
-    <div class="casilla">
-      <span>Externo:</span>
-      <div class="checkbox-custom">
-        {% if reporte.tipo == 'Externo' %}<span class="x-marcada">X</span>{% endif %}
-      </div>
-    </div>
-  </td>
-</tr>
-</table>
+    <table class="tabla-reporte">
+      <tr>
+        <td class="celda-titulo">Regional:</td>
+        <td class="celda-valor">{{ reporte.regional }}</td>
+        <td class="celda-titulo">Centro de Formación:</td>
+        <td class="celda-valor">{{ reporte.centro_formacion }}</td>
+      </tr>
+      <tr>
+        <td class="celda-titulo">Programa de Formación:</td>
+        <td class="celda-valor">{{ reporte.programa }}</td>
+        <td class="celda-titulo">Código del Programa:</td>
+        <td class="celda-valor">{{ reporte.codigo_programa }}</td>
+      </tr>
+      <tr>
+        <td class="subtitulo-ambiente" rowspan="3">Identificación del ambiente de aprendizaje</td>
+        <td class="celda-titulo">Localización:</td>
+        <td class="celda-valor" colspan="2">{{ reporte.localizacion }}</td>
+      </tr>
+      <tr>
+        <td class="celda-titulo">Denominación:</td>
+        <td class="celda-valor" colspan="2">{{ reporte.denominacion }}</td>
+      </tr>
+      <tr>
+        <td class="celda-titulo">Tipo de Ambiente:</td>
+        <td class="celda-valor">
+          <div class="casilla">
+            <span>Interno:</span>
+            <div class="checkbox-custom">
+              {% if reporte.tipo == 'Interno' %}<span class="x-marcada">X</span>{% endif %}
+            </div>
+          </div>
+        </td>
+        <td class="celda-valor">
+          <div class="casilla">
+            <span>Externo:</span>
+            <div class="checkbox-custom">
+              {% if reporte.tipo == 'Externo' %}<span class="x-marcada">X</span>{% endif %}
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
   </div>
 
   <!-- 2. Identificación de novedades -->
@@ -79,44 +79,40 @@
   <table class="tabla-novedades">
     <thead>
       <tr>
-      <th class="encabezado-novedad">TIPO DE NOVEDAD</th>
-      <th class="encabezado-novedad">DETALLE DE NOVEDAD</th>
-    </tr>
+        <th class="encabezado-novedad">TIPO DE NOVEDAD</th>
+        <th class="encabezado-novedad">DETALLE DE NOVEDAD</th>
+      </tr>
     </thead>
     <tbody>
-      <tr><td>Ambiente, aula o laboratorio</td><td>{{ novedad.nov_ambiente }}</td></tr>
-      <tr><td>Equipos, máquinas y mobiliario</td><td>{{ novedad.nov_equipos }}</td></tr>
-      <tr><td>Materiales de formación</td><td>{{ novedad.nov_materiales }}</td></tr>
-      <tr><td>Biblioteca y bibliografía</td><td>{{ novedad.nov_biblioteca }}</td></tr>
+      <tr><td>Ambiente, aula o laboratorio</td><td>{{ novedad.nov_ambiente | safe }}</td></tr>
+      <tr><td>Equipos, máquinas y mobiliario</td><td>{{ novedad.nov_equipos | safe }}</td></tr>
+      <tr><td>Materiales de formación</td><td>{{ novedad.nov_materiales | safe }}</td></tr>
+      <tr><td>Biblioteca y bibliografía</td><td>{{ novedad.nov_biblioteca | safe }}</td></tr>
       <tr>
- <tr>
-  <td colspan="2" class="celda-viabilidad">
-    <span class="texto-viabilidad">DECISIÓN SOBRE LA VIABILIDAD DE USO DEL AMBIENTE:</span>
-    <span class="casilla-inline">
-      Apto:
-  <span class="checkbox-custom">
-    {% if novedad.decision_ambiente == 'Apto' %}
-      <span class="x-marcada">X</span>
-    {% else %}
-      <span style="visibility: hidden;">X</span>
-    {% endif %}
-  </span>
-</span>
-    </span>
-    <span class="casilla-inline">
-  No apto:
-  <span class="checkbox-custom">
-    {% if novedad.decision_ambiente == 'No apto' %}
-      <span class="x-marcada">X</span>
-    {% else %}
-      <span style="visibility: hidden;">X</span>
-    {% endif %}
-  </span>
-</span>
-    </span>
-  </td>
-</tr>
-</tr>
+        <td colspan="2" class="celda-viabilidad">
+          <span class="texto-viabilidad">DECISIÓN SOBRE LA VIABILIDAD DE USO DEL AMBIENTE:</span>
+          <span class="casilla-inline">
+            Apto:
+            <span class="checkbox-custom">
+              {% if novedad.decision_ambiente == 'Apto' %}
+                <span class="x-marcada">X</span>
+              {% else %}
+                <span style="visibility: hidden;">X</span>
+              {% endif %}
+            </span>
+          </span>
+          <span class="casilla-inline">
+            No apto:
+            <span class="checkbox-custom">
+              {% if novedad.decision_ambiente == 'No apto' %}
+                <span class="x-marcada">X</span>
+              {% else %}
+                <span style="visibility: hidden;">X</span>
+              {% endif %}
+            </span>
+          </span>
+        </td>
+      </tr>
     </tbody>
   </table>
 
@@ -126,51 +122,51 @@
       <tr>
         <td>Ciudad y fecha:</td>
         <td class="celda-fecha-ciudad">
-  {{ novedad.fecha_formateada }}<br>
-  <span class="ciudad">{{ novedad.ciudad }}</span>
-</td>
+          {{ novedad.fecha_formateada }}<br>
+          <span class="ciudad">{{ novedad.ciudad }}</span>
+        </td>
         <td class="celda-firma-titulo">
-  Firma
-  <div class="nombre-firma">
-    <small>Nombre del instructor que realiza el reporte:</small>
-  </div>
-</td>
+          Firma
+          <div class="nombre-firma">
+            <small>Nombre del instructor que realiza el reporte:</small>
+          </div>
+        </td>
         <td>
-  {% if novedad.firma_instructor %}
-    <img src="{{ novedad.firma_instructor | b64img }}" alt="Firma instructor"><br>
-  {% else %}
-    <span class="text-muted">Sin firma</span><br>
-  {% endif %}
-  <strong>{{ novedad.nombre_instructor }} {{ novedad.apellido_instructor }}</strong>
-</td>
+          {% if novedad.firma_instructor %}
+            <img src="{{ novedad.firma_instructor | b64img }}" alt="Firma instructor"><br>
+          {% else %}
+            <span class="text-muted">Sin firma</span><br>
+          {% endif %}
+          <strong>{{ novedad.nombre_instructor }} {{ novedad.apellido_instructor }}</strong>
+        </td>
       </tr>
       <tr>
-  <td>Ciudad y fecha:</td>
-  <td class="celda-fecha-ciudad">
-    {% if novedad.fecha_revision_formateada %}
-      {{ novedad.fecha_revision_formateada }}<br>
-      <span class="ciudad">{{ novedad.ciudad }}</span>
-    {% else %}
-      <span class="text-muted">Pendiente</span><br>
-      <span class="ciudad">{{ novedad.ciudad }}</span>
-    {% endif %}
-  </td>
-  <td class="celda-firma-titulo">
-    Firma
-    <div class="nombre-firma">
-      <small>Nombre del coordinador que recibe el reporte:</small>
-    </div>
-  </td>
-  <td>
-    {% if novedad.fecha_revision_formateada and novedad.firma_coordinador %}
-      <img src="{{ novedad.firma_coordinador | b64img }}" alt="Firma coordinador"><br>
-      <strong>{{ novedad.nombre_coordinador }} {{ novedad.apellido_coordinador }}</strong>
-    {% else %}
-      <span class="text-muted">Sin revisión</span><br>
-      <strong class="text-muted">—</strong>
-    {% endif %}
-  </td>
-</tr>
+        <td>Ciudad y fecha:</td>
+        <td class="celda-fecha-ciudad">
+          {% if novedad.fecha_revision_formateada %}
+            {{ novedad.fecha_revision_formateada }}<br>
+            <span class="ciudad">{{ novedad.ciudad }}</span>
+          {% else %}
+            <span class="text-muted">Pendiente</span><br>
+            <span class="ciudad">{{ novedad.ciudad }}</span>
+          {% endif %}
+        </td>
+        <td class="celda-firma-titulo">
+          Firma
+          <div class="nombre-firma">
+            <small>Nombre del coordinador que recibe el reporte:</small>
+          </div>
+        </td>
+        <td>
+          {% if novedad.fecha_revision_formateada and novedad.firma_coordinador %}
+            <img src="{{ novedad.firma_coordinador | b64img }}" alt="Firma coordinador"><br>
+            <strong>{{ novedad.nombre_coordinador }} {{ novedad.apellido_coordinador }}</strong>
+          {% else %}
+            <span class="text-muted">Sin revisión</span><br>
+            <strong class="text-muted">—</strong>
+          {% endif %}
+        </td>
+      </tr>
     </tbody>
   </table>
 </body>
