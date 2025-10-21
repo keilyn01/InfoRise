@@ -2724,3 +2724,32 @@ body.dark .footer-inicio a {
 .dropdown-menu.show {
   display: block;
 }
+
+/* ✅ Estilo para Select2 en modo oscuro */
+.select2-container--bootstrap4 .select2-selection {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+}
+
+.select2-container--bootstrap4 .select2-selection__rendered {
+  color: var(--bs-body-color);
+}
+
+.select2-container--bootstrap4 .select2-dropdown {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: 1px solid #ced4da;
+}
+
+.select2-container--bootstrap4 .select2-results__option {
+  color: var(--bs-body-color);
+}
+
+.ck.ck-editor__main > .ck-editor__editable {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+}
