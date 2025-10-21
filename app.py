@@ -449,7 +449,7 @@ def eliminar_usuario(id):
 @app.route("/Inforise/admin/eliminar_usuarios_multiples", methods=["POST"])
 def eliminar_usuarios_multiples():
     try:
-        ids = request.form.getlist("usuarios")  # lista de IDs seleccionados
+        ids = request.form.getlist("usuarios")
         conexion = conectar()
         cursor = conexion.cursor()
 
@@ -457,7 +457,7 @@ def eliminar_usuarios_multiples():
         for id in ids:
             cursor.execute("SELECT estado FROM usuarios WHERE id = %s", (id,))
             estado = cursor.fetchone()
-            if estado and not estado[0]:
+            if estado and not estado[0]:  # Solo si está inactivo
                 cursor.execute("SELECT COUNT(*) FROM notificaciones WHERE id_usuario = %s", (id,))
                 reportes = cursor.fetchone()[0]
                 if reportes == 0:
@@ -465,7 +465,10 @@ def eliminar_usuarios_multiples():
                     eliminados += 1
 
         conexion.commit()
-        flash(f"{eliminados} usuarios fueron eliminados correctamente.", "success")
+        if eliminados > 0:
+            flash(f"{eliminados} usuario(s) eliminado(s) correctamente.", "success")
+        else:
+            flash("No se eliminó ningún usuario. Verifica que estén inactivos y sin reportes.", "warning")
 
     except Exception as error:
         flash("Error al eliminar usuarios.", "danger")
