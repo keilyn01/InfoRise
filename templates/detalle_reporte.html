@@ -103,21 +103,22 @@
   </form>
 </section>
 
-<!-- ✅ CKEditor script -->
-
+{% block scripts %}
 <script>
-  document.querySelectorAll('.ckeditor').forEach(textarea => {
-    ClassicEditor
-      .create(textarea, {
-        toolbar: [
-          'heading', '|',
-          'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'
-        ],
-        removePlugins: ['Title'],
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.ckeditor').forEach(textarea => {
+      ClassicEditor
+        .create(textarea, {
+          toolbar: [
+            'heading', '|',
+            'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'
+          ],
+          removePlugins: ['Title'],
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
   });
 </script>
 {% endblock %}

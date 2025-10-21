@@ -82,13 +82,16 @@
   </div>
 </div>
 <script>
-  $(document).ready(function () {
-    // Inicializa Select2 solo dentro del modal actual
-    $('#modalActualizar{{ usuario[0] }} .form-select').select2({
-      dropdownParent: $('#modalActualizar{{ usuario[0] }}'),
-      width: '100%',
-      dropdownAutoWidth: true,
-      theme: 'bootstrap-5' // opcional si usas Bootstrap 5
+  document.addEventListener('DOMContentLoaded', function () {
+    const modalId = '#modalActualizar{{ usuario[0] }}';
+
+    $(modalId).on('shown.bs.modal', function () {
+      $(modalId + ' .form-select').select2({
+        dropdownParent: $(modalId),
+        width: '100%',
+        theme: 'bootstrap-5',
+        dropdownAutoWidth: true
+      });
     });
   });
 </script>
