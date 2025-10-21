@@ -104,10 +104,20 @@
 </section>
 
 <!-- ✅ CKEditor script -->
-<script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
+
 <script>
   document.querySelectorAll('.ckeditor').forEach(textarea => {
-    CKEDITOR.replace(textarea);
+    ClassicEditor
+      .create(textarea, {
+        toolbar: [
+          'heading', '|',
+          'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'
+        ],
+        removePlugins: ['Title'],
+      })
+      .catch(error => {
+        console.error(error);
+      });
   });
 </script>
 {% endblock %}

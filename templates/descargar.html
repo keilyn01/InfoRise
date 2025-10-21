@@ -15,7 +15,7 @@
 </head>
 <body>
 
-  <!-- Encabezado institucional (solo logo) -->
+  <!-- Encabezado institucional -->
   <div class="logo-centro encabezado-pdf">
     <img src="file:///{{ logo_path }}" alt="Logo SENA">
   </div>
@@ -145,7 +145,13 @@
         <td class="celda-fecha-ciudad">
           {% if novedad.fecha_revision_formateada %}
             {{ novedad.fecha_revision_formateada }}<br>
-            <span class="ciudad">{{ novedad.ciudad }}</span>
+            <span class="ciudad">
+              {% if novedad.ciudad_revision %}
+                {{ novedad.ciudad_revision }}
+              {% else %}
+                {{ novedad.ciudad }}
+              {% endif %}
+            </span>
           {% else %}
             <span class="text-muted">Pendiente</span><br>
             <span class="ciudad">{{ novedad.ciudad }}</span>
