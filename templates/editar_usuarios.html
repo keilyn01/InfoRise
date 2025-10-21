@@ -83,18 +83,20 @@
 </div>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const modalId = '#modalActualizar{{ usuario[0] }}';
+    const modales = document.querySelectorAll('[id^="modalActualizar"]');
 
-    $(modalId).on('shown.bs.modal', function () {
-      $(modalId + ' .form-select').each(function () {
-        if (!$(this).hasClass('select2-inicializado')) {
-          $(this).select2({
-            dropdownParent: $(modalId),
-            width: '100%',
-            theme: 'bootstrap4',
-            dropdownAutoWidth: true
-          }).addClass('select2-inicializado');
-        }
+    modales.forEach(modal => {
+      modal.addEventListener('shown.bs.modal', function () {
+        modal.querySelectorAll('select.form-select').forEach(select => {
+          if (!select.classList.contains('select2-inicializado')) {
+            $(select).select2({
+              dropdownParent: $(modal),
+              theme: 'bootstrap4',
+              width: '100%',
+              dropdownAutoWidth: true
+            }).addClass('select2-inicializado');
+          }
+        });
       });
     });
   });
