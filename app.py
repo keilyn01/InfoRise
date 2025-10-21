@@ -1317,7 +1317,7 @@ def obtener_datos_reporte(id_reporte):
     conn = conectar()
     cursor = conn.cursor()
 
-    # 1. Datos del reporte (incluye nombre_reporte)
+    # 1. Datos del reporte
     cursor.execute("""
         SELECT r.id, r.regional, r.fecha, r.nombre_reporte,
                p.nombre AS programa, p.codigo AS codigo,
@@ -1355,11 +1355,12 @@ def obtener_datos_reporte(id_reporte):
     ]
     novedad = dict(zip(campos_novedad, novedad_raw)) if novedad_raw else {}
 
-    # 3. Revisión
+    # 3. Revisión confirmada
     cursor.execute("""
         SELECT ciudad, fecha_revision, id_usuario
         FROM revisiones
-        WHERE id_reporte = %s
+        WHERE id_reporte = %s AND revisado = TRUE
+        ORDER BY fecha_revision DESC
         LIMIT 1;
     """, (id_reporte,))
     revision_raw = cursor.fetchone()
@@ -1384,7 +1385,7 @@ def obtener_datos_reporte(id_reporte):
             novedad['apellido_instructor'] = instructor_raw[1]
             novedad['firma_instructor'] = bytes(instructor_raw[2]) if instructor_raw[2] else b''
 
-    # 5. Coordinador
+    # 5. Coordinador (solo si revisión confirmada)
     if revision and revision.get('id_usuario'):
         cursor.execute("""
             SELECT nombre, apellido, firma
@@ -1403,8 +1404,6 @@ def obtener_datos_reporte(id_reporte):
     cursor.close()
     desconectar(conn)
     return reporte, novedad
-
-
 # ---------------------------
 # Rutas
 # ---------------------------
