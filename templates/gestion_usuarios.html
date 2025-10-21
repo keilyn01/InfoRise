@@ -32,55 +32,59 @@
       </button>
     </div>
   </div>
-<div class="tabla-scroll">
-  <table class="table-usuarios">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Identificación</th>
-      <th>Tipo de identificación</th>
-      <th>Nombres</th>
-      <th>Apellidos</th>
-      <th>Correo</th>
-      <th>Tipo de usuario</th>
-      <th>Estado</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for usuario in datos %}
-      <tr>
-        <td>
-          {% if not usuario[7] and usuario[8] == 0 %}
-            <input type="checkbox" class="checkbox-eliminar" name="usuarios" value="{{ usuario[0] }}" style="display: none;">
-          {% endif %}
-        </td>
-        <td>{{ usuario[1] }}</td>
-        <td>{{ usuario[2] }}</td>
-        <td>{{ usuario[3] }}</td>
-        <td>{{ usuario[4] }}</td>
-        <td>{{ usuario[5] }}</td>
-        <td>{{ usuario[6] }}</td>
-        <td>{{ 'Activo' if usuario[7] else 'Inactivo' }}</td>
-        <td>
-          <button type="button" class="btn btn-success btn-actualizar" data-bs-toggle="modal" data-bs-target="#modalActualizar{{ usuario[0] }}">
-            Actualizar
-          </button>
 
-          {% if not usuario[7] and usuario[8] == 0 %}
+  <div class="tabla-scroll">
+    <table class="table-usuarios">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Identificación</th>
+          <th>Tipo de identificación</th>
+          <th>Nombres</th>
+          <th>Apellidos</th>
+          <th>Correo</th>
+          <th>Tipo de usuario</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for usuario in datos %}
+        <tr>
+          <td>
+            <input type="checkbox"
+                   class="checkbox-eliminar"
+                   name="usuarios"
+                   value="{{ usuario[0] }}"
+                   style="display: none;"
+                   {% if not usuario[7] and usuario[8] == 0 %} data-eliminable="true" {% else %} disabled {% endif %}>
+          </td>
+          <td>{{ usuario[1] }}</td>
+          <td>{{ usuario[2] }}</td>
+          <td>{{ usuario[3] }}</td>
+          <td>{{ usuario[4] }}</td>
+          <td>{{ usuario[5] }}</td>
+          <td>{{ usuario[6] }}</td>
+          <td>{{ 'Activo' if usuario[7] else 'Inactivo' }}</td>
+          <td>
+            <button type="button" class="btn btn-success btn-actualizar" data-bs-toggle="modal" data-bs-target="#modalActualizar{{ usuario[0] }}">
+              Actualizar
+            </button>
+
+            {% if not usuario[7] and usuario[8] == 0 %}
             <button type="button" class="btn btn-danger btn-sm ms-2"
                     onclick="mostrarModalEliminarUsuario('{{ usuario[0] }}')"
                     title="Eliminar">
               <i class="fa-solid fa-trash"></i>
             </button>
-          {% endif %}
-        </td>
-      </tr>
-      {% include 'editar_usuarios.html' %}
-    {% endfor %}
-  </tbody>
-</table>
-</div>
+            {% endif %}
+          </td>
+        </tr>
+        {% include 'editar_usuarios.html' %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
   <!-- ✅ Modal de confirmación de eliminación individual -->
   <div id="modal-eliminar-usuario" class="modal-nombrar" style="display: none;">
@@ -112,19 +116,22 @@
   </div>
 
   <!-- ✅ Scripts -->
-   
-  <script> 
-   function activarEliminacionUsuarios() {
-    const checkboxes = document.querySelectorAll(".checkbox-eliminar");
-    if (checkboxes.length === 0) {
-      alert("Solo se puede eliminar si hay al menos un usuario inactivo sin reportes asociados.");
-      return;
-    }
+  <script>
+    function activarEliminacionUsuarios() {
+      const checkboxes = document.querySelectorAll(".checkbox-eliminar");
+      let visibles = 0;
 
-    checkboxes.forEach(cb => {
-      cb.style.display = "inline-block";
-    });
-   }
+      checkboxes.forEach(cb => {
+        if (cb.dataset.eliminable === "true") {
+          cb.style.display = "inline-block";
+          visibles++;
+        }
+      });
+
+      if (visibles === 0) {
+        alert("No hay usuarios inactivos sin reportes para eliminar.");
+      }
+    }
 
     function mostrarModalEliminarUsuarios() {
       const seleccionados = document.querySelectorAll(".checkbox-eliminar:checked");

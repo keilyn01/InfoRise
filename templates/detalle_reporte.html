@@ -108,17 +108,22 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.ckeditor').forEach(textarea => {
-      ClassicEditor
-        .create(textarea, {
-          toolbar: [
-            'heading', '|',
-            'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'
-          ],
-          removePlugins: ['Title'],
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      if (!textarea.classList.contains('ckeditor-inicializado')) {
+        ClassicEditor
+          .create(textarea, {
+            toolbar: [
+              'heading', '|',
+              'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'
+            ],
+            removePlugins: ['Title'],
+          })
+          .then(editor => {
+            textarea.classList.add('ckeditor-inicializado');
+          })
+          .catch(error => {
+            console.error('Error al inicializar CKEditor:', error);
+          });
+      }
     });
   });
 </script>

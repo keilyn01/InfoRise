@@ -86,11 +86,15 @@
     const modalId = '#modalActualizar{{ usuario[0] }}';
 
     $(modalId).on('shown.bs.modal', function () {
-      $(modalId + ' .form-select').select2({
-        dropdownParent: $(modalId),
-        width: '100%',
-        theme: 'bootstrap-5',
-        dropdownAutoWidth: true
+      $(modalId + ' .form-select').each(function () {
+        if (!$(this).hasClass('select2-inicializado')) {
+          $(this).select2({
+            dropdownParent: $(modalId),
+            width: '100%',
+            theme: 'bootstrap4',
+            dropdownAutoWidth: true
+          }).addClass('select2-inicializado');
+        }
       });
     });
   });
