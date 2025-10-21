@@ -327,15 +327,15 @@ def panel_control():
                            total_reportes_revisados=total_reportes_revisados)
 
 @app.route("/Inforise/admin/gestion_usuarios", methods=["GET"])
-def gestion_users():
+def gestion_usuarios():
     conexion = conectar()
     cursor = conexion.cursor()
 
-    # Obtener usuarios con nombre + sigla del tipo de identificación
     consulta = """
         SELECT u.id, u.identificacion,
                t.nombre || ' (' || t.sigla || ')' AS tipo_identificacion,
-               u.nombre, u.apellido, u.correo, u.tipo, u.estado
+               u.nombre, u.apellido, u.correo, u.tipo, u.estado,
+               (SELECT COUNT(*) FROM notificaciones n WHERE n.id_usuario = u.id) AS reportes
         FROM usuarios u
         JOIN tipo_identificacion t ON u.id_tipo_identificacion = t.id
         ORDER BY u.id
@@ -509,7 +509,7 @@ def editar_usuario(id):
             cursor.close()
             desconectar(conexion)
 
-    return redirect(url_for("gestion_users"))
+    return redirect(url_for("gestion_usuarios"))  
 
 @app.route("/Inforise/crear", methods=["GET", "POST"])
 def crear():
