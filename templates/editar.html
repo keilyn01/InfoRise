@@ -3,55 +3,55 @@
 {% block titulo %}Editar reporte{% endblock %}
 
 {% block contenido %}
-  <div class="container mt-5">
-    <h2 class="titulo-detalle">1. Información General</h2>
+<div class="container mt-5">
+  <h2 class="titulo-detalle">1. Información General</h2>
 
-    <form class="formulario-reporte" action="/Inforise/editar/{{ reporte.id }}" method="POST">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <input type="hidden" name="id" value="{{ reporte.id }}">
-      <input type="hidden" name="id_ambiente" value="{{ reporte.id_ambiente }}">
-      <input type="hidden" name="id_novedad" value="{{ novedad.id }}">
+  <form class="formulario-reporte" action="/Inforise/editar/{{ reporte.id }}" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="id" value="{{ reporte.id }}">
+    <input type="hidden" name="id_ambiente" value="{{ reporte.id_ambiente }}">
+    <input type="hidden" name="id_novedad" value="{{ novedad.id }}">
 
-      <!-- Regional -->
-      <div class="form-group mb-3">
-        <label for="regional">Regional:</label>
-        <input type="text" class="form-control" id="regional" name="regional" value="{{ reporte.regional }}">
-      </div>
+    <!-- Regional -->
+    <div class="form-group mb-3">
+      <label for="regional">Regional:</label>
+      <input type="text" class="form-control" id="regional" name="regional" value="{{ reporte.regional }}">
+    </div>
 
-      <!-- Centro de formación -->
-      <div class="form-group mb-3">
-        <label for="centro_de_formacion">Centro de formación:</label>
-        <select class="form-select" id="centro_de_formacion" name="centro_de_formacion" required>
-          <option value="">Selecciona tu centro</option>
-          {% for centro in centros %}
-            <option value="{{ centro[0] }}" {% if centro[0] == reporte.id_centroformacion %}selected{% endif %}>{{ centro[1] }}</option>
-          {% endfor %}
-        </select>
-      </div>
+    <!-- Centro de formación -->
+    <div class="form-group mb-3">
+      <label for="centro_de_formacion">Centro de formación:</label>
+      <select class="form-select" id="centro_de_formacion" name="centro_de_formacion" required>
+        <option value="">Selecciona tu centro</option>
+        {% for centro in centros %}
+          <option value="{{ centro[0] }}" {% if centro[0] == reporte.id_centroformacion %}selected{% endif %}>{{ centro[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-      <!-- Programa de formación -->
-      <div class="form-group mb-3">
-        <label for="programa">Programa de formación:</label>
-        <select class="form-select" id="programa" name="programa" required>
-          <option value="">Selecciona tu programa</option>
-          {% for programa in programas %}
-            <option value="{{ programa[0] }}"
-                    data-codigo="{{ programa[2] }}"
-                    {% if programa[0] == reporte.id_programa %}selected{% endif %}>
-              {{ programa[1] }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
+    <!-- Programa de formación -->
+    <div class="form-group mb-3">
+      <label for="programa">Programa de formación:</label>
+      <select class="form-select" id="programa" name="programa" required>
+        <option value="">Selecciona tu programa</option>
+        {% for programa in programas %}
+          <option value="{{ programa[0] }}"
+                  data-codigo="{{ programa[2] }}"
+                  {% if programa[0] == reporte.id_programa %}selected{% endif %}>
+            {{ programa[1] }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
 
-      <!-- Código del programa -->
-      <div class="form-group mb-3">
-        <label for="codigo">Código del Programa:</label>
-        <input type="text" class="form-control" id="codigo" name="codigo"
-               value="{{ reporte.codigo_programa }}" required>
-      </div>
+    <!-- Código del programa -->
+    <div class="form-group mb-3">
+      <label for="codigo">Código del Programa:</label>
+      <input type="text" class="form-control" id="codigo" name="codigo"
+             value="{{ reporte.codigo_programa }}" required>
+    </div>
 
-      <script>
+    <script>
       document.addEventListener('DOMContentLoaded', function() {
         const selectPrograma = document.getElementById('programa');
         const inputCodigo = document.getElementById('codigo');
@@ -66,88 +66,100 @@
           inputCodigo.value = codigo;
         });
       });
-      </script>
+    </script>
 
-      <h2 class="subtitulo-reporte">Identificación del ambiente de aprendizaje</h2>
+    <h2 class="subtitulo-reporte">Identificación del ambiente de aprendizaje</h2>
 
-      <!-- Localización del ambiente -->
-      <div class="form-group mb-3">
-        <label for="localizacion">Localización del ambiente:</label>
-        <input type="text" class="form-control" id="localizacion" name="localizacion" value="{{ reporte.localizacion }}" required>
+    <!-- Localización del ambiente -->
+    <div class="form-group mb-3">
+      <label for="localizacion">Localización del ambiente:</label>
+      <input type="text" class="form-control" id="localizacion" name="localizacion" value="{{ reporte.localizacion }}" required>
+    </div>
+
+    <!-- Denominación del ambiente -->
+    <div class="form-group mb-3">
+      <label for="denominacion">Denominación del ambiente:</label>
+      <input type="text" class="form-control" id="denominacion" name="denominacion" value="{{ reporte.denominacion }}" required>
+    </div>
+
+    <!-- Tipo de ambiente -->
+    <div class="form-group mb-3">
+      <label class="mb-2">Tipo de ambiente:</label>
+      <div class="tipo-opciones">
+        {% for tipo in tipos %}
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="tipo" id="tipo_{{ loop.index }}" value="{{ tipo }}" {% if tipo == reporte.tipo %}checked{% endif %} required>
+            <label class="form-check-label" for="tipo_{{ loop.index }}">{{ tipo }}</label>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- 📝 Formulario de novedades -->
+    <section class="contenedor-novedades">
+      <h2 class="titulo-novedades">2. Identificación de novedades</h2>
+
+      <div class="form-group">
+        <label for="nov_ambiente">Ambiente, aula o laboratorio:</label>
+        <textarea id="nov_ambiente" name="nov_ambiente" class="ckeditor" required>{{ novedad.nov_ambiente | safe }}</textarea>
       </div>
 
-      <!-- Denominación del ambiente -->
-      <div class="form-group mb-3">
-        <label for="denominacion">Denominación del ambiente:</label>
-        <input type="text" class="form-control" id="denominacion" name="denominacion" value="{{ reporte.denominacion }}" required>
+      <div class="form-group">
+        <label for="nov_equipos">Equipos, máquinas y mobiliario:</label>
+        <textarea id="nov_equipos" name="nov_equipos" class="ckeditor" required>{{ novedad.nov_equipos | safe }}</textarea>
       </div>
 
-      <!-- Tipo de ambiente -->
+      <div class="form-group">
+        <label for="nov_materiales">Materiales de formación:</label>
+        <textarea id="nov_materiales" name="nov_materiales" class="ckeditor" required>{{ novedad.nov_materiales | safe }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="nov_biblioteca">Biblioteca y bibliografía:</label>
+        <textarea id="nov_biblioteca" name="nov_biblioteca" class="ckeditor" required>{{ novedad.nov_biblioteca | safe }}</textarea>
+      </div>
+
       <div class="form-group mb-3">
-        <label class="mb-2">Tipo de ambiente:</label>
+        <label class="mb-2">Decisión de la viabilidad del ambiente:</label>
         <div class="tipo-opciones">
-          {% for tipo in tipos %}
+          {% for decision in decisiones %}
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="tipo" id="tipo_{{ loop.index }}" value="{{ tipo }}" {% if tipo == reporte.tipo %}checked{% endif %} required>
-              <label class="form-check-label" for="tipo_{{ loop.index }}">{{ tipo }}</label>
+              <input class="form-check-input" type="radio" name="decision_ambiente" id="decision_{{ loop.index }}" value="{{ decision }}" {% if decision == novedad.decision_ambiente %}checked{% endif %} required>
+              <label class="form-check-label" for="decision_{{ loop.index }}">{{ decision }}</label>
             </div>
           {% endfor %}
         </div>
       </div>
 
-      <!-- 📝 Formulario de novedades -->
-      <section class="contenedor-novedades">
-        <h2 class="titulo-novedades">2. Identificación de novedades</h2>
-
-        <div class="form-group">
-          <label for="nov_ambiente">Ambiente, aula o laboratorio:</label>
-          <textarea id="nov_ambiente" name="nov_ambiente" class="ckeditor" required>{{ novedad.nov_ambiente | safe }}</textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="nov_equipos">Equipos, máquinas y mobiliario:</label>
-          <textarea id="nov_equipos" name="nov_equipos" class="ckeditor" required>{{ novedad.nov_equipos | safe }}</textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="nov_materiales">Materiales de formación:</label>
-          <textarea id="nov_materiales" name="nov_materiales" class="ckeditor" required>{{ novedad.nov_materiales | safe }}</textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="nov_biblioteca">Biblioteca y bibliografía:</label>
-          <textarea id="nov_biblioteca" name="nov_biblioteca" class="ckeditor" required>{{ novedad.nov_biblioteca | safe }}</textarea>
-        </div>
-
-        <div class="form-group mb-3">
-          <label class="mb-2">Decisión de la viabilidad del ambiente:</label>
-          <div class="tipo-opciones">
-            {% for decision in decisiones %}
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="decision_ambiente" id="decision_{{ loop.index }}" value="{{ decision }}" {% if decision == novedad.decision_ambiente %}checked{% endif %} required>
-                <label class="form-check-label" for="decision_{{ loop.index }}">{{ decision }}</label>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="ciudad">Ciudad:</label>
-          <input type="text" id="ciudad" name="ciudad" class="input-ciudad" value="{{ novedad.ciudad }}" required>
-        </div>
-      </section>
-
       <div class="form-group">
-        <button type="submit">Actualizar reporte</button>
+        <label for="ciudad">Ciudad:</label>
+        <input type="text" id="ciudad" name="ciudad" class="input-ciudad" value="{{ novedad.ciudad }}" required>
       </div>
-    </form>
-  </div>
+    </section>
 
-  <!-- ✅ CKEditor script -->
-  <script src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
-  <script>
-    document.querySelectorAll('.ckeditor').forEach(textarea => {
-      CKEDITOR.replace(textarea);
+    <div class="form-group">
+      <button type="submit">Actualizar reporte</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.addEventListener('load', function () {
+    document.querySelectorAll('textarea.ckeditor').forEach(textarea => {
+      ClassicEditor
+        .create(textarea, {
+          toolbar: [
+            'heading', '|',
+            'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'
+          ],
+          removePlugins: ['Title']
+        })
+        .catch(error => {
+          console.error('Error al inicializar CKEditor:', error);
+        });
     });
-  </script>
+  });
+</script>
 {% endblock %}

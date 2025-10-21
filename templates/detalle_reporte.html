@@ -3,23 +3,19 @@
 
 {% block contenido %}
 <div class="detalle-reporte">
-
   <h2 class="titulo-detalle">1. Información General</h2>
 
   <section class="tabla-reporte" style="display: grid; grid-template-columns: 1fr 1.5fr 1fr 1.5fr;">
-    <!-- Fila 1: Regional y Centro de Formación -->
     <div class="fila-celda celda-titulo">Regional:</div>
     <div class="fila-celda celda-valor">{{ reporte[1] }}</div>
     <div class="fila-celda celda-titulo">Centro de Formación:</div>
     <div class="fila-celda celda-valor">{{ reporte[8] }}</div>
 
-    <!-- Fila 2: Programa y Código -->
     <div class="fila-celda celda-titulo">Programa de Formación:</div>
     <div class="fila-celda celda-valor">{{ reporte[3] }}</div>
     <div class="fila-celda celda-titulo">Código del Programa:</div>
     <div class="fila-celda celda-valor">{{ reporte[4] }}</div>
 
-    <!-- Fila 3: Subtítulo de ambiente -->
     <div class="fila-celda subtitulo-ambiente" style="grid-row: span 3; grid-column: 1 / 2; display: flex; align-items: center; justify-content: center;">
       Identificación del ambiente de aprendizaje
     </div>
@@ -106,24 +102,19 @@
 
 {% block scripts %}
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.ckeditor').forEach(textarea => {
-      if (!textarea.classList.contains('ckeditor-inicializado')) {
-        ClassicEditor
-          .create(textarea, {
-            toolbar: [
-              'heading', '|',
-              'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'
-            ],
-            removePlugins: ['Title'],
-          })
-          .then(editor => {
-            textarea.classList.add('ckeditor-inicializado');
-          })
-          .catch(error => {
-            console.error('Error al inicializar CKEditor:', error);
-          });
-      }
+  window.addEventListener('load', function () {
+    document.querySelectorAll('textarea.ckeditor').forEach(textarea => {
+      ClassicEditor
+        .create(textarea, {
+          toolbar: [
+            'heading', '|',
+            'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'
+          ],
+          removePlugins: ['Title']
+        })
+        .catch(error => {
+          console.error('Error al inicializar CKEditor:', error);
+        });
     });
   });
 </script>
