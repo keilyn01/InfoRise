@@ -2779,3 +2779,25 @@ body.dark .select2-container--bootstrap4 .select2-results__option--highlighted {
   position: relative;
   z-index: 1;
 }
+
+/* 🌙 Estilo para selects en modo oscuro */
+body.dark select.form-select,
+body.dark .form-control,
+body.dark input[type="text"],
+body.dark input[type="email"] {
+  background-color: #222 !important;
+  color: #f1f1f1 !important;
+  border: 1px solid #444 !important;
+}
+
+/* 🌞 Estilo base para selects */
+select.form-select {
+  font-size: 15px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #212529;
+  line-height: 1.4;
+  width: 100%;
+}
