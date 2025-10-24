@@ -1082,6 +1082,31 @@ body.dark .btn-descargar i {
   color: #ffffff;
 }
 
+/* ✉️ Botón de envío en modo claro */
+.btn-enviar {
+  padding: 6px 12px;
+  background-color: #38aa16;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-enviar:hover {
+  background-color: #2e8c12;
+}
+
+/* 🌙 Botón de envío en modo oscuro: blanco total */
+body.dark .btn-enviar {
+  color: #ffffff !important;
+}
+
+body.dark .btn-enviar:hover {
+  background-color: #a5a5a5 !important;
+}
+
 
 /* 📝 Formulario de nombrar reporte */
 .form-nombrar {
