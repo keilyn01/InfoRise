@@ -366,7 +366,7 @@ def gestion_reportes():
     conexion = conectar()
     cursor = conexion.cursor()
 
-    consulta = f"""
+    consulta = """
         SELECT r.id, r.regional, r.fecha,
                r.nombre_reporte,
                CONCAT(instr.nombre, ' ', instr.apellido) AS instructor,
@@ -380,10 +380,15 @@ def gestion_reportes():
         LEFT JOIN usuarios coord ON rev.id_usuario = coord.id AND coord.tipo = 'Coordinador'
     """
 
+    condiciones = []
     datos = []
+
     if fecha_inicio and fecha_fin:
-        consulta += " WHERE r.fecha BETWEEN %s AND %s"
+        condiciones.append("r.fecha BETWEEN %s AND %s")
         datos.extend([fecha_inicio, fecha_fin])
+
+    if condiciones:
+        consulta += " WHERE " + " AND ".join(condiciones)
 
     consulta += f" ORDER BY r.fecha {orden_sql}"
     cursor.execute(consulta, tuple(datos))
@@ -1407,9 +1412,7 @@ def obtener_datos_reporte(id_reporte):
     cursor.close()
     desconectar(conn)
     return reporte, novedad
-# ---------------------------
-# Rutas
-# ---------------------------
+
 @app.route("/Inforise/reporte/<int:id_reporte>")
 def descargar(id_reporte):
     reporte, novedad = obtener_datos_reporte(id_reporte)
