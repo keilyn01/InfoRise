@@ -1,7 +1,7 @@
 <div class="modal fade" id="modalActualizar{{ usuario[0] }}" tabindex="-1" aria-labelledby="labelActualizar{{ usuario[0] }}" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      
+
       <!-- Encabezado -->
       <div class="modal-header">
         <h5 class="modal-title" id="labelActualizar{{ usuario[0] }}">Actualizar Usuario</h5>
@@ -81,23 +81,3 @@
     </div>
   </div>
 </div>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const modales = document.querySelectorAll('[id^="modalActualizar"]');
-
-    modales.forEach(modal => {
-      modal.addEventListener('shown.bs.modal', function () {
-        modal.querySelectorAll('select.form-select').forEach(select => {
-          if (!select.classList.contains('select2-inicializado')) {
-            $(select).select2({
-              dropdownParent: $(modal),
-              theme: 'bootstrap4',
-              width: '100%',
-              dropdownAutoWidth: true
-            }).addClass('select2-inicializado');
-          }
-        });
-      });
-    });
-  });
-</script>
