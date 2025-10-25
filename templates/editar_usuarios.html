@@ -23,7 +23,7 @@
           <!-- Tipo de identificación -->
           <div class="mb-3">
             <label for="id_tipo_identificacion{{ usuario[0] }}" class="form-label">Tipo de identificación</label>
-            <select class="form-select" id="id_tipo_identificacion{{ usuario[0] }}" name="id_tipo_identificacion" required>
+            <select class="form-select sin-select2" id="id_tipo_identificacion{{ usuario[0] }}" name="id_tipo_identificacion" required>
               <option value="">Selecciona un tipo</option>
               {% for t in tipos_identificacion %}
                 <option value="{{ t.id }}" {% if t.id == usuario[2] %}selected{% endif %}>
@@ -54,7 +54,7 @@
           <!-- Tipo de usuario -->
           <div class="mb-3">
             <label for="tipo{{ usuario[0] }}" class="form-label">Tipo de usuario</label>
-            <select class="form-select" id="tipo{{ usuario[0] }}" name="tipo" required>
+            <select class="form-select sin-select2" id="tipo{{ usuario[0] }}" name="tipo" required>
               <option value="">Selecciona un tipo</option>
               {% for opcion in tipos %}
                 <option value="{{ opcion }}" {% if opcion == usuario[6] %}selected{% endif %}>{{ opcion }}</option>
@@ -65,7 +65,7 @@
           <!-- Estado -->
           <div class="mb-3">
             <label for="estado{{ usuario[0] }}" class="form-label">Estado</label>
-            <select class="form-select" id="estado{{ usuario[0] }}" name="estado" required>
+            <select class="form-select sin-select2" id="estado{{ usuario[0] }}" name="estado" required>
               <option value="activo" {% if usuario[7] %}selected{% endif %}>Activo</option>
               <option value="inactivo" {% if not usuario[7] %}selected{% endif %}>Inactivo</option>
             </select>
