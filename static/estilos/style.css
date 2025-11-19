@@ -2801,3 +2801,44 @@ select.form-select {
   line-height: 1.4;
   width: 100%;
 }
+
+/* 🎛 Estilos para filtros avanzados */
+.dropdown-menu .form-label {
+  font-weight: 500;
+  color: #212529;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.dropdown-menu .form-select {
+  border: 1px solid #ced4da;
+  background-color: #fff;
+  color: #212529;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: border-color 0.2s ease;
+}
+
+.dropdown-menu .form-select:focus {
+  border-color: #38aa16;
+  box-shadow: 0 0 0 0.15rem rgba(56, 170, 22, 0.25);
+}
+
+/* 🌙 Modo oscuro */
+body.dark .dropdown-menu .form-label {
+  color: #f0f0f0;
+}
+
+body.dark .dropdown-menu .form-select {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
+
+body.dark .dropdown-menu .form-select:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 0.15rem rgba(76, 175, 80, 0.25);
+}
