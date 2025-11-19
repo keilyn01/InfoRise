@@ -382,6 +382,7 @@ def gestion_reportes():
         LEFT JOIN usuarios coord ON rev.id_usuario = coord.id AND coord.tipo = 'Coordinador'
         JOIN programas p ON r.id_programa = p.id
         JOIN ambientes a ON r.id_ambiente = a.id
+        JOIN centros_de_formacion c ON a.id_centro = c.id
     """
 
     condiciones = []
@@ -391,7 +392,7 @@ def gestion_reportes():
         condiciones.append("r.fecha BETWEEN %s AND %s")
         datos.extend([fecha_inicio, fecha_fin])
     if centro:
-        condiciones.append("a.denominacion = %s")
+        condiciones.append("c.nombre = %s")
         datos.append(centro)
     if programa:
         condiciones.append("p.nombre = %s")
@@ -416,9 +417,10 @@ def gestion_reportes():
 
     # ✅ Obtener opciones únicas para los filtros correctos
     cursor.execute("""
-        SELECT DISTINCT a.denominacion
+        SELECT DISTINCT c.nombre
         FROM reportes r
         JOIN ambientes a ON r.id_ambiente = a.id
+        JOIN centros_de_formacion c ON a.id_centro = c.id
     """)
     centros = [row[0] for row in cursor.fetchall()]
 
@@ -1129,7 +1131,8 @@ def revisiones():
     consulta_base = """
         SELECT r.id, r.regional, r.fecha,
                p.nombre AS programa,
-               a.localizacion, a.denominacion, a.tipo,
+               c.nombre AS centro_formacion,
+               a.denominacion, a.tipo,
                r.nombre_reporte,
                CONCAT(u.nombre, ' ', u.apellido) AS instructor,
                rev.revisado,
@@ -1140,6 +1143,7 @@ def revisiones():
         FROM reportes r
         JOIN programas p ON r.id_programa = p.id
         JOIN ambientes a ON r.id_ambiente = a.id
+        JOIN centros_de_formacion c ON a.id_centro = c.id
         JOIN notificaciones n ON n.id_reporte = r.id
         JOIN usuarios u ON n.id_usuario = u.id
         LEFT JOIN revisiones rev ON rev.id_reporte = r.id
@@ -1153,7 +1157,7 @@ def revisiones():
         condiciones.append("r.fecha BETWEEN %s AND %s")
         datos.extend([fecha_inicio, fecha_fin])
     if centro:
-        condiciones.append("a.denominacion = %s")
+        condiciones.append("c.nombre = %s")
         datos.append(centro)
     if programa:
         condiciones.append("p.nombre = %s")
@@ -1222,9 +1226,10 @@ def revisiones():
     # ✅ Obtener listas únicas para filtros correctos
     cursor = conexion.cursor()
     cursor.execute("""
-        SELECT DISTINCT a.denominacion
+        SELECT DISTINCT c.nombre
         FROM reportes r
         JOIN ambientes a ON r.id_ambiente = a.id
+        JOIN centros_de_formacion c ON a.id_centro = c.id
         WHERE r.enviado = TRUE
     """)
     centros = [row[0] for row in cursor.fetchall()]
