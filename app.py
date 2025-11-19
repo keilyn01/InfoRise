@@ -362,6 +362,8 @@ def gestion_reportes():
     fecha_fin = request.args.get("fecha_fin")
     orden = request.args.get("orden", "desc")
     orden_sql = "ASC" if orden == "asc" else "DESC"
+    centro = request.args.get("centro")
+    programa = request.args.get("programa")
 
     conexion = conectar()
     cursor = conexion.cursor()
@@ -386,6 +388,12 @@ def gestion_reportes():
     if fecha_inicio and fecha_fin:
         condiciones.append("r.fecha BETWEEN %s AND %s")
         datos.extend([fecha_inicio, fecha_fin])
+    if centro:
+        condiciones.append("r.regional = %s")
+        datos.append(centro)
+    if programa:
+        condiciones.append("r.nombre_reporte LIKE %s")
+        datos.append(f"%{programa}%")
 
     if condiciones:
         consulta += " WHERE " + " AND ".join(condiciones)
@@ -404,11 +412,16 @@ def gestion_reportes():
         if isinstance(reportes[i][5], str):
             reportes[i][5] = reportes[i][5].title()
 
+    # Obtener opciones únicas para los filtros
+    cursor.execute("SELECT DISTINCT regional FROM reportes")
+    centros = [row[0] for row in cursor.fetchall()]
+    cursor.execute("SELECT DISTINCT nombre_reporte FROM reportes")
+    programas = [row[0] for row in cursor.fetchall()]
+
     cursor.close()
     desconectar(conexion)
 
-    return render_template("gestion_reportes.html", reportes=reportes)
-
+    return render_template("gestion_reportes.html", reportes=reportes, centros=centros, programas=programas)
 
 @app.route("/Inforise/admin/eliminar_usuario/<int:id>", methods=["POST"])
 def eliminar_usuario(id):
@@ -578,7 +591,6 @@ def crear():
     tipos = obtener_tipo_ambiente()
     return render_template("crear.html", programas=programas, centros=centros, tipos=tipos)
 
-
 @app.route("/Inforise/reportes", methods=["GET"])
 def reportes():
     fecha_inicio = request.args.get("fecha_inicio")
@@ -600,20 +612,20 @@ def reportes():
         cursor.execute(f"""
             SELECT r.id, r.regional, r.fecha, p.nombre AS programa,
                    a.localizacion, a.denominacion, a.tipo, r.nombre_reporte,
-                   rev.revisado, p.abreviatura
+                   rev.revisado, p.abreviatura, r.enviado
             FROM reportes r
             JOIN programas p ON r.id_programa = p.id
             JOIN ambientes a ON r.id_ambiente = a.id
             LEFT JOIN revisiones rev ON rev.id_reporte = r.id
             JOIN notificaciones n ON n.id_reporte = r.id
             WHERE n.id_usuario = %s
-            ORDER BY r.fecha {orden_sql}
+            ORDER BY r.enviado ASC, r.fecha {orden_sql}
         """, (id_usuario,))
     elif tipo_usuario == "Coordinador":
         cursor.execute(f"""
             SELECT r.id, r.regional, r.fecha, p.nombre AS programa,
                    a.localizacion, a.denominacion, a.tipo, r.nombre_reporte,
-                   rev.revisado, p.abreviatura
+                   rev.revisado, p.abreviatura, r.enviado
             FROM reportes r
             JOIN programas p ON r.id_programa = p.id
             JOIN ambientes a ON r.id_ambiente = a.id
@@ -629,7 +641,7 @@ def reportes():
                 cursor.execute(f"""
                     SELECT r.id, r.regional, r.fecha, p.nombre AS programa,
                            a.localizacion, a.denominacion, a.tipo, r.nombre_reporte,
-                           rev.revisado, p.abreviatura
+                           rev.revisado, p.abreviatura, r.enviado
                     FROM reportes r
                     JOIN programas p ON r.id_programa = p.id
                     JOIN ambientes a ON r.id_ambiente = a.id
@@ -642,7 +654,7 @@ def reportes():
                 cursor.execute(f"""
                     SELECT r.id, r.regional, r.fecha, p.nombre AS programa,
                            a.localizacion, a.denominacion, a.tipo, r.nombre_reporte,
-                           rev.revisado, p.abreviatura
+                           rev.revisado, p.abreviatura, r.enviado
                     FROM reportes r
                     JOIN programas p ON r.id_programa = p.id
                     JOIN ambientes a ON r.id_ambiente = a.id
@@ -653,7 +665,7 @@ def reportes():
             cursor.execute(f"""
                 SELECT r.id, r.regional, r.fecha, p.nombre AS programa,
                        a.localizacion, a.denominacion, a.tipo, r.nombre_reporte,
-                       rev.revisado, p.abreviatura
+                       rev.revisado, p.abreviatura, r.enviado
                 FROM reportes r
                 JOIN programas p ON r.id_programa = p.id
                 JOIN ambientes a ON r.id_ambiente = a.id
@@ -666,8 +678,6 @@ def reportes():
     # ✅ Formatear la fecha y generar nombre si falta
     for i in range(len(reportes)):
         fecha_raw = reportes[i][2]
-
-        # Convertir a objeto date si viene como string
         if isinstance(fecha_raw, str):
             try:
                 fecha_obj = datetime.strptime(fecha_raw, "%Y-%m-%d").date()
@@ -679,8 +689,8 @@ def reportes():
             fecha_obj = fecha_raw
 
         reportes[i] = list(reportes[i])
-        reportes[i][2] = fecha_obj.strftime('%d %b %Y')  # Ej: 13 Oct 2025
-        fecha_numerica = fecha_obj.strftime('%d%m%Y')    # Ej: 13102025
+        reportes[i][2] = fecha_obj.strftime('%d %b %Y')
+        fecha_numerica = fecha_obj.strftime('%d%m%Y')
 
         if not reportes[i][7]:  # nombre_reporte vacío
             abreviatura = reportes[i][9] or "SINABREV"
@@ -703,13 +713,9 @@ def reportes():
             novedades_por_reporte[id_reporte] = []
         novedades_por_reporte[id_reporte].append(novedad[1:])
 
-    # ✅ Obtener estado de envío por reporte
-    cursor.execute("SELECT id, enviado FROM reportes")
-    estado_envio = cursor.fetchall()
-    reporte_enviado = {r[0]: r[1] for r in estado_envio}
-
-    # ✅ Obtener estado de revisión por reporte
-    reporte_revisado = {r[0]: r[8] for r in reportes if len(r) > 8}
+    # ✅ Obtener estado de envío y revisión directamente del resultado
+    reporte_enviado = {r[0]: r[10] for r in reportes}
+    reporte_revisado = {r[0]: r[8] for r in reportes}
 
     cursor.close()
     desconectar(conexion)
@@ -1096,49 +1102,61 @@ def enviar_reporte(id_reporte):
         agregar_notificacion(f"Reporte #{id_reporte} enviado correctamente.")
     return redirect(url_for("reportes"))
     
-
 @app.route("/Inforise/revisiones", methods=["GET"])
 def revisiones():
     fecha_inicio = request.args.get("fecha_inicio")
     fecha_fin = request.args.get("fecha_fin")
     orden = request.args.get("orden", "desc")
     orden_sql = "ASC" if orden == "asc" else "DESC"
+    centro = request.args.get("centro")
+    programa = request.args.get("programa")
 
     conexion = conectar()
     cursor = conexion.cursor()
 
-    # 🔍 Consulta principal con datos de revisión y coordinador
-    consulta_base = f"""
-    SELECT r.id, r.regional, r.fecha,
-           p.nombre AS programa,
-           a.localizacion, a.denominacion, a.tipo,
-           r.nombre_reporte,
-           CONCAT(u.nombre, ' ', u.apellido) AS instructor,
-           rev.revisado,
-           p.abreviatura,
-           rev.fecha_revision,
-           rev.ciudad,
-           rev.id_usuario AS id_coordinador
-    FROM reportes r
-    JOIN programas p ON r.id_programa = p.id
-    JOIN ambientes a ON r.id_ambiente = a.id
-    JOIN notificaciones n ON n.id_reporte = r.id
-    JOIN usuarios u ON n.id_usuario = u.id
-    LEFT JOIN revisiones rev ON rev.id_reporte = r.id
+    # 🔍 Consulta principal con filtros
+    consulta_base = """
+        SELECT r.id, r.regional, r.fecha,
+               p.nombre AS programa,
+               a.localizacion, a.denominacion, a.tipo,
+               r.nombre_reporte,
+               CONCAT(u.nombre, ' ', u.apellido) AS instructor,
+               rev.revisado,
+               p.abreviatura,
+               rev.fecha_revision,
+               rev.ciudad,
+               rev.id_usuario AS id_coordinador
+        FROM reportes r
+        JOIN programas p ON r.id_programa = p.id
+        JOIN ambientes a ON r.id_ambiente = a.id
+        JOIN notificaciones n ON n.id_reporte = r.id
+        JOIN usuarios u ON n.id_usuario = u.id
+        LEFT JOIN revisiones rev ON rev.id_reporte = r.id
+        WHERE r.enviado = TRUE
     """
 
+    condiciones = []
     datos = []
-    if fecha_inicio and fecha_fin:
-        consulta_base += " WHERE r.enviado = TRUE AND r.fecha BETWEEN %s AND %s"
-        datos.extend([fecha_inicio, fecha_fin])
-    else:
-        consulta_base += " WHERE r.enviado = TRUE"
 
-    consulta_base += f" ORDER BY r.fecha {orden_sql}"
+    if fecha_inicio and fecha_fin:
+        condiciones.append("r.fecha BETWEEN %s AND %s")
+        datos.extend([fecha_inicio, fecha_fin])
+    if centro:
+        condiciones.append("r.regional = %s")
+        datos.append(centro)
+    if programa:
+        condiciones.append("p.nombre LIKE %s")
+        datos.append(f"%{programa}%")
+
+    if condiciones:
+        consulta_base += " AND " + " AND ".join(condiciones)
+
+    # 🆕 Ordenar primero por revisado (no revisado primero), luego por fecha
+    consulta_base += f" ORDER BY rev.revisado ASC, r.fecha {orden_sql}"
     cursor.execute(consulta_base, tuple(datos))
     reportes = cursor.fetchall()
 
-    # ✅ Formatear fecha, nombre del instructor y nombre del reporte si falta
+    # ✅ Formatear datos
     for i in range(len(reportes)):
         fecha_raw = reportes[i][2]
         if isinstance(fecha_raw, str):
@@ -1152,28 +1170,22 @@ def revisiones():
             fecha_obj = fecha_raw
 
         reportes[i] = list(reportes[i])
-        reportes[i][2] = fecha_obj.strftime('%d %b %Y')  # Ej: 13 Oct 2025
-        fecha_numerica = fecha_obj.strftime('%d%m%Y')    # Ej: 13102025
+        reportes[i][2] = fecha_obj.strftime('%d %b %Y')
+        fecha_numerica = fecha_obj.strftime('%d%m%Y')
 
-        if not reportes[i][7]:  # nombre_reporte vacío
+        if not reportes[i][7]:
             abreviatura = reportes[i][10] or "SINABREV"
             reportes[i][7] = f"{abreviatura}-{fecha_numerica}"
 
-        # ✅ Formatear nombre del instructor
-        nombre_instructor = reportes[i][8]
-        if isinstance(nombre_instructor, str):
-            reportes[i][8] = nombre_instructor.title()
+        if isinstance(reportes[i][8], str):
+            reportes[i][8] = reportes[i][8].title()
 
-        # ✅ Obtener nombre del coordinador si existe
         id_coordinador = reportes[i][13]
         if id_coordinador:
             cursor_coord = conexion.cursor()
             cursor_coord.execute("SELECT nombre, apellido FROM usuarios WHERE id = %s AND tipo = 'Coordinador'", (id_coordinador,))
             datos_coord = cursor_coord.fetchone()
-            if datos_coord:
-                reportes[i].append(f"{datos_coord[0]} {datos_coord[1]}")
-            else:
-                reportes[i].append("—")
+            reportes[i].append(f"{datos_coord[0]} {datos_coord[1]}" if datos_coord else "—")
             cursor_coord.close()
         else:
             reportes[i].append("—")
@@ -1187,11 +1199,9 @@ def revisiones():
         JOIN reportes r ON notif.id_reporte = r.id
     """)
     novedades = cursor.fetchall()
-
     cursor.close()
-    desconectar(conexion)
 
-    # ✅ Agrupar novedades por reporte
+    # ✅ Agrupar novedades
     novedades_por_reporte = {}
     for novedad in novedades:
         id_reporte = novedad[0]
@@ -1199,10 +1209,21 @@ def revisiones():
             novedades_por_reporte[id_reporte] = []
         novedades_por_reporte[id_reporte].append(novedad[1:])
 
+    # ✅ Obtener listas únicas para filtros
+    cursor = conexion.cursor()
+    cursor.execute("SELECT DISTINCT regional FROM reportes WHERE enviado = TRUE")
+    centros = [row[0] for row in cursor.fetchall()]
+    cursor.execute("SELECT DISTINCT p.nombre FROM programas p JOIN reportes r ON r.id_programa = p.id WHERE r.enviado = TRUE")
+    programas = [row[0] for row in cursor.fetchall()]
+    cursor.close()
+    desconectar(conexion)
+
     return render_template(
         "revisiones.html",
         reportes=reportes,
-        novedades_por_reporte=novedades_por_reporte
+        novedades_por_reporte=novedades_por_reporte,
+        centros=centros,
+        programas=programas
     )
 
 @app.route("/Inforise/revisar/<int:id_reporte>", methods=["POST"])
