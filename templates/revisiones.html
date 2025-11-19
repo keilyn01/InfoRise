@@ -88,6 +88,7 @@
     <span class="instructor-reporte">Instructor</span>
     <span class="fecha-reporte">Fecha</span>
     <span class="centro-reporte">Centro</span>
+    <span class="programa-reporte">Programa</span>
     <span></span>
   </div>
 
@@ -97,9 +98,9 @@
     <div class="nombre-reporte d-flex align-items-center gap-2">
       <i class="fa-solid fa-file-lines text-success"></i>
       <span style="text-decoration: none; color: inherit;">
-        {{ reporte[7] }}
+        {{ reporte[5] }}
       </span>
-      {% if not reporte[9] %}
+      {% if not reporte[7] %}
         <form method="POST" action="{{ url_for('marcar_revisado', id_reporte=reporte[0]) }}" onsubmit="event.stopPropagation();" class="ms-2">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="btn-accion" title="Marcar como revisado">
@@ -111,9 +112,10 @@
         <span class="badge bg-success ms-2">Revisado</span>
       {% endif %}
     </div>
-    <div class="instructor-reporte">{{ reporte[8] }}</div>
+    <div class="instructor-reporte">{{ reporte[6] }}</div>
     <div class="fecha-reporte">{{ reporte[2] }}</div>
     <div class="centro-reporte">{{ reporte[4] }}</div>
+    <div class="programa-reporte">{{ reporte[3] }}</div>
     <div>
       <a href="{{ url_for('generar_pdf', id_reporte=reporte[0]) }}" class="btn btn-sm btn-descargar" title="Descargar" onclick="event.stopPropagation();">
         <i class="fa-solid fa-download"></i>
