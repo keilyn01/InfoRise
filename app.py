@@ -1163,7 +1163,13 @@ def revisiones():
     if condiciones:
         consulta_base += " AND " + " AND ".join(condiciones)
 
-    consulta_base += f" ORDER BY rev.revisado ASC, r.fecha {orden_sql}"
+    # ✅ Ordenar primero los no revisados (rev.revisado = FALSE o NULL)
+    consulta_base += f"""
+        ORDER BY 
+            CASE WHEN rev.revisado IS FALSE OR rev.revisado IS NULL THEN 0 ELSE 1 END,
+            r.fecha {orden_sql}
+    """
+
     cursor.execute(consulta_base, tuple(datos))
     reportes = cursor.fetchall()
 
