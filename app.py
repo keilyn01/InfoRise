@@ -374,15 +374,15 @@ def gestion_reportes():
                CONCAT(instr.nombre, ' ', instr.apellido) AS instructor,
                CONCAT(coord.nombre, ' ', coord.apellido) AS coordinador,
                rev.revisado,
-               r.estado
+               r.estado,
+               c.nombre AS centro_formacion
         FROM reportes r
         JOIN notificaciones n ON n.id_reporte = r.id
         JOIN usuarios instr ON n.id_usuario = instr.id AND instr.tipo = 'Instructor'
         LEFT JOIN revisiones rev ON rev.id_reporte = r.id
         LEFT JOIN usuarios coord ON rev.id_usuario = coord.id AND coord.tipo = 'Coordinador'
         JOIN programas p ON r.id_programa = p.id
-        JOIN ambientes a ON r.id_ambiente = a.id
-        JOIN centros_de_formacion c ON a.id_centro = c.id
+        JOIN centros_de_formacion c ON r.id_centroformacion = c.id
     """
 
     condiciones = []
@@ -419,8 +419,7 @@ def gestion_reportes():
     cursor.execute("""
         SELECT DISTINCT c.nombre
         FROM reportes r
-        JOIN ambientes a ON r.id_ambiente = a.id
-        JOIN centros_de_formacion c ON a.id_centro = c.id
+        JOIN centros_de_formacion c ON r.id_centroformacion = c.id
     """)
     centros = [row[0] for row in cursor.fetchall()]
 
@@ -1132,7 +1131,6 @@ def revisiones():
         SELECT r.id, r.regional, r.fecha,
                p.nombre AS programa,
                c.nombre AS centro_formacion,
-               a.denominacion, a.tipo,
                r.nombre_reporte,
                CONCAT(u.nombre, ' ', u.apellido) AS instructor,
                rev.revisado,
@@ -1142,8 +1140,7 @@ def revisiones():
                rev.id_usuario AS id_coordinador
         FROM reportes r
         JOIN programas p ON r.id_programa = p.id
-        JOIN ambientes a ON r.id_ambiente = a.id
-        JOIN centros_de_formacion c ON a.id_centro = c.id
+        JOIN centros_de_formacion c ON r.id_centroformacion = c.id
         JOIN notificaciones n ON n.id_reporte = r.id
         JOIN usuarios u ON n.id_usuario = u.id
         LEFT JOIN revisiones rev ON rev.id_reporte = r.id
@@ -1187,14 +1184,14 @@ def revisiones():
         reportes[i][2] = fecha_obj.strftime('%d %b %Y')
         fecha_numerica = fecha_obj.strftime('%d%m%Y')
 
-        if not reportes[i][7]:
-            abreviatura = reportes[i][10] or "SINABREV"
-            reportes[i][7] = f"{abreviatura}-{fecha_numerica}"
+        if not reportes[i][5]:  # nombre_reporte
+            abreviatura = reportes[i][8] or "SINABREV"
+            reportes[i][5] = f"{abreviatura}-{fecha_numerica}"
 
-        if isinstance(reportes[i][8], str):
-            reportes[i][8] = reportes[i][8].title()
+        if isinstance(reportes[i][6], str):  # instructor
+            reportes[i][6] = reportes[i][6].title()
 
-        id_coordinador = reportes[i][13]
+        id_coordinador = reportes[i][11]
         if id_coordinador:
             cursor_coord = conexion.cursor()
             cursor_coord.execute("SELECT nombre, apellido FROM usuarios WHERE id = %s AND tipo = 'Coordinador'", (id_coordinador,))
@@ -1228,8 +1225,7 @@ def revisiones():
     cursor.execute("""
         SELECT DISTINCT c.nombre
         FROM reportes r
-        JOIN ambientes a ON r.id_ambiente = a.id
-        JOIN centros_de_formacion c ON a.id_centro = c.id
+        JOIN centros_de_formacion c ON r.id_centroformacion = c.id
         WHERE r.enviado = TRUE
     """)
     centros = [row[0] for row in cursor.fetchall()]
