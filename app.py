@@ -380,6 +380,8 @@ def gestion_reportes():
         JOIN usuarios instr ON n.id_usuario = instr.id AND instr.tipo = 'Instructor'
         LEFT JOIN revisiones rev ON rev.id_reporte = r.id
         LEFT JOIN usuarios coord ON rev.id_usuario = coord.id AND coord.tipo = 'Coordinador'
+        JOIN programas p ON r.id_programa = p.id
+        JOIN ambientes a ON r.id_ambiente = a.id
     """
 
     condiciones = []
@@ -389,11 +391,11 @@ def gestion_reportes():
         condiciones.append("r.fecha BETWEEN %s AND %s")
         datos.extend([fecha_inicio, fecha_fin])
     if centro:
-        condiciones.append("r.regional = %s")
+        condiciones.append("a.denominacion = %s")
         datos.append(centro)
     if programa:
-        condiciones.append("r.nombre_reporte LIKE %s")
-        datos.append(f"%{programa}%")
+        condiciones.append("p.nombre = %s")
+        datos.append(programa)
 
     if condiciones:
         consulta += " WHERE " + " AND ".join(condiciones)
@@ -412,10 +414,19 @@ def gestion_reportes():
         if isinstance(reportes[i][5], str):
             reportes[i][5] = reportes[i][5].title()
 
-    # Obtener opciones únicas para los filtros
-    cursor.execute("SELECT DISTINCT regional FROM reportes")
+    # ✅ Obtener opciones únicas para los filtros correctos
+    cursor.execute("""
+        SELECT DISTINCT a.denominacion
+        FROM reportes r
+        JOIN ambientes a ON r.id_ambiente = a.id
+    """)
     centros = [row[0] for row in cursor.fetchall()]
-    cursor.execute("SELECT DISTINCT nombre_reporte FROM reportes")
+
+    cursor.execute("""
+        SELECT DISTINCT p.nombre
+        FROM reportes r
+        JOIN programas p ON r.id_programa = p.id
+    """)
     programas = [row[0] for row in cursor.fetchall()]
 
     cursor.close()
@@ -1142,16 +1153,15 @@ def revisiones():
         condiciones.append("r.fecha BETWEEN %s AND %s")
         datos.extend([fecha_inicio, fecha_fin])
     if centro:
-        condiciones.append("r.regional = %s")
+        condiciones.append("a.denominacion = %s")
         datos.append(centro)
     if programa:
-        condiciones.append("p.nombre LIKE %s")
-        datos.append(f"%{programa}%")
+        condiciones.append("p.nombre = %s")
+        datos.append(programa)
 
     if condiciones:
         consulta_base += " AND " + " AND ".join(condiciones)
 
-    # 🆕 Ordenar primero por revisado (no revisado primero), luego por fecha
     consulta_base += f" ORDER BY rev.revisado ASC, r.fecha {orden_sql}"
     cursor.execute(consulta_base, tuple(datos))
     reportes = cursor.fetchall()
@@ -1209,11 +1219,22 @@ def revisiones():
             novedades_por_reporte[id_reporte] = []
         novedades_por_reporte[id_reporte].append(novedad[1:])
 
-    # ✅ Obtener listas únicas para filtros
+    # ✅ Obtener listas únicas para filtros correctos
     cursor = conexion.cursor()
-    cursor.execute("SELECT DISTINCT regional FROM reportes WHERE enviado = TRUE")
+    cursor.execute("""
+        SELECT DISTINCT a.denominacion
+        FROM reportes r
+        JOIN ambientes a ON r.id_ambiente = a.id
+        WHERE r.enviado = TRUE
+    """)
     centros = [row[0] for row in cursor.fetchall()]
-    cursor.execute("SELECT DISTINCT p.nombre FROM programas p JOIN reportes r ON r.id_programa = p.id WHERE r.enviado = TRUE")
+
+    cursor.execute("""
+        SELECT DISTINCT p.nombre
+        FROM reportes r
+        JOIN programas p ON r.id_programa = p.id
+        WHERE r.enviado = TRUE
+    """)
     programas = [row[0] for row in cursor.fetchall()]
     cursor.close()
     desconectar(conexion)
