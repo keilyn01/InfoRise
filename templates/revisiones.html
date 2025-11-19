@@ -87,6 +87,7 @@
     <span class="nombre-reporte">Nombre</span>
     <span class="instructor-reporte">Instructor</span>
     <span class="fecha-reporte">Fecha</span>
+    <span class="centro-reporte">Centro</span>
     <span></span>
   </div>
 
@@ -112,6 +113,7 @@
     </div>
     <div class="instructor-reporte">{{ reporte[8] }}</div>
     <div class="fecha-reporte">{{ reporte[2] }}</div>
+    <div class="centro-reporte">{{ reporte[4] }}</div>
     <div>
       <a href="{{ url_for('generar_pdf', id_reporte=reporte[0]) }}" class="btn btn-sm btn-descargar" title="Descargar" onclick="event.stopPropagation();">
         <i class="fa-solid fa-download"></i>
