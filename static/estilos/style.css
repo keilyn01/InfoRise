@@ -2802,6 +2802,14 @@ select.form-select {
   width: 100%;
 }
 
+/* 🎛 Contenedor de filtros horizontales */
+.filtro-fechas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+}
+
 /* 🔘 Botones de acción */
 .btn-accion {
   background-color: #f8f9fa;
@@ -2817,15 +2825,7 @@ select.form-select {
   background-color: #e2e6ea;
 }
 
-/* 🔘 Contenedor de filtros horizontales */
-.filtro-fechas {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  gap: 12px;
-}
-
-/* 🔘 Contenedor de filtros por categoría */
+/* 🎛 Contenedor de filtros por categoría */
 #filtros-categorias {
   display: flex;
   flex-wrap: wrap;
@@ -2834,7 +2834,7 @@ select.form-select {
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* 🔘 Botones desplegables por categoría */
+/* 🎛 Botones desplegables */
 #filtros-categorias .dropdown-toggle {
   background-color: #ffffff;
   border: 1px solid #ced4da;
@@ -2848,7 +2848,7 @@ select.form-select {
   background-color: #f1f1f1;
 }
 
-/* ✅ Menú desplegable solo para filtros */
+/* ✅ Menú desplegable exclusivo para filtros */
 .dropdown-menu.dropdown-filtro {
   min-width: 220px;
   max-height: 260px;
@@ -2859,9 +2859,10 @@ select.form-select {
   background-color: #ffffff;
   border: 1px solid #dee2e6;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 1050;
 }
 
-/* ✅ Checkboxes dentro del menú */
+/* ✅ Checkboxes */
 .dropdown-menu.dropdown-filtro .form-check {
   margin-bottom: 6px;
 }
@@ -2870,11 +2871,7 @@ select.form-select {
   cursor: pointer;
   border-radius: 4px;
   border: 1px solid #adb5bd;
-}
-
-.dropdown-menu.dropdown-filtro .form-check-input:checked {
-  background-color: #198754;
-  border-color: #198754;
+  accent-color: #198754; /* ✅ Verde institucional */
 }
 
 .dropdown-menu.dropdown-filtro .form-check-label {
@@ -2913,11 +2910,7 @@ body.dark .dropdown-menu.dropdown-filtro .form-check-label {
 body.dark .dropdown-menu.dropdown-filtro .form-check-input {
   background-color: #2c2c2c;
   border-color: #555;
-}
-
-body.dark .dropdown-menu.dropdown-filtro .form-check-input:checked {
-  background-color: #4caf50;
-  border-color: #4caf50;
+  accent-color: #4caf50; /* ✅ Verde en modo oscuro */
 }
 
 /* ✨ Animación suave */
