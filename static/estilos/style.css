@@ -2802,86 +2802,112 @@ select.form-select {
   width: 100%;
 }
 
-/* 🎛 Estilos para panel de filtros tipo modal */
-#panel-filtros {
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 1px solid #dee2e6;
-}
-
-/* 🧭 Tabs de filtros */
-#filtroTabs .nav-link {
-  font-weight: 500;
-  color: #495057;
-  border: none;
-  border-bottom: 2px solid transparent;
-}
-
-#filtroTabs .nav-link.active {
-  color: #198754;
-  border-bottom: 2px solid #198754;
-  background-color: transparent;
-}
-
-/* 🧾 Etiquetas de sección */
-#panel-filtros .form-label {
-  font-weight: 600;
+/* 🎛 Botón principal de filtros */
+.btn-accion {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
   color: #212529;
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
 }
 
-/* ✅ Checkbox estilo limpio */
-#panel-filtros .form-check {
-  margin-bottom: 0.4rem;
+.btn-accion:hover {
+  background-color: #e2e6ea;
 }
 
-#panel-filtros .form-check-input {
+/* 🎛 Contenedor de botones de categoría */
+#filtros-categorias {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 🎛 Botones desplegables por categoría */
+#filtros-categorias .dropdown-toggle {
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  color: #212529;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+#filtros-categorias .dropdown-toggle:hover {
+  background-color: #f8f9fa;
+}
+
+/* 🎛 Menú desplegable */
+.dropdown-menu {
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 14px;
+  border-radius: 6px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 🎛 Checkboxes */
+.dropdown-menu .form-check {
+  margin-bottom: 6px;
+}
+
+.dropdown-menu .form-check-input {
+  cursor: pointer;
   border-radius: 4px;
   border: 1px solid #adb5bd;
-  cursor: pointer;
 }
 
-#panel-filtros .form-check-input:checked {
+.dropdown-menu .form-check-input:checked {
   background-color: #198754;
   border-color: #198754;
 }
 
-#panel-filtros .form-check-label {
+.dropdown-menu .form-check-label {
   font-size: 14px;
   color: #343a40;
   cursor: pointer;
 }
 
 /* 🌙 Modo oscuro */
-body.dark #panel-filtros {
+body.dark .btn-accion {
+  background-color: #2c2c2c;
+  color: #f0f0f0;
+  border-color: #555;
+}
+
+body.dark .btn-accion:hover {
+  background-color: #3a3a3a;
+}
+
+body.dark #filtros-categorias .dropdown-toggle {
   background-color: #1e1e1e;
-  border-color: #333;
+  color: #f0f0f0;
+  border-color: #444;
 }
 
-body.dark #filtroTabs .nav-link {
-  color: #ccc;
+body.dark .dropdown-menu {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border-color: #444;
 }
 
-body.dark #filtroTabs .nav-link.active {
-  color: #4caf50;
-  border-color: #4caf50;
-}
-
-body.dark #panel-filtros .form-label,
-body.dark #panel-filtros .form-check-label {
+body.dark .dropdown-menu .form-check-label {
   color: #f0f0f0;
 }
 
-body.dark #panel-filtros .form-check-input {
+body.dark .dropdown-menu .form-check-input {
   background-color: #2c2c2c;
   border-color: #555;
 }
 
-body.dark #panel-filtros .form-check-input:checked {
+body.dark .dropdown-menu .form-check-input:checked {
   background-color: #4caf50;
   border-color: #4caf50;
+}
+
+/* ✨ Animación suave */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
