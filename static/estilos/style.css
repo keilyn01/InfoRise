@@ -2639,6 +2639,14 @@ body.dark .btn-close {
   box-sizing: content-box;
 }
 
+.encabezado-reportes,
+.fila-reporte {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
 /* 🔒 Evita que el botón de enviar o los badges empujen el nombre */
 .nombre-reporte form,
 .nombre-reporte .badge {
