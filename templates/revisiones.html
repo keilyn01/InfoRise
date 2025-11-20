@@ -41,68 +41,53 @@
       <span>Ordenar</span>
     </a>
 
-    <!-- 🎛 Filtros tipo modal -->
+    <!-- 🎛 Botón Filtros -->
     <div class="text-center w-100 mt-3">
-      <button type="button" class="btn-accion" data-bs-toggle="collapse" data-bs-target="#panel-filtros" aria-expanded="false" aria-controls="panel-filtros">
+      <button type="button" class="btn-accion" onclick="document.getElementById('filtros-categorias').classList.toggle('d-none')">
         <i class="fa-solid fa-sliders"></i> Filtros
       </button>
     </div>
 
-    <div class="collapse mt-3 w-100" id="panel-filtros">
-      <div class="card card-body shadow-sm border rounded-3">
-        <input type="hidden" name="orden" value="{{ request.args.get('orden', 'desc') }}">
-        <input type="hidden" name="fecha_inicio" value="{{ request.args.get('fecha_inicio', '') }}">
-        <input type="hidden" name="fecha_fin" value="{{ request.args.get('fecha_fin', '') }}">
-
-        <!-- Tabs -->
-        <ul class="nav nav-tabs mb-3" id="filtroTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="programas-tab" data-bs-toggle="tab" data-bs-target="#programas" type="button" role="tab">Programas</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="centros-tab" data-bs-toggle="tab" data-bs-target="#centros" type="button" role="tab">Centros</button>
-          </li>
-        </ul>
-
-        <div class="tab-content" id="filtroTabsContent">
-          <!-- ✅ Programas -->
-          <div class="tab-pane fade show active" id="programas" role="tabpanel">
-            <div class="mb-3">
-              <label class="form-label"><i class="fa-solid fa-filter me-1"></i>Selecciona programas</label>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="programa" value="" id="programaTodos" checked>
-                <label class="form-check-label" for="programaTodos">Todos</label>
-              </div>
-              {% for p in programas %}
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="programa" value="{{ p }}" id="programa_{{ loop.index }}"
-                  {% if request.args.getlist('programa') and p in request.args.getlist('programa') %}checked{% endif %}>
-                <label class="form-check-label" for="programa_{{ loop.index }}">{{ p }}</label>
-              </div>
-              {% endfor %}
-            </div>
+    <!-- 🎛 Filtros por categoría -->
+    <div id="filtros-categorias" class="d-flex flex-wrap gap-2 mt-3 d-none">
+      <!-- Centros -->
+      <div class="dropdown">
+        <button class="btn-accion dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="fa-solid fa-building"></i> Centros
+        </button>
+        <div class="dropdown-menu p-3 shadow" style="min-width: 250px;">
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="centro" value="" id="centroTodos" checked>
+            <label class="form-check-label" for="centroTodos">Todos</label>
           </div>
-
-          <!-- ✅ Centros -->
-          <div class="tab-pane fade" id="centros" role="tabpanel">
-            <div class="mb-3">
-              <label class="form-label"><i class="fa-solid fa-filter me-1"></i>Selecciona centros</label>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="centro" value="" id="centroTodos" checked>
-                <label class="form-check-label" for="centroTodos">Todos</label>
-              </div>
-              {% for c in centros %}
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="centro" value="{{ c }}" id="centro_{{ loop.index }}"
-                  {% if request.args.getlist('centro') and c in request.args.getlist('centro') %}checked{% endif %}>
-                <label class="form-check-label" for="centro_{{ loop.index }}">{{ c }}</label>
-              </div>
-              {% endfor %}
-            </div>
+          {% for c in centros %}
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="centro" value="{{ c }}" id="centro_{{ loop.index }}"
+              {% if request.args.getlist('centro') and c in request.args.getlist('centro') %}checked{% endif %}>
+            <label class="form-check-label" for="centro_{{ loop.index }}">{{ c }}</label>
           </div>
+          {% endfor %}
         </div>
+      </div>
 
-        <button type="submit" class="btn btn-success w-100 mt-3">Aplicar filtros</button>
+      <!-- Programas -->
+      <div class="dropdown">
+        <button class="btn-accion dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="fa-solid fa-graduation-cap"></i> Programas
+        </button>
+        <div class="dropdown-menu p-3 shadow" style="min-width: 250px;">
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="programa" value="" id="programaTodos" checked>
+            <label class="form-check-label" for="programaTodos">Todos</label>
+          </div>
+          {% for p in programas %}
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="programa" value="{{ p }}" id="programa_{{ loop.index }}"
+              {% if request.args.getlist('programa') and p in request.args.getlist('programa') %}checked{% endif %}>
+            <label class="form-check-label" for="programa_{{ loop.index }}">{{ p }}</label>
+          </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </form>
