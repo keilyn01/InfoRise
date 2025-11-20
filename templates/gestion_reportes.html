@@ -42,55 +42,79 @@
     </a>
 
     <!-- 🎛 Botón Filtros -->
-    <div class="text-center w-100 mt-3">
+    <div>
       <button type="button" class="btn-accion" onclick="document.getElementById('filtros-categorias').classList.toggle('d-none')">
         <i class="fa-solid fa-sliders"></i> Filtros
       </button>
     </div>
+  </form>
 
-    <!-- 🎛 Filtros por categoría -->
-    <div id="filtros-categorias" class="d-flex flex-wrap gap-2 mt-3 d-none">
-      <!-- Centros -->
-      <div class="dropdown">
-        <button class="btn-accion dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          <i class="fa-solid fa-building"></i> Centros
-        </button>
-        <div class="dropdown-menu dropdown-filtro p-3 shadow">
+  <!-- 🎛 Filtros por categoría -->
+  <div id="filtros-categorias" class="d-flex flex-wrap gap-2 mt-3 d-none">
+    <!-- Centros -->
+    <div class="dropdown">
+      <button class="btn-accion dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        <i class="fa-solid fa-building"></i> Centros
+      </button>
+      <div class="dropdown-menu dropdown-filtro p-3 shadow">
+        <form method="GET" id="centroForm">
+          <input type="hidden" name="fecha_inicio" value="{{ request.args.get('fecha_inicio', '') }}">
+          <input type="hidden" name="fecha_fin" value="{{ request.args.get('fecha_fin', '') }}">
+          <input type="hidden" name="orden" value="{{ request.args.get('orden', 'desc') }}">
+          {% for p in request.args.getlist('programa') %}
+            <input type="hidden" name="programa" value="{{ p }}">
+          {% endfor %}
+
           <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" name="centro" value="" id="centroTodos" checked>
+            <input class="form-check-input" type="checkbox" name="centro" value="" id="centroTodos"
+                   {% if not request.args.getlist('centro') or '' in request.args.getlist('centro') %}checked{% endif %}
+                   onchange="limpiarYEnviar('centroForm', 'centro')">
             <label class="form-check-label" for="centroTodos">Todos</label>
           </div>
           {% for c in centros %}
           <div class="form-check">
             <input class="form-check-input" type="checkbox" name="centro" value="{{ c }}" id="centro_{{ loop.index }}"
-              {% if request.args.getlist('centro') and c in request.args.getlist('centro') %}checked{% endif %}>
+                   {% if c in request.args.getlist('centro') %}checked{% endif %}
+                   onchange="desmarcarTodosYEnviar('centroForm', 'centroTodos')">
             <label class="form-check-label" for="centro_{{ loop.index }}">{{ c }}</label>
           </div>
           {% endfor %}
-        </div>
+        </form>
       </div>
+    </div>
 
-      <!-- Programas -->
-      <div class="dropdown">
-        <button class="btn-accion dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          <i class="fa-solid fa-graduation-cap"></i> Programas
-        </button>
-        <div class="dropdown-menu dropdown-filtro p-3 shadow">
+    <!-- Programas -->
+    <div class="dropdown">
+      <button class="btn-accion dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        <i class="fa-solid fa-graduation-cap"></i> Programas
+      </button>
+      <div class="dropdown-menu dropdown-filtro p-3 shadow">
+        <form method="GET" id="programaForm">
+          <input type="hidden" name="fecha_inicio" value="{{ request.args.get('fecha_inicio', '') }}">
+          <input type="hidden" name="fecha_fin" value="{{ request.args.get('fecha_fin', '') }}">
+          <input type="hidden" name="orden" value="{{ request.args.get('orden', 'desc') }}">
+          {% for c in request.args.getlist('centro') %}
+            <input type="hidden" name="centro" value="{{ c }}">
+          {% endfor %}
+
           <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" name="programa" value="" id="programaTodos" checked>
+            <input class="form-check-input" type="checkbox" name="programa" value="" id="programaTodos"
+                   {% if not request.args.getlist('programa') or '' in request.args.getlist('programa') %}checked{% endif %}
+                   onchange="limpiarYEnviar('programaForm', 'programa')">
             <label class="form-check-label" for="programaTodos">Todos</label>
           </div>
           {% for p in programas %}
           <div class="form-check">
             <input class="form-check-input" type="checkbox" name="programa" value="{{ p }}" id="programa_{{ loop.index }}"
-              {% if request.args.getlist('programa') and p in request.args.getlist('programa') %}checked{% endif %}>
+                   {% if p in request.args.getlist('programa') %}checked{% endif %}
+                   onchange="desmarcarTodosYEnviar('programaForm', 'programaTodos')">
             <label class="form-check-label" for="programa_{{ loop.index }}">{{ p }}</label>
           </div>
           {% endfor %}
-        </div>
+        </form>
       </div>
     </div>
-  </form>
+  </div>
 
   <!-- 🧾 Encabezado tipo Word -->
   <div class="encabezado-reportes fila-reporte">
@@ -136,4 +160,20 @@
     </div>
   {% endif %}
 </div>
+<script>
+  function limpiarYEnviar(formId, campo) {
+    const form = document.getElementById(formId);
+    const checkboxes = form.querySelectorAll(`input[name="${campo}"]`);
+    checkboxes.forEach(cb => {
+      if (cb.value !== "") cb.checked = false;
+    });
+    form.submit();
+  }
+
+  function desmarcarTodosYEnviar(formId, todosId) {
+    const todos = document.getElementById(todosId);
+    if (todos) todos.checked = false;
+    document.getElementById(formId).submit();
+  }
+</script>
 {% endblock %}
