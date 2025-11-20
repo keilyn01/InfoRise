@@ -362,8 +362,8 @@ def gestion_reportes():
     fecha_fin = request.args.get("fecha_fin")
     orden = request.args.get("orden", "desc")
     orden_sql = "ASC" if orden == "asc" else "DESC"
-    centro = request.args.get("centro")
-    programa = request.args.get("programa")
+    centros_seleccionados = request.args.getlist("centro")
+    programas_seleccionados = request.args.getlist("programa")
 
     conexion = conectar()
     cursor = conexion.cursor()
@@ -391,12 +391,14 @@ def gestion_reportes():
     if fecha_inicio and fecha_fin:
         condiciones.append("r.fecha BETWEEN %s AND %s")
         datos.extend([fecha_inicio, fecha_fin])
-    if centro:
-        condiciones.append("c.nombre = %s")
-        datos.append(centro)
-    if programa:
-        condiciones.append("p.nombre = %s")
-        datos.append(programa)
+
+    if centros_seleccionados and "" not in centros_seleccionados:
+        condiciones.append("c.nombre IN %s")
+        datos.append(tuple(centros_seleccionados))
+
+    if programas_seleccionados and "" not in programas_seleccionados:
+        condiciones.append("p.nombre IN %s")
+        datos.append(tuple(programas_seleccionados))
 
     if condiciones:
         consulta += " WHERE " + " AND ".join(condiciones)
@@ -415,19 +417,11 @@ def gestion_reportes():
         if isinstance(reportes[i][5], str):
             reportes[i][5] = reportes[i][5].title()
 
-    # ✅ Obtener opciones únicas para los filtros correctos
-    cursor.execute("""
-        SELECT DISTINCT c.nombre
-        FROM reportes r
-        JOIN centros_de_formacion c ON r.id_centroformacion = c.id
-    """)
+    # ✅ Obtener todos los centros y programas (incluso sin reportes)
+    cursor.execute("SELECT nombre FROM centros_de_formacion ORDER BY nombre")
     centros = [row[0] for row in cursor.fetchall()]
 
-    cursor.execute("""
-        SELECT DISTINCT p.nombre
-        FROM reportes r
-        JOIN programas p ON r.id_programa = p.id
-    """)
+    cursor.execute("SELECT nombre FROM programas ORDER BY nombre")
     programas = [row[0] for row in cursor.fetchall()]
 
     cursor.close()
@@ -1120,8 +1114,8 @@ def revisiones():
     fecha_fin = request.args.get("fecha_fin")
     orden = request.args.get("orden", "desc")
     orden_sql = "ASC" if orden == "asc" else "DESC"
-    centro = request.args.get("centro")
-    programa = request.args.get("programa")
+    centros_seleccionados = request.args.getlist("centro")
+    programas_seleccionados = request.args.getlist("programa")
 
     conexion = conectar()
     cursor = conexion.cursor()
@@ -1153,17 +1147,19 @@ def revisiones():
     if fecha_inicio and fecha_fin:
         condiciones.append("r.fecha BETWEEN %s AND %s")
         datos.extend([fecha_inicio, fecha_fin])
-    if centro:
-        condiciones.append("c.nombre = %s")
-        datos.append(centro)
-    if programa:
-        condiciones.append("p.nombre = %s")
-        datos.append(programa)
+
+    if centros_seleccionados and "" not in centros_seleccionados:
+        condiciones.append("c.nombre IN %s")
+        datos.append(tuple(centros_seleccionados))
+
+    if programas_seleccionados and "" not in programas_seleccionados:
+        condiciones.append("p.nombre IN %s")
+        datos.append(tuple(programas_seleccionados))
 
     if condiciones:
         consulta_base += " AND " + " AND ".join(condiciones)
 
-    # ✅ Ordenar primero los no revisados (rev.revisado = FALSE o NULL)
+    # ✅ Ordenar primero los no revisados
     consulta_base += f"""
         ORDER BY 
             CASE WHEN rev.revisado IS FALSE OR rev.revisado IS NULL THEN 0 ELSE 1 END,
@@ -1226,22 +1222,12 @@ def revisiones():
             novedades_por_reporte[id_reporte] = []
         novedades_por_reporte[id_reporte].append(novedad[1:])
 
-    # ✅ Obtener listas únicas para filtros correctos
+    # ✅ Obtener todos los centros y programas (incluso sin reportes)
     cursor = conexion.cursor()
-    cursor.execute("""
-        SELECT DISTINCT c.nombre
-        FROM reportes r
-        JOIN centros_de_formacion c ON r.id_centroformacion = c.id
-        WHERE r.enviado = TRUE
-    """)
+    cursor.execute("SELECT nombre FROM centros_de_formacion ORDER BY nombre")
     centros = [row[0] for row in cursor.fetchall()]
 
-    cursor.execute("""
-        SELECT DISTINCT p.nombre
-        FROM reportes r
-        JOIN programas p ON r.id_programa = p.id
-        WHERE r.enviado = TRUE
-    """)
+    cursor.execute("SELECT nombre FROM programas ORDER BY nombre")
     programas = [row[0] for row in cursor.fetchall()]
     cursor.close()
     desconectar(conexion)
