@@ -2856,7 +2856,7 @@ select.form-select {
   font-size: 14px;
   border-radius: 6px;
   padding: 10px 12px;
-  background-color: #ffffff;
+  background-color: #ffffff; /* ✅ Blanco en modo claro */
   border: 1px solid #dee2e6;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   z-index: 1050;
@@ -2871,7 +2871,7 @@ select.form-select {
   cursor: pointer;
   border-radius: 4px;
   border: 1px solid #adb5bd;
-  accent-color: #198754; /* ✅ Verde institucional */
+  accent-color: #198754; /* ✅ Verde institucional para el check */
 }
 
 .dropdown-menu.dropdown-filtro .form-check-label {
@@ -2898,7 +2898,7 @@ body.dark #filtros-categorias .dropdown-toggle {
 }
 
 body.dark .dropdown-menu.dropdown-filtro {
-  background-color: #1e1e1e;
+  background-color: #000000; /* ✅ Negro en modo oscuro */
   color: #f0f0f0;
   border-color: #444;
 }
@@ -2917,4 +2917,17 @@ body.dark .dropdown-menu.dropdown-filtro .form-check-input {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Evita que los dropdowns de filtros se cierren al hacer clic dentro */
+.dropdown-menu.dropdown-filtro {
+  pointer-events: auto;
+}
+
+.dropdown-menu.dropdown-filtro form {
+  pointer-events: auto;
+}
+
+.dropdown.dropdown-filtro.show .dropdown-menu {
+  display: block;
 }
