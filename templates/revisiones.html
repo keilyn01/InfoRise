@@ -41,43 +41,68 @@
       <span>Ordenar</span>
     </a>
 
-    <!-- 🎛 Filtros avanzados -->
-    <div class="dropdown">
-      <button class="btn-accion" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <!-- 🎛 Filtros tipo modal -->
+    <div class="text-center w-100 mt-3">
+      <button type="button" class="btn-accion" data-bs-toggle="collapse" data-bs-target="#panel-filtros" aria-expanded="false" aria-controls="panel-filtros">
         <i class="fa-solid fa-sliders"></i> Filtros
       </button>
-      <div class="dropdown-menu p-3 shadow" style="min-width: 300px;">
+    </div>
+
+    <div class="collapse mt-3 w-100" id="panel-filtros">
+      <div class="card card-body shadow-sm border rounded-3">
         <input type="hidden" name="orden" value="{{ request.args.get('orden', 'desc') }}">
         <input type="hidden" name="fecha_inicio" value="{{ request.args.get('fecha_inicio', '') }}">
         <input type="hidden" name="fecha_fin" value="{{ request.args.get('fecha_fin', '') }}">
 
-        <!-- Centro de formación -->
-        <div class="mb-3">
-          <label for="centro" class="form-label">
-            <i class="fa-solid fa-filter me-1"></i>Centro de Formación
-          </label>
-          <select class="form-select" name="centro" id="centro">
-            <option value="">Todos</option>
-            {% for c in centros %}
-              <option value="{{ c }}" {% if request.args.get('centro') == c %}selected{% endif %}>{{ c }}</option>
-            {% endfor %}
-          </select>
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mb-3" id="filtroTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="programas-tab" data-bs-toggle="tab" data-bs-target="#programas" type="button" role="tab">Programas</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="centros-tab" data-bs-toggle="tab" data-bs-target="#centros" type="button" role="tab">Centros</button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="filtroTabsContent">
+          <!-- ✅ Programas -->
+          <div class="tab-pane fade show active" id="programas" role="tabpanel">
+            <div class="mb-3">
+              <label class="form-label"><i class="fa-solid fa-filter me-1"></i>Selecciona programas</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="programa" value="" id="programaTodos" checked>
+                <label class="form-check-label" for="programaTodos">Todos</label>
+              </div>
+              {% for p in programas %}
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="programa" value="{{ p }}" id="programa_{{ loop.index }}"
+                  {% if request.args.getlist('programa') and p in request.args.getlist('programa') %}checked{% endif %}>
+                <label class="form-check-label" for="programa_{{ loop.index }}">{{ p }}</label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- ✅ Centros -->
+          <div class="tab-pane fade" id="centros" role="tabpanel">
+            <div class="mb-3">
+              <label class="form-label"><i class="fa-solid fa-filter me-1"></i>Selecciona centros</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="centro" value="" id="centroTodos" checked>
+                <label class="form-check-label" for="centroTodos">Todos</label>
+              </div>
+              {% for c in centros %}
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="centro" value="{{ c }}" id="centro_{{ loop.index }}"
+                  {% if request.args.getlist('centro') and c in request.args.getlist('centro') %}checked{% endif %}>
+                <label class="form-check-label" for="centro_{{ loop.index }}">{{ c }}</label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
         </div>
 
-        <!-- Programa de formación -->
-        <div class="mb-3">
-          <label for="programa" class="form-label">
-            <i class="fa-solid fa-filter me-1"></i>Programa de Formación
-          </label>
-          <select class="form-select" name="programa" id="programa">
-            <option value="">Todos</option>
-            {% for p in programas %}
-              <option value="{{ p }}" {% if request.args.get('programa') == p %}selected{% endif %}>{{ p }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <button type="submit" class="btn btn-success w-100">Aplicar filtros</button>
+        <button type="submit" class="btn btn-success w-100 mt-3">Aplicar filtros</button>
       </div>
     </div>
   </form>
@@ -93,35 +118,41 @@
   </div>
 
   <!-- 📄 Lista de reportes -->
-  {% for reporte in reportes %}
-  <div class="fila-reporte fila-reporte-link" onclick="window.location.href='/Inforise/revision/{{ reporte[0] }}'">
-    <div class="nombre-reporte d-flex align-items-center gap-2">
-      <i class="fa-solid fa-file-lines text-success"></i>
-      <span style="text-decoration: none; color: inherit;">
-        {{ reporte[5] }}
-      </span>
-      {% if not reporte[7] %}
-        <form method="POST" action="{{ url_for('marcar_revisado', id_reporte=reporte[0]) }}" onsubmit="event.stopPropagation();" class="ms-2">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn-accion" title="Marcar como revisado">
-            <i class="fa-solid fa-check"></i>
-            <span>Revisar</span>
-          </button>
-        </form>
-      {% else %}
-        <span class="badge bg-success ms-2">Revisado</span>
-      {% endif %}
+  {% if reportes %}
+    {% for reporte in reportes %}
+    <div class="fila-reporte fila-reporte-link" onclick="window.location.href='/Inforise/revision/{{ reporte[0] }}'">
+      <div class="nombre-reporte d-flex align-items-center gap-2">
+        <i class="fa-solid fa-file-lines text-success"></i>
+        <span style="text-decoration: none; color: inherit;">
+          {{ reporte[5] }}
+        </span>
+        {% if not reporte[7] %}
+          <form method="POST" action="{{ url_for('marcar_revisado', id_reporte=reporte[0]) }}" onsubmit="event.stopPropagation();" class="ms-2">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn-accion" title="Marcar como revisado">
+              <i class="fa-solid fa-check"></i>
+              <span>Revisar</span>
+            </button>
+          </form>
+        {% else %}
+          <span class="badge bg-success ms-2">Revisado</span>
+        {% endif %}
+      </div>
+      <div class="instructor-reporte">{{ reporte[6] }}</div>
+      <div class="fecha-reporte">{{ reporte[2] }}</div>
+      <div class="centro-reporte">{{ reporte[4] }}</div>
+      <div class="programa-reporte">{{ reporte[3] }}</div>
+      <div>
+        <a href="{{ url_for('generar_pdf', id_reporte=reporte[0]) }}" class="btn btn-sm btn-descargar" title="Descargar" onclick="event.stopPropagation();">
+          <i class="fa-solid fa-download"></i>
+        </a>
+      </div>
     </div>
-    <div class="instructor-reporte">{{ reporte[6] }}</div>
-    <div class="fecha-reporte">{{ reporte[2] }}</div>
-    <div class="centro-reporte">{{ reporte[4] }}</div>
-    <div class="programa-reporte">{{ reporte[3] }}</div>
-    <div>
-      <a href="{{ url_for('generar_pdf', id_reporte=reporte[0]) }}" class="btn btn-sm btn-descargar" title="Descargar" onclick="event.stopPropagation();">
-        <i class="fa-solid fa-download"></i>
-      </a>
+    {% endfor %}
+  {% else %}
+    <div class="text-center mt-5">
+      <p class="text-muted">Sin resultados para esta combinación de filtros.</p>
     </div>
-  </div>
-  {% endfor %}
+  {% endif %}
 </div>
 {% endblock %}
